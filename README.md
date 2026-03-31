@@ -29,10 +29,8 @@
   - **Scene + Camera + Renderer** (WebGLRenderer ou WebGPURenderer si possible)
   - **Branch hierarchy**: Chaque branche doit être un `Mesh` séparé contenant le type de défaut (sanitary, structure, etc...) si il y'en a
   - **Raycasting**: `raycaster.intersectObjects()` sur clic/touch -> détecter exactement quelle branche est touchée
-  - **Animation de coupe** : scale -> 0 + fade + particules simples (ou slice shader) -> suppression du mesh
-  - **Feedback pédagogique** : couleur (vert/rouge) + panneau HTML ou tooltip avec explication + score
+  - **Feedback pédagogique** : couleur (vert/rouge) + panneau HTML ou tooltip avec explication + score si on veut rendre l'experience comme un jeu pour capter l'attention des étudiants
   - **OrbitControls** (ou TrackballControls) pour vue 360°
-  - **UI**: HTML/CSS overlay (ou React Three Fiber + @react-three/drei si on veut React)
   - **Données des arbres**: Si on fait plusieurs arbres on peut utiliser une base de donnée JSON (arbre + liste des bonnes et mauvaise coupes)
   - **Performance**: InstancedMesh pour branches identiques, low-poly, pas de feuilles
 
