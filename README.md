@@ -25,7 +25,7 @@
   - plusieurs paramètres (niveaux de branches, angles axiaux/radiaux, espacement, gnarliness, etc...)
   - Alternative: [FloraSynth](https://www.florasynth.com/)
 
-- **Mécaniques obligatoires à implémenter**:
+- **Mécaniques à implémenter**:
   - **Scene + Camera + Renderer** (WebGLRenderer ou WebGPURenderer si possible)
   - **Branch hierarchy**: Chaque branche doit être un `Mesh` séparé contenant le type de défaut (sanitary, structure, etc...) si il y'en a
   - **Raycasting**: `raycaster.intersectObjects()` sur clic/touch -> détecter exactement quelle branche est touchée
