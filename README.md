@@ -4,13 +4,13 @@
 
 ## Contexte et Contraintes du Projet
 
-- Arbres **jeunes/moyens** seulement (peu de branches, pas de feuilles requises)
-- **5 à 7 défauts clairs** par arbre (malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
+- Arbres jeunes/moyens seulement (peu de branches, pas de feuilles requises)
+- 5 à 7 défauts clairs par arbre (malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
 - Interaction : cliquer sur une branche + feedback (bonne/mauvaise coupe qui montre la branche en vert ou rouge + explication pédagogique optionnel)
 - Vue 3D libre (orbite 360°)
 - Scénarios/exercices multiples si possible.
 - Interface web
-- Doit être le **moins lourd possible** (optimisation prioritaire)
+- Doit être le moins lourd possible
 
 
 ### Three.js 
@@ -27,7 +27,7 @@
 - **Mécaniques à implémenter**:
   - **Scene + Camera + Renderer** (WebGLRenderer ou WebGPURenderer si possible)
   - **Branch hierarchy**: Chaque branche doit être un `Mesh` séparé contenant le type de défaut (sanitary, structure, etc...) si il y'en a
-  - [Raycasting](https://threejs.org/docs/#api/en/core/Raycaster): `raycaster.intersectObjects()` sur clic/touch -> détecter exactement quelle branche est touchée
+  - **[Raycasting](https://threejs.org/docs/#api/en/core/Raycaster)**: `raycaster.intersectObjects()` sur clic/touch -> détecter exactement quelle branche est touchée
   - **Feedback pédagogique** : couleur (vert/rouge) + panneau HTML ou tooltip avec explication + score si on veut rendre l'experience comme un jeu pour capter l'attention des étudiants
   - **OrbitControls** (ou TrackballControls) pour vue 360°
   - **Données des arbres**: Si on fait plusieurs arbres on peut utiliser une base de donnée JSON (arbre + liste des bonnes et mauvaise coupes)
@@ -71,18 +71,6 @@
 
 - **Maya**: Option de générer des arbres par brush (Content browser) mais pas trop bon. Blender serait meilleur
 
-## Solution principale retenue à date: Three.js + EZ-Tree 
-
-- Parfaitement adapté au web
-- EZ-Tree donne le contrôle procédural dont on a besoin (jeunes arbres, 5-7 défauts faciles à taguer).
-- Interaction clic/coupe ultra-simple avec "raycasting"
-- Support WebGPU
-- Bundle léger et optimisation facile
-
-**Options rejetées**:
-- Unity WebGL: trop lourd comparé à Three.js
-- Maya/Blender: pas interactif en temps réel sans l'utilisation de Three.js derrière
-
 ### Exemple de site web qui utilise Three.js pour la 3D
 
 - **[EZ-Tree](https://www.eztree.dev/)** 
@@ -112,4 +100,16 @@
 
 - **[Go Bonsai – Interactive 3D Tree Simulator](https://frankforce.com/games/go-bonsai/)**  
   Version application
+
+## Solution principale retenue à date: Three.js + EZ-Tree + Raycasting
+
+- Parfaitement adapté au web
+- EZ-Tree donne le contrôle procédural dont on a besoin (jeunes arbres, 5-7 défauts faciles à taguer).
+- Interaction clic/coupe ultra-simple avec "raycasting"
+- Support WebGPU
+- Bundle léger et optimisation facile
+
+**Options rejetées**:
+- Unity WebGL: trop lourd comparé à Three.js
+- Maya/Blender: pas interactif en temps réel sans l'utilisation de Three.js derrière
 
