@@ -5,7 +5,7 @@
 ## Contexte et Contraintes du Projet
 
 - Arbres **jeunes/moyens** seulement (peu de branches, pas de feuilles requises)
-- **5 à 7 défauts clairs** par arbre (mortes, malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
+- **5 à 7 défauts clairs** par arbre (malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
 - Interaction : cliquer sur une branche + feedback immédiat (bonne/mauvaise coupe + explication pédagogique)
 - Vue 3D libre (orbite 360°)
 - Scénarios/exercices multiples si possible.
