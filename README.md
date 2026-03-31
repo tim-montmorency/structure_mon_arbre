@@ -65,3 +65,5 @@
 **Options rejetées**:
 - Unity WebGL: trop lourd comparé à Three.js
 - Maya/Blender: pas interactif en temps réel sans l'utilisation de Three.js derrière
+
+### Exemple de site web qui utilise Three.js pour la 3D
