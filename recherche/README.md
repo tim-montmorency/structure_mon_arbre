@@ -21,6 +21,7 @@ Génération d'abre:
  - FloraSynth : basé sur du L-system
  - EZ-Tree
 
+Comparaison
 - L-system:
   -  méthode mathématique basée sur des règles pour générer des structures comme des arbres
   -  très précis et complexe
