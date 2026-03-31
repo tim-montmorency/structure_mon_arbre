@@ -55,7 +55,7 @@
 ## Solution principale retenue à date: Three.js + EZ-Tree 
 
 - Parfaitement adapté au web
-- EZ-Tree donne exactement le contrôle procédural dont on a besoin (jeunes arbres, 5-7 défauts faciles à taguer).
+- EZ-Tree donne le contrôle procédural dont on a besoin (jeunes arbres, 5-7 défauts faciles à taguer).
 - Interaction clic/coupe ultra-simple avec "raycasting"
 - Support WebGPU
 - Bundle léger et optimisation facile
