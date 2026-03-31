@@ -16,4 +16,32 @@ Pour Godot, il est principalement utiliser pour des jeux plus complexe. Il se re
 
 Voici un site web qui compare three.js et godot: [three.js vs. Godot | Needle](https://cloud.needle.tools/compare/needle-vs-threejs-vs-godot?utm_source=chatgpt.com)
 
+## Système
+Génération d'abre:
+ - FloraSynth : basé sur du L-system
+ - EZ-Tree
+
+- L-system:
+  -  méthode mathématique basée sur des règles pour générer des structures comme des arbres
+  -  très précis et complexe
+  -  faut rajouter l'aléatoire
+  -  simulation croissance
+  -  besoin d'être codé
+
+- EZ-Tree
+  - librairire
+  - plus ou moins complexe
+  - aléatoire déjà intégrer
+  - génération rapide
+  - prêt à l'emploi
+
+Dans ce cas, le plus simple serait d'utiliser la libraire de EZ-Tree et de la modifier.
+
+
+  
+
+
+
+
+
 
