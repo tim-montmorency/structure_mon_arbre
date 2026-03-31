@@ -39,8 +39,8 @@
 - Three.js vérifie quels objets (meshes) ce rayon touche dans la scène
 - On récupère l’objet le plus proche (la branche touchée)
 
-- Permet le **hover**: quand la souris passe sur une branche, on peut la surligner (exemple: bordure jaune ou changement de couleur temporaire)
-- Permet le **clic**: quand l’étudiant clique, on identifie exactement quelle branche (ou segment de branche) a été touchée
+- Permet le hover: quand la souris passe sur une branche, on peut la surligner (exemple: bordure jaune ou changement de couleur temporaire)
+- Permet le clic: quand l’étudiant clique, on identifie exactement quelle branche (ou segment de branche) a été touchée
 - Supporte la hiérarchie: une grosse branche peut être composée de plusieurs meshes (tronçon 1, 2, 3). On peut couper un segment à la fois ou toute la branche d’un coup
 
 - Démo officielle de sélection d’objets par Dan Greenheck (auteur d’EZ-Tree) :  
