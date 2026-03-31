@@ -18,12 +18,6 @@
 - ~500 KB–2 MB taille du bundle
 - Excellente facilité d'interaction (clic dans notre cas)
 
-- **Génération d’arbres**:
-  - [EZ-Tree](https://github.com/dgreenheck/ez-tree) /  [Démo](https://www.eztree.dev/)
-  - ["Creating realistic 3D trees with Three.js"](https://tympanus.net/codrops/2025/01/27/fractals-to-forests-creating-realistic-3d-trees-with-three-js/)
-  - plusieurs paramètres (niveaux de branches, angles axiaux/radiaux, espacement, gnarliness, etc...)
-  - Alternative: [FloraSynth](https://www.florasynth.com/)
-
 - **Mécaniques à implémenter**:
   - **Scene + Camera + Renderer** (WebGLRenderer ou WebGPURenderer si possible)
   - **Branch hierarchy**: Chaque branche doit être un `Mesh` séparé contenant le type de défaut (sanitary, structure, etc...) si il y'en a
@@ -69,37 +63,40 @@
   - Générer arbres procéduraux et exporter en .glb -> charger dans Three.js / EZTree ?
   - [The Grove 3D](https://www.thegrove3d.com/) (Payant)
 
-- **Maya**: Option de générer des arbres par brush (Content browser) mais pas trop bon. Blender serait meilleur
+- **Maya**:
+  - Option de générer des arbres par brush (Content browser) mais pas trop bon. Blender serait meilleur
 
 ### Exemple de site web qui utilise Three.js pour la 3D
 
-- **[EZ-Tree](https://www.eztree.dev/)** 
-  Comme mentionner, c'est un générateur potentiel que nous pouvons utiliser    
-  On peut ajouter raycasting + tagging de défauts par-dessus
+- **[EZ-Tree](https://github.com/dgreenheck/ez-tree) /  [Démo](https://www.eztree.dev/)** 
+  - C'est un générateur potentiel que nous pouvons utiliser    
+  - On peut ajouter raycasting + tagging de défauts par-dessus
+  - ["Creating realistic 3D trees with Three.js"](https://tympanus.net/codrops/2025/01/27/fractals-to-forests-creating-realistic-3d-trees-with-three-js/)
+  - Plusieurs paramètres (niveaux de branches, angles axiaux/radiaux, espacement, gnarliness, etc...)
 
 - **[Three.js Raycasting Object Selection](https://dgreenheck.github.io/threejs-object-selection/)** (par l’auteur d’EZ-Tree)  
-  hover + clic sur objets hiérarchiques (branches)  
-  Exactement la mécanique hover -> sélection -> feedback couleur que nous voulons
+  - Hover + clic sur objets hiérarchiques (branches)  
+  - Exactement la mécanique hover -> sélection -> feedback couleur que nous voulons
 
 - **[Interactive cutting of pieces off a mesh (three-bvh-csg)](https://discourse.threejs.org/t/demo-interactive-cutting-of-pieces-off-a-mesh-three-bvh-csg-rapier3d/45404)**    
-  Démo Three.js: tu “coupes” un mesh en temps réel avec une brosse, le mesh se met à jour  
-  Preuve que le “clic pour couper/supprimer une partie” fonctionne en WebGL sans animation lourde
+  - Démo Three.js: tu “coupes” un mesh en temps réel avec une brosse, le mesh se met à jour  
+  - Preuve que le “clic pour couper/supprimer une partie” fonctionne en WebGL sans animation lourde
 
 - **[FloraSynth – Procedural Tree Generator](https://www.florasynth.com/)**  
-  appuie sur espace pour générer des arbres différents, vue 3D libre
-  Preuve que la génération + interaction 3D d’arbres jeunes fonctionne parfaitement dans un navigateur
+  - Appuie sur espace pour générer des arbres différents, vue 3D libre
+  - Preuve que la génération + interaction 3D d’arbres jeunes fonctionne parfaitement dans un navigateur
 
 - **[AJM Tree Generator](https://andrewmarsh.com/software/tree3d-web/)**  
-  Web app qui génère des arbres procéduraux 3D en direct (abstraits ou réalistes), vue 360°    
+  - Web app qui génère des arbres procéduraux 3D en direct (abstraits ou réalistes), vue 360°    
 
 
 ## Autre projets
 
 - **[3D2cut – Digital Vine Pruning Training](https://www.3d2cut.com/)**  
-  Plateforme web avec simulations interactives de coupe sur vignes 3D
+  - Plateforme web avec simulations interactives de coupe sur vignes 3D
 
 - **[Go Bonsai – Interactive 3D Tree Simulator](https://frankforce.com/games/go-bonsai/)**  
-  Version application
+  - Version application
 
 ## Solution principale retenue à date: Three.js + EZ-Tree + Raycasting
 
