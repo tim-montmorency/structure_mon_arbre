@@ -10,10 +10,10 @@ Unity recommande d'utiliser surtout les fichiers FBX. Pour être capable de bien
 Three.js recommande surtourt d'utiliser fichiers GLB qui sont idéals pour le web comparé aux autres formats qui pourraitt prendre du temps à charger comme les fichiers FBX
 
 ## Performance web
-Voici un site web qui compare three.js et unity pour la performance web :
+Voici un site web qui compare three.js et unity pour la performance web : [Three.js vs Unity for Web | Comparison Guide 2026](https://www.utsubo.com/blog/threejs-vs-unity-web-comparison?utm_source=chatgpt.com)
 
 Pour Godot, il est principalement utiliser pour des jeux plus complexe. Il se retrouverait entre unity et three.js mais plus proche d'unity. La performance pourrait être légèrement lente.
 
-Voici un site web qui compare three.js et godot: 
+Voici un site web qui compare three.js et godot: [three.js vs. Godot | Needle](https://cloud.needle.tools/compare/needle-vs-threejs-vs-godot?utm_source=chatgpt.com)
 
 
