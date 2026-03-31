@@ -12,6 +12,8 @@ Three.js recommande surtourt d'utiliser fichiers GLB qui sont idéals pour le we
 ## Performance web
 Voici un site web qui compare three.js et unity pour la performance web :
 
+Pour Godot, il est principalement utiliser pour des jeux plus complexe. Il se retrouverait entre unity et three.js mais plus proche d'unity. La performance pourrait être légèrement lente.
 
+Voici un site web qui compare three.js et godot: 
 
 
