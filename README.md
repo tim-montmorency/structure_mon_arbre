@@ -6,7 +6,7 @@
 
 - Arbres **jeunes/moyens** seulement (peu de branches, pas de feuilles requises)
 - **5 à 7 défauts clairs** par arbre (malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
-- Interaction : cliquer sur une branche + feedback immédiat (bonne/mauvaise coupe + explication pédagogique)
+- Interaction : cliquer sur une branche + feedback (bonne/mauvaise coupe qui montre la branche en vert ou rouge + explication pédagogique optionnel)
 - Vue 3D libre (orbite 360°)
 - Scénarios/exercices multiples si possible.
 - Interface web sur `tim-montmorency.com/incubateur`
