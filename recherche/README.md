@@ -28,6 +28,7 @@ Comparaison
   -  faut rajouter l'aléatoire
   -  simulation croissance
   -  besoin d'être codé
+[L-System : définition et explications](https://www.techno-science.net/definition/11374.html)
 
 - EZ-Tree
   - librairire
