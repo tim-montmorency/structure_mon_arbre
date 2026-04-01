@@ -60,7 +60,7 @@ AJM:
 <img src="./image/ajm_texture.png" alt="AJM" width="400">
 
 ## Divisions des mesh
-Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrouve dans The Grove lorsqu'on active le mode skeleton : [The Grove 3D](https://www.thegrove3d.com/)
+Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrouve dans The Grove lorsqu'on active le mode skeleton : [The Grove 3D](https://www.thegrove3d.com/)         
 Un arbre ne peut pas être un seule mesh. Il a besoin d'un hiérarachie pour le tronc, branches et sous-branches
 
 ### Code
