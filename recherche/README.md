@@ -58,7 +58,20 @@ Go bonsai:
 AJM:  
 <img src="./image/ajm_texture.png" alt="AJM" width="400">
 
-##
+## Divisions des mesh
+Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrouve dans The Grove lorsqu'on active le mode ske
+
+### Code
+- faudras faire les différents mesh dans le code
+- Dans le code, faut faire l'hiérarchie de parents-enfants
+- Compatible avec le L-system
+
+Bon exemple des divisions de mesh dans le code
+
+### Modélisation
+- Chaque partie = mesh séparé
+- Découpé avant l'importation
+- Besoin de plusieurs mesh pour chaque arbre
 
   
 
