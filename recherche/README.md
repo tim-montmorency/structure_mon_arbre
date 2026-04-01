@@ -43,15 +43,15 @@ Dans ce cas, le plus simple serait d'utiliser la libraire de EZ-Tree et de la mo
 ## Texture des arbres des exemples
 
 ### Réaliste
-![EZ-Tree](ez-tree_texture.png)
-![Florasynth](florasynth_texture.png)
-![The Grove](the_grove_texture.png)
+![EZ-Tree](./image/ez-tree_texture.png)
+![Florasynth](./image/florasynth_texture.png)
+![The Grove](./image/the_grove_texture.png)
 
 ### Semi-réaliste
-![Go bonsai](go_bonsai_texture.jpg)
+![Go bonsai](./image/go_bonsai_texture.jpg)
 
 ### Low-poly
-![AJM](ajm_texture.png)
+![AJM](./image/ajm_texture.png)
 
   
 
