@@ -76,7 +76,8 @@ Un arbre ne peut pas être un seule mesh. Il a besoin d'un hiérarachie pour le 
 - Chaque partie = mesh séparé
 - faut modéliser la fin de chaque branche ou les branches qu'on veut séparée
 - Découpé et faire l'hiérarchie de parent-enfant avant l'importation
-- Besoin de plusieurs mesh pour chaque arbre        
+- Besoin de plusieurs mesh pour chaque arbre
+- Il est possible de faire la hiérarchie sur Blender et la gérer dans Three.js par la suite.        
 Pour couper des mesh sur blender: [How to Separate Meshes in Blender - YouTube](https://www.youtube.com/shorts/ctBjLaRyjVA)           
 Pour connecter un enfant à un parent: [How to parent objects - Blender 4.3 - YouTube](https://www.youtube.com/watch?v=x7KJbEhB4qI)
 - The Grove utiliser blender pour faire le coupage de branches.[Technical overview - The Grove](https://www.thegrove3d.com/learn/technical-overview/)
