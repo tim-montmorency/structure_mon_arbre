@@ -102,7 +102,7 @@
 
 - Parfaitement adapté au web
 - EZ-Tree donne le contrôle procédural dont on a besoin (jeunes arbres, 5-7 défauts faciles à taguer).
-- Interaction clic/coupe ultra-simple avec "raycasting"
+- Interaction clic/coupe avec "raycasting"
 - Support WebGPU
 - Bundle léger et optimisation facile
 
@@ -110,3 +110,35 @@
 - Unity WebGL: trop lourd comparé à Three.js
 - Maya/Blender: pas interactif en temps réel sans l'utilisation de Three.js derrière
 
+## Ressources d'arbres 3D (pas généré)
+
+- Sites de modèles gratuits:
+  - [Free3D](https://free3d.com/3d-models/lowpoly-tree)
+  - [Sketchfab](https://sketchfab.com/3d-models/low-poly-tree-for-webgl-521bf4886fa849bdb474020fc9c7bc4c)
+  - [Poly Pizza](https://poly.pizza/search/tree)
+  - [CGTrader](https://www.cgtrader.com/low-poly-3d-models/tree)
+
+## "Tree It"
+
+C’est un générateur de modèles d’arbres 3D: tu construis l’arbre en ajoutant et en modifiant des joints et tu peux les éditer individuellement pour casser les branches pour créer des défauts 
+
+**Lien**:  
+- [Steam](https://store.steampowered.com/app/2386460/Tree_It/)  
+- [Site officiel (version gratuite)](http://www.evolved-software.com/treeit/treeit)
+
+**Points utiles pour notre projet**:  
+- Création rapide d’arbres jeunes/moyens  
+- Énornement d'option de personnalisation  
+- Export dans plusieurs formats : .obj, .fbxm etc...  
+
+**Comment l’utiliser avec notre outil web**:  
+1. Créer l’arbre dans Tree It  
+2. Casser ou ajuster les branches pour avoir les défauts voulus  
+3. Exporter en .obj ou .fbx  
+4. Convertir en .glb avec Blender  
+5. Charger le .glb dans Three.js  
+6. Ajouter le raycasting pour le hover et le clic (comme expliqué plus haut)
+
+**Avantages** :  
+- Contrôle précis sur chaque branche
+- Mesh bien fait de base  
