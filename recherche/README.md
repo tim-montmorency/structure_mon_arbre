@@ -35,7 +35,8 @@ Comparaison
   - plus ou moins complexe
   - aléatoire déjà intégrer
   - génération rapide
-  - prêt à l'emploi
+  - prêt à l'emploi     
+[GitHub - dgreenheck/ez-tree: Procedural tree generator written with JavaScript and Three.js · GitHub](https://github.com/dgreenheck/ez-tree)
 
 Dans ce cas, le plus simple serait d'utiliser la libraire de EZ-Tree et de la modifier.
 
