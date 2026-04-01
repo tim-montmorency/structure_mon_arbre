@@ -66,7 +66,7 @@ Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrou
 - Dans le code, faut faire l'hiérarchie de parents-enfants
 - les segments contrôle leur enfants
 - Compatible avec le L-system
-- Si on fait un simple cylindre, la fin de la branche ne sera pas fermé. Faut rajouter openEnded = true.
+- Si on fait un simple cylindre, la fin de la branche ne sera pas fermé. Faut rajouter openEnded = true. [CylinderGeometry – three.js docs](https://threejs.org/docs/?q=cyli#CylinderGeometry)
 
 
 
