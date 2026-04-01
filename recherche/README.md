@@ -64,13 +64,16 @@ Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrou
 ### Code
 - faudras faire les différents mesh dans le code
 - Dans le code, faut faire l'hiérarchie de parents-enfants
+- les segments contrôle leur enfants
 - Compatible avec le L-system
+- Si on fait un simple cylindre, la fin de la branche ne sera pas fermé. Faut rajouter openEnded = true.
 
-Bon exemple des divisions de mesh dans le code
+
 
 ### Modélisation
 - Chaque partie = mesh séparé
-- Découpé avant l'importation
+- faut modéliser la fin de chaque branche ou les branches qu'on veut séparée
+- Découpé et faire l'hiérarchie de parent-enfant avant l'importation
 - Besoin de plusieurs mesh pour chaque arbre
 
   
