@@ -40,6 +40,14 @@ Comparaison
 Dans ce cas, le plus simple serait d'utiliser la libraire de EZ-Tree et de la modifier.
 
 
+## Texture des arbres des exemples
+
+### Réaliste
+
+### Semi-réaliste
+
+### Low-poly
+
   
 
 
