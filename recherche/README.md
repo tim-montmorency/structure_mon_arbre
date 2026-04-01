@@ -75,6 +75,8 @@ Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrou
 - faut modéliser la fin de chaque branche ou les branches qu'on veut séparée
 - Découpé et faire l'hiérarchie de parent-enfant avant l'importation
 - Besoin de plusieurs mesh pour chaque arbre
+Pour couper des mesh sur blender: [How to Separate Meshes in Blender - YouTube](https://www.youtube.com/shorts/ctBjLaRyjVA)
+Pour connecter un enfant à un parent: [How to parent objects - Blender 4.3 - YouTube](https://www.youtube.com/watch?v=x7KJbEhB4qI)
 
   
 
