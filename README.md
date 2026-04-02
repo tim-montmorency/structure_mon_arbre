@@ -143,11 +143,15 @@ C’est un générateur de modèles d’arbres 3D: tu construis l’arbre en ajo
 - On peut contrôlesr chaque branche
 - Mesh bien fait de base  
 
-<img src="./media/default.png" alt="default view" width="500">
+<img src="./media/default.png" alt="default view" width="700">
+<img src="./media/individual.png" alt="individual" width="700">
+<img src="./media/scale.png" alt="scale" width="700">
+<img src="./media/wireframe.png" alt="wireframe" width="700">
+<img src="./media/meshCount.png" alt="meshCount" width="1000">
+
 <img src="./media/branch.png" alt="branch" width="500">
-<img src="./media/individual.png" alt="individual" width="500">
 <img src="./media/export.png" alt="export" width="500">
-<img src="./media/scale.png" alt="scale" width="500">
-<img src="./media/toolbar.png" alt="toolbar" width="500">
-<img src="./media/view.png" alt="view" width="500">
-<img src="./media/wireframe.png" alt="wireframe" width="500"> 
+
+<img src="./media/toolbar.png" alt="toolbar" width="100">
+<img src="./media/view.png" alt="view" width="200">
+
