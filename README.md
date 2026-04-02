@@ -139,6 +139,15 @@ C’est un générateur de modèles d’arbres 3D: tu construis l’arbre en ajo
 5. Charger le .glb dans Three.js  
 6. Ajouter le raycasting pour le hover et le clic (comme expliqué plus haut)
 
-**Avantages** :  
-- Contrôle précis sur chaque branche
+**Avantages**:  
+- On peut contrôlesr chaque branche
 - Mesh bien fait de base  
+
+<img src="./media/default.png" alt="default view" width="500">
+<img src="./media/branch.png" alt="branch" width="500">
+<img src="./media/individual.png" alt="individual" width="500">
+<img src="./media/export.png" alt="export" width="500">
+<img src="./media/scale.png" alt="scale" width="500">
+<img src="./media/toolbar.png" alt="toolbar" width="500">
+<img src="./media/view.png" alt="view" width="500">
+<img src="./media/wireframe.png" alt="wireframe" width="500"> 
