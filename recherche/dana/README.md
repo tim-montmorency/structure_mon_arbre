@@ -45,19 +45,19 @@ Dans ce cas, le plus simple serait d'utiliser la libraire de EZ-Tree et de la mo
 
 ### Réaliste   
 Florasynth:     
-<img src="./image/florasynth_texture.png" alt="Florasynth" width="400">        
+<img src="./media/florasynth_texture.png" alt="Florasynth" width="400">        
 The Grove:    
-<img src="./image/the_grove_texture.png" alt="The Grove" width="400">  
+<img src="./media/the_grove_texture.png" alt="The Grove" width="400">  
 
 ### Semi-réaliste
 Go bonsai:    
-<img src="./image/go_bonsai_texture.jpg" alt="Go bonsai" width="400">       
+<img src="./media/go_bonsai_texture.jpg" alt="Go bonsai" width="400">       
 EZ-Tree:      
-<img src="./image/ez-tree_texture.png" alt="EZ-Tree" width="400">     
+<img src="./media/ez-tree_texture.png" alt="EZ-Tree" width="400">     
 
 ### Low-poly
 AJM:  
-<img src="./image/ajm_texture.png" alt="AJM" width="400">
+<img src="./media/ajm_texture.png" alt="AJM" width="400">
 
 ## Divisions des mesh
 Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrouve dans The Grove lorsqu'on active le mode skeleton : [The Grove 3D](https://www.thegrove3d.com/)         
