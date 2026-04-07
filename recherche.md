@@ -1,19 +1,6 @@
-# Recherche - Elie
+# Recherche 
 
-**Objectif**: Créer un outil web interactif permettant aux étudiants de pratiquer la taille d’arbres jeunes/moyens en identifiant 5 à 7 défauts par arbre (sanitaires, structurels, branches basses, angles aigus, etc...)
-
-## Contexte et Contraintes du Projet
-
-- Arbres jeunes/moyens seulement (peu de branches, pas de feuilles requises)
-- 5 à 7 défauts clairs par arbre (malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
-- Interaction : cliquer sur une branche + feedback (bonne/mauvaise coupe qui montre la branche en vert ou rouge + explication pédagogique optionnel)
-- Vue 3D libre (orbite 360°)
-- Scénarios/exercices multiples si possible.
-- Interface web
-- Doit être le moins lourd possible
-
-
-### Three.js 
+## Three.js 
 
 - ~500 KB–2 MB taille du bundle
 - Excellente facilité d'interaction (clic dans notre cas)
@@ -27,7 +14,7 @@
   - **Données des arbres**: Si on fait plusieurs arbres on peut utiliser une base de donnée JSON (arbre + liste des bonnes et mauvaise coupes)
   - **Performance**: InstancedMesh pour branches identiques, low-poly, pas de feuilles
 
-#### Raycasting dans Three.js
+### Raycasting dans Three.js
 
 - Hover sur les branches + clic pour sélectionner
 - Three.js vérifie quels objets (meshes) ce rayon touche dans la scène
@@ -48,7 +35,7 @@
   https://threejs.org/examples/#webgl_interactive_lines    
 
 
-###  Moteurs de Jeu avec Export Web
+##  Moteurs de Jeu avec Export Web
 
 - **Unity + WebGL**:
   - Plugin: Procedural Tree Builder (Asset Store), [OpenFracture](https://github.com/dgreenheck/OpenFracture)
@@ -56,7 +43,7 @@
 - **Godot + HTML5 export**:
   - Plugin: [gdTree3D](https://github.com/JekSun97/gdTree3D)
 
-### Outils de Modélisation 3D + Export vers Web
+## Outils de Modélisation 3D + Export vers Web
 
 - **Blender**:
   - [Easy Tree](https://extensions.blender.org/add-ons/easy-tree/)
@@ -65,8 +52,49 @@
 
 - **Maya**:
   - Option de générer des arbres par brush (Content browser) mais pas trop bon. Blender serait meilleur
+ 
+## Type de fichiers
+Les fichiers  GLB  sont idéals pour les applications web parce qu'il est compacte et il a un temps de chargement rapide tandis que les fichiers .fbx sont idéals pour les animations complexes et le développement de jeux.
 
-### Exemple de site web qui utilise Three.js pour la 3D
+Godot recommande d'utiliser surtour les fichiers  GLB. Pour utiliser les fichiers FBX, il faudrait installer un programme externe
+
+Unity recommande d'utiliser surtout les fichiers FBX. Pour être capable de bien utiliser les fichiers  GLB, unity demande d'utiliser une extension.
+
+Three.js recommande surtourt d'utiliser fichiers GLB qui sont idéals pour le web comparé aux autres formats qui pourraitt prendre du temps à charger comme les fichiers FBX
+
+## Performance web
+Voici un site web qui compare three.js et unity pour la performance web : [Three.js vs Unity for Web | Comparison Guide 2026](https://www.utsubo.com/blog/threejs-vs-unity-web-comparison?utm_source=chatgpt.com)
+
+Pour Godot, il est principalement utiliser pour des jeux plus complexe. Il se retrouverait entre unity et three.js mais plus proche d'unity. La performance pourrait être légèrement lente.
+
+Voici un site web qui compare three.js et godot: [three.js vs. Godot | Needle](https://cloud.needle.tools/compare/needle-vs-threejs-vs-godot?utm_source=chatgpt.com)
+
+## Système
+Génération d'abre:
+ - FloraSynth : basé sur du L-system
+ - EZ-Tree
+
+Comparaison
+- L-system:
+  -  méthode mathématique basée sur des règles pour générer des structures comme des arbres
+  -  très précis et complexe
+  -  faut rajouter l'aléatoire
+  -  simulation croissance
+  -  besoin d'être codé
+[L-System : définition et explications](https://www.techno-science.net/definition/11374.html)
+
+- EZ-Tree
+  - librairire
+  - plus ou moins complexe
+  - aléatoire déjà intégrer
+  - génération rapide
+  - prêt à l'emploi     
+[GitHub - dgreenheck/ez-tree: Procedural tree generator written with JavaScript and Three.js · GitHub](https://github.com/dgreenheck/ez-tree)
+
+Dans ce cas, le plus simple serait d'utiliser la libraire de EZ-Tree et de la modifier.
+
+
+## Exemple de site web qui utilise Three.js pour la 3D
 
 - **[EZ-Tree](https://github.com/dgreenheck/ez-tree) /  [Démo](https://www.eztree.dev/)** 
   - C'est un générateur potentiel que nous pouvons utiliser    
@@ -89,14 +117,29 @@
 - **[AJM Tree Generator](https://andrewmarsh.com/software/tree3d-web/)**  
   - Web app qui génère des arbres procéduraux 3D en direct (abstraits ou réalistes), vue 360°    
 
-
-## Autre projets
-
 - **[3D2cut – Digital Vine Pruning Training](https://www.3d2cut.com/)**  
   - Plateforme web avec simulations interactives de coupe sur vignes 3D
 
 - **[Go Bonsai – Interactive 3D Tree Simulator](https://frankforce.com/games/go-bonsai/)**  
   - Version application
+ 
+## Texture des arbres des exemples
+
+### Réaliste   
+Florasynth:     
+<img src="./recherche/dana/media/florasynth_texture.png" alt="Florasynth" width="400">        
+The Grove:    
+<img src="./recherche/dana/media/the_grove_texture.png" alt="The Grove" width="400">  
+
+### Semi-réaliste
+Go bonsai:    
+<img src="./recherche/dana/media/go_bonsai_texture.jpg" alt="Go bonsai" width="400">       
+EZ-Tree:      
+<img src="./recherche/dana/media/ez-tree_texture.png" alt="EZ-Tree" width="400">     
+
+### Low-poly
+AJM:  
+<img src="./recherche/dana/media/ajm_texture.png" alt="AJM" width="400">
 
 ## Solution principale retenue à date: Three.js + EZ-Tree + Raycasting
 
@@ -143,16 +186,39 @@ C’est un générateur de modèles d’arbres 3D: tu construis l’arbre en ajo
 - On peut contrôlesr chaque branche
 - Mesh bien fait de base  
 
-<img src="./media/default.png" alt="default view" width="700">
-<img src="./media/individual.png" alt="individual" width="700">
-<img src="./media/scale.png" alt="scale" width="700">
-<img src="./media/wireframe.png" alt="wireframe" width="700">
-<img src="./media/meshCount.png" alt="meshCount" width="1000">
+<img src="./recherche/elie/media/default.png" alt="default view" width="700">
+<img src="./recherche/elie/media/individual.png" alt="individual" width="700">
+<img src="./recherche/elie/media/scale.png" alt="scale" width="700">
+<img src="./recherche/elie/media/wireframe.png" alt="wireframe" width="700">
+<img src="./recherche/elie/media/meshCount.png" alt="meshCount" width="1000">
 
-<img src="./media/branch.png" alt="branch" width="500">
-<img src="./media/export.png" alt="export" width="500">
+<img src="./recherche/elie/media/branch.png" alt="branch" width="500">
+<img src="./recherche/elie/media/export.png" alt="export" width="500">
 
-<img src="./media/toolbar.png" alt="toolbar" width="100">
-<img src="./media/view.png" alt="view" width="200">
+<img src="./recherche/elie/media/toolbar.png" alt="toolbar" width="100">
+<img src="./recherche/elie/media/view.png" alt="view" width="200">
+
+## Divisions des mesh
+Bon exemple de séparation de mesh et de hiérarchie parent-enfant, on le retrouve dans The Grove lorsqu'on active le mode skeleton : [The Grove 3D](https://www.thegrove3d.com/)         
+Un arbre ne peut pas être un seule mesh. Il a besoin d'un hiérarachie pour le tronc, branches et sous-branches
+
+### Code
+- faudras faire les différents mesh dans le code
+- Dans le code, faut faire l'hiérarchie de parents-enfants
+- les segments contrôle leur enfants
+- Compatible avec le L-system
+- Si on fait un simple cylindre, la fin de la branche ne sera pas fermé. Faut rajouter openEnded = true. [CylinderGeometry – three.js docs](https://threejs.org/docs/?q=cyli#CylinderGeometry)
+
+
+
+### Modélisation
+- Chaque partie = mesh séparé
+- faut modéliser la fin de chaque branche ou les branches qu'on veut séparée
+- Découpé et faire l'hiérarchie de parent-enfant avant l'importation
+- Besoin de plusieurs mesh pour chaque arbre
+- Il est possible de faire la hiérarchie sur Blender et la gérer dans Three.js par la suite.        
+Pour couper des mesh sur blender: [How to Separate Meshes in Blender - YouTube](https://www.youtube.com/shorts/ctBjLaRyjVA)           
+Pour connecter un enfant à un parent: [How to parent objects - Blender 4.3 - YouTube](https://www.youtube.com/watch?v=x7KJbEhB4qI)
+- The Grove utiliser blender pour faire le coupage de branches.[Technical overview - The Grove](https://www.thegrove3d.com/learn/technical-overview/)
 
 
