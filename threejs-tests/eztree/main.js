@@ -48,6 +48,18 @@ tree.options.branch.levels = 3;
 tree.generate();
 scene.add(tree);
 
+tree.traverse((object) => {
+  // Calculate depth by climbing up the parent chain
+  let depth = 0;
+  let temp = object;
+  while (temp.parent !== null && temp !== tree) {
+    depth++;
+    temp = temp.parent;
+  }
+
+  console.log(`${'--'.repeat(depth)} ${object.type}: ${object.name || 'Unnamed'}`);
+});
+
 camera.position.z = 5;
 
 // Animation

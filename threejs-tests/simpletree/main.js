@@ -41,6 +41,33 @@ scene.add(myTree);
 
 camera.position.z = 5;
 
+const logHierarchy = (root) => {
+  root.traverse((object) => {
+    // 1. Calculate depth by climbing the parent chain
+    let depth = 0;
+    let current = object;
+    
+    // Stop climbing when we hit the root or null
+    while (current.parent && current !== root) {
+      depth++;
+      current = current.parent;
+    }
+
+    // 2. Identify the part
+    // We can use the level or name if you set it during generation
+    const name = object.name || (depth === 0 ? "Tree Root" : `Branch L${depth-1}`);
+    const type = object.type;
+
+    // 3. Print with indentation
+    console.log(`${'  '.repeat(depth)}|-- [${type}] ${name}`);
+  });
+};
+
+// Usage:
+logHierarchy(myTree);
+
+
+
 // Animation
 function animate(time) {
 
