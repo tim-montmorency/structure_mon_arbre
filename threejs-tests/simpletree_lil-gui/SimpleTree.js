@@ -75,3 +75,4 @@ export class SimpleTree extends THREE.Group {
     return mesh;
   }
 }
+

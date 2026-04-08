@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SimpleTree } from './SimpleTree.js';
+import GUI from 'lil-gui';
+
 
 const scene = new THREE.Scene();
 
@@ -35,9 +37,30 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
+
+
 // Create new tree
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
 scene.add(myTree);
+
+// GUI
+const gui = new GUI();
+
+const params = {
+  rotationSpeed: 0.01,
+  color: '#3a1809ff',
+  wireframe: false
+};
+
+gui.add(params, 'rotationSpeed', 0, 0.1);
+
+gui.addColor(params, 'color').onChange(value => {
+  myTree.material.color.set(value);
+});
+
+gui.add(params, 'wireframe').onChange(value => {
+  myTree.material.wireframe = value;
+});
 
 camera.position.z = 5;
 
@@ -68,10 +91,12 @@ logHierarchy(myTree);
 
 
 
+
+
 // Animation
 function animate(time) {
 
-
+  myTree.rotation.y += params.rotationSpeed;
   renderer.render(scene, camera);
 }
 
