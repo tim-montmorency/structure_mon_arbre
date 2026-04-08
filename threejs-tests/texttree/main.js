@@ -59,7 +59,7 @@ const treeData = `
 const myTree = new TextTree(treeData , { color: 0x5d4037 });
 scene.add(myTree);
 
-camera.position.z = 5;
+camera.position.z = 2;
 
 const logHierarchy = (root) => {
   root.traverse((object) => {

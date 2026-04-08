@@ -82,17 +82,5 @@ export class TextTree extends THREE.Group {
     });
   }
 
-  logStructure() {
-    this.traverse((object) => {
-      let depth = 0;
-      let current = object;
-      while (current.parent && current !== this) {
-        depth++;
-        current = current.parent;
-      }
-      if (object.isMesh) {
-        console.log(`${'  '.repeat(depth)}|-- [${object.type}] ${object.name}`);
-      }
-    });
-  }
+
 }
