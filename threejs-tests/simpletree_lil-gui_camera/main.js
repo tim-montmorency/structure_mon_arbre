@@ -12,6 +12,14 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
+const cameraParams = {
+  radius: 5,      // distance
+  theta: 0,       // gauche/droite
+  phi: Math.PI/2  // haut/bas
+};
+
+
+
 //Pour render avec le WebGPU
 
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Créé le moteur de rendu
@@ -40,14 +48,11 @@ scene.add(cube);
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
 scene.add(myTree);
 
-// GUI
-const gui = new GUI();
 
-const cameraParams = {
-  radius: 5,      // distance
-  theta: 0,       // gauche/droite
-  phi: Math.PI/2  // haut/bas
-};
+// GUI
+
+
+const gui = new GUI();
 
 //Bouton reset
 
@@ -58,11 +63,11 @@ const resetCamera = () => {
 };
 
 // Position caméra
-gui.add(cameraParams, 'theta', -Math.PI, Math.PI).name('Gauche / Droite');
+gui.add(cameraParams, 'theta', -Math.PI, Math.PI).name('Gauche / Droite').listen().onChange(updateURL);
 
-gui.add(cameraParams, 'phi', 0.1, Math.PI ).name('Haut / Bas');
+gui.add(cameraParams, 'phi', 0.1, Math.PI ).name('Haut / Bas').listen().onChange(updateURL);
 
-gui.add(cameraParams, 'radius', 5, 20).name('Zoom');
+gui.add(cameraParams, 'radius', 5, 20).name('Zoom').listen().onChange(updateURL);
 
 gui.add({ resetCamera }, 'resetCamera').name('Reset Caméra');
 
