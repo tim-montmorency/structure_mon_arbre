@@ -42,11 +42,12 @@ const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
 sunLight.position.set(5, 10, 7); // Position it up and to the side
 scene.add(sunLight);
 
-// Cube
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+// Pastille
+const geometry = new THREE.CylinderGeometry(2.5, 2.5, 0.1, 32);
+const material = new THREE.MeshStandardMaterial({ color: 0x009d00});
+
+const pastille = new THREE.Mesh(geometry, material);
+scene.add(pastille);
 
 
 
@@ -54,9 +55,11 @@ scene.add(cube);
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
 scene.add(myTree);
 
-const box = new THREE.Box3().setFromObject(myTree);
-const center = new THREE.Vector3();
-box.getCenter(center);
+const center = new THREE.Vector3(0, 2 , 0);
+
+const helper = new THREE.AxesHelper(5);
+helper.position.copy(center);
+scene.add(helper);
 
 
 // GUI
