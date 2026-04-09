@@ -13,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-//Pour render avec le WebGPU
+
 
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Créé le moteur de rendu
 renderer.setSize(window.innerWidth, window.innerHeight);

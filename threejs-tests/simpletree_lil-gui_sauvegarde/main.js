@@ -28,9 +28,6 @@ for (let key in cameraParams) {
 }
 
 
-
-//Pour render avec le WebGPU
-
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Créé le moteur de rendu
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
