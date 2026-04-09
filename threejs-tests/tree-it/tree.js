@@ -84,6 +84,26 @@ export function setupTreeInteraction(scene, camera, raycaster, mouse, tree) {
     });
   }
 
+  // Helper function to check if a mesh or any of its parents are marked as bad
+  function checkBadStatus(mesh) {
+    // Check the mesh itself
+    if (mesh.userData.isBad === true) {
+      return { isBad: true, isParentBad: false };
+    }
+
+    // Check all parents up the hierarchy
+    let current = mesh;
+    while (current.parent) {
+      current = current.parent;
+      if (current.userData.isBad === true) {
+        return { isBad: false, isParentBad: true };
+      }
+    }
+
+    // Not bad and no bad parents
+    return { isBad: false, isParentBad: false };
+  }
+
   // Hover: only the exact branch you point at
   window.addEventListener("mousemove", (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -121,7 +141,20 @@ export function setupTreeInteraction(scene, camera, raycaster, mouse, tree) {
 
     if (clickedMesh.userData.ignoreRaycast) return;
 
-    console.log("Clicked and removing mesh:", clickedMesh.name);
+    const badStatus = checkBadStatus(clickedMesh);
+    let statusMessage = "GOOD BRANCH";
+    
+    if (badStatus.isBad) {
+      statusMessage = "BAD BRANCH";
+    } else if (badStatus.isParentBad) {
+      statusMessage = "Parent is bad branch";
+    }
+    
+    console.log(
+      "Clicked and removing mesh:",
+      clickedMesh.name || "unnamed mesh",
+      `[${statusMessage}]`
+    );
 
     // Clean up material from map if it exists
     meshMaterials.delete(clickedMesh);
