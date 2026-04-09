@@ -20,6 +20,7 @@ const cameraParams = {
 
 
 
+
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Créé le moteur de rendu
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -63,7 +64,7 @@ const resetCamera = () => {
 // Position caméra
 gui.add(cameraParams, 'theta', -Math.PI, Math.PI).name('Gauche / Droite').listen();
 
-gui.add(cameraParams, 'phi', 0.1, Math.PI ).name('Haut / Bas').listen();
+gui.add(cameraParams, 'phi', 0.01 , Math.PI / 2 ).name('Haut / Bas').listen();
 
 gui.add(cameraParams, 'radius', 5, 20).name('Zoom').listen();
 

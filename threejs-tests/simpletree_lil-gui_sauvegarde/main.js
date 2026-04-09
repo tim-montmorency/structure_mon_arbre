@@ -79,7 +79,7 @@ const resetCamera = () => {
 // Position caméra
 gui.add(cameraParams, 'theta', -Math.PI, Math.PI).name('Gauche / Droite').listen().onChange(updateURL);
 
-gui.add(cameraParams, 'phi', 0.1, Math.PI ).name('Haut / Bas').listen().onChange(updateURL);
+gui.add(cameraParams, 'phi', 0.01 , Math.PI / 2 ).name('Haut / Bas').listen();
 
 gui.add(cameraParams, 'radius', 5, 20).name('Zoom').listen().onChange(updateURL);
 
