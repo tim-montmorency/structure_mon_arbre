@@ -54,6 +54,10 @@ scene.add(cube);
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
 scene.add(myTree);
 
+const box = new THREE.Box3().setFromObject(myTree);
+const center = new THREE.Vector3();
+box.getCenter(center);
+
 
 // GUI
 const gui = new GUI();
@@ -115,16 +119,21 @@ logHierarchy(myTree);
 
 
 // Animation
-function animate(time) {
+function animate() {
 
   const x = cameraParams.radius * Math.sin(cameraParams.phi) * Math.cos(cameraParams.theta);
   const y = cameraParams.radius * Math.cos(cameraParams.phi);
   const z = cameraParams.radius * Math.sin(cameraParams.phi) * Math.sin(cameraParams.theta);
 
-  camera.position.set(x, y, z);
+  // 👉 AJOUT DU CENTRE
+  camera.position.set(
+    center.x + x,
+    center.y + y,
+    center.z + z
+  );
 
-  // toujours regarder l’arbre
-  camera.lookAt(myTree.position);
+  camera.lookAt(center);
+
   renderer.render(scene, camera);
 }
 
