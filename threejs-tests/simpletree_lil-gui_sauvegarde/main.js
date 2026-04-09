@@ -1,23 +1,18 @@
 import * as THREE from 'three';
 import { SimpleTree } from './SimpleTree.js';
-import GUI from 'lil-gui';
+import { createCamera, updateCamera } from './camera.js';
+import { createGUI } from './gui.js';
 
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+const camera = createCamera();
 
 const cameraParams = {
   radius: 5,      // distance
   theta: 0,       // gauche/droite
   phi: Math.PI/2  // haut/bas
 };
-
 
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -26,6 +21,21 @@ for (let key in cameraParams) {
     cameraParams[key] = parseFloat(urlParams.get(key));
   }
 }
+
+// UPDATE URL
+const updateURL = () => {
+  const params = new URLSearchParams();
+
+  for (let key in cameraParams) {
+    params.set(key, cameraParams[key].toFixed(2));
+  }
+
+  window.history.replaceState(
+    {},
+    '',
+    window.location.pathname + '?' + params.toString()
+  );
+};
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Créé le moteur de rendu
@@ -49,48 +59,15 @@ const material = new THREE.MeshStandardMaterial({ color: 0x009d00});
 const pastille = new THREE.Mesh(geometry, material);
 scene.add(pastille);
 
-
-
 // Create new tree
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
 scene.add(myTree);
 
 const center = new THREE.Vector3(0, 2 , 0);
 
-const helper = new THREE.AxesHelper(5);
-helper.position.copy(center);
-scene.add(helper);
-
-
 // GUI
-const gui = new GUI();
+createGUI(cameraParams, updateURL);
 
-
-const updateURL = () => {
-  const params = new URLSearchParams();
-  for (let key in cameraParams) {
-    params.set(key, cameraParams[key].toFixed(2)); 
-  }
-  const newURL = window.location.pathname + '?' + params.toString();
-  window.history.replaceState({}, '', newURL);
-};
-
-//Bouton reset
-
-const resetCamera = () => {
-  cameraParams.theta = 0;
-  cameraParams.phi = Math.PI / 2;
-  cameraParams.radius = 5;
-};
-
-// Position caméra
-gui.add(cameraParams, 'theta', -Math.PI, Math.PI).name('Gauche / Droite').listen().onChange(updateURL);
-
-gui.add(cameraParams, 'phi', 0.01 , Math.PI / 2 ).name('Haut / Bas').listen();
-
-gui.add(cameraParams, 'radius', 5, 20).name('Zoom').listen().onChange(updateURL);
-
-gui.add({ resetCamera }, 'resetCamera').name('Reset Caméra');
 
 const logHierarchy = (root) => {
   root.traverse((object) => {
@@ -124,18 +101,8 @@ logHierarchy(myTree);
 // Animation
 function animate() {
 
-  const x = cameraParams.radius * Math.sin(cameraParams.phi) * Math.cos(cameraParams.theta);
-  const y = cameraParams.radius * Math.cos(cameraParams.phi);
-  const z = cameraParams.radius * Math.sin(cameraParams.phi) * Math.sin(cameraParams.theta);
-
-  // 👉 AJOUT DU CENTRE
-  camera.position.set(
-    center.x + x,
-    center.y + y,
-    center.z + z
-  );
-
-  camera.lookAt(center);
+  updateCamera(camera, cameraParams, center);
+  
 
   renderer.render(scene, camera);
 }
