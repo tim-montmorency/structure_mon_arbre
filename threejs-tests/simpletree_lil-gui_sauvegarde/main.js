@@ -44,20 +44,40 @@ document.body.appendChild(renderer.domElement);
 
 
 // 1. Add Ambient Light (Soft white light everywhere)
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); 
+const ambientLight = new THREE.AmbientLight(0xffffff, 1); 
 scene.add(ambientLight);
 
 // 2. Add Directional Light (Sun-like light from a specific direction)
-const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
-sunLight.position.set(5, 10, 7); // Position it up and to the side
+const sunLight = new THREE.DirectionalLight(0xffffff, 4.0);
+sunLight.position.set(5, 10, 6); // Position it up and to the side
 scene.add(sunLight);
 
+scene.background = new THREE.Color(0x59a6d3);
+
+
+// Texture
+const textureLoader = new THREE.TextureLoader();
+const grassTexture = textureLoader.load('https://threejs.org/examples/textures/terrain/grasslight-big.jpg');
+
+grassTexture.wrapS = THREE.RepeatWrapping;
+grassTexture.wrapT = THREE.RepeatWrapping;
+grassTexture.repeat.set(2, 2);
+
+grassTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+
+
 // Pastille
-const geometry = new THREE.CylinderGeometry(2.5, 2.5, 0.1, 32);
-const material = new THREE.MeshStandardMaterial({ color: 0x009d00});
+const geometry = new THREE.CylinderGeometry(4, 4, 0.1, 64, 1, false);
+
+const material = new THREE.MeshStandardMaterial({
+  map: grassTexture
+});
 
 const pastille = new THREE.Mesh(geometry, material);
 scene.add(pastille);
+
+
 
 // Create new tree
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
