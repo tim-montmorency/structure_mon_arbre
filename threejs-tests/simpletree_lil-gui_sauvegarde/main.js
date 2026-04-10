@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { SimpleTree } from './SimpleTree.js';
 import { createCamera, updateCamera } from './camera.js';
 import { createGUI } from './gui.js';
-
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 
@@ -13,6 +13,7 @@ const cameraParams = {
   theta: 0,       // gauche/droite
   phi: Math.PI/2  // haut/bas
 };
+
 
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -44,11 +45,11 @@ document.body.appendChild(renderer.domElement);
 
 
 // 1. Add Ambient Light (Soft white light everywhere)
-const ambientLight = new THREE.AmbientLight(0xffffff, 1); 
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); 
 scene.add(ambientLight);
 
 // 2. Add Directional Light (Sun-like light from a specific direction)
-const sunLight = new THREE.DirectionalLight(0xffffff, 4.0);
+const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
 sunLight.position.set(5, 10, 6); // Position it up and to the side
 scene.add(sunLight);
 
@@ -77,7 +78,46 @@ const material = new THREE.MeshStandardMaterial({
 const pastille = new THREE.Mesh(geometry, material);
 scene.add(pastille);
 
+// Orbit
+const controls = new OrbitControls(camera, renderer.domElement);
 
+controls.enabled = false;
+
+controls.mouseButtons = {
+  LEFT: THREE.MOUSE.ROTATE,
+  MIDDLE: THREE.MOUSE.PAN,
+  RIGHT: THREE.MOUSE.DOLLY
+};
+
+controls.target.copy(center);
+
+// activer avec clic milieu
+renderer.domElement.addEventListener('mousedown', (e) => {
+  if (e.button === 1) {
+    e.preventDefault();
+    controls.enabled = true;
+  }
+});
+
+// désactiver quand relâché
+renderer.domElement.addEventListener('mouseup', (e) => {
+  if (e.button === 1) {
+    controls.enabled = false;
+  }
+});
+
+// sync Orbit → ton système
+controls.addEventListener('change', () => {
+  if (!controls.enabled) return;
+
+  const offset = camera.position.clone().sub(controls.target);
+
+  cameraParams.radius = offset.length();
+  cameraParams.theta = Math.atan2(offset.z, offset.x);
+  cameraParams.phi = Math.acos(offset.y / offset.length());
+
+  updateURL();
+});
 
 // Create new tree
 const myTree = new SimpleTree({ levels: 3, color: 0x5d4037 });
@@ -121,7 +161,11 @@ logHierarchy(myTree);
 // Animation
 function animate() {
 
-  updateCamera(camera, cameraParams, center);
+  if (!controls.enabled) {
+    updateCamera(camera, cameraParams, center);
+  }
+
+  controls.update();
   
 
   renderer.render(scene, camera);
