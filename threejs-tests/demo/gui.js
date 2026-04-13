@@ -10,7 +10,7 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility) {
   const sliders = [
     { key: "theta", min: -Math.PI, max: Math.PI, label: "Gauche / Droite" },
     { key: "phi", min: 0.01, max: Math.PI / 2, label: "Haut / Bas" },
-    { key: "radius", min: 1, max: 50, label: "Zoom" },
+    { key: "radius", min: 1, max: 5, label: "Zoom" },
   ];
 
   sliders.forEach((slider, index) => {
