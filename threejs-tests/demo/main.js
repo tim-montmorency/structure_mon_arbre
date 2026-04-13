@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createCamera, updateCamera } from "./camera.js";
 import { createGUI } from "./gui.js";
@@ -47,43 +46,17 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Lighting setup
-scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-// Top light
-const topLight = new THREE.DirectionalLight(0xffffff, 1.5);
-topLight.position.set(0, 20, 0);
-topLight.castShadow = false;
-scene.add(topLight);
+// Sun light
+const sunLight = new THREE.DirectionalLight(0xffffff, 5.0);
+sunLight.position.set(5, 2.52, 6); // Position it up and to the side
+scene.add(sunLight);
 
-// Right light
-const rightLight = new THREE.DirectionalLight(0xffffff, 1.2);
-rightLight.position.set(15, 10, 0);
-rightLight.castShadow = false;
-scene.add(rightLight);
-
-// Left light
-const leftLight = new THREE.DirectionalLight(0xffffff, 1.2);
-leftLight.position.set(-15, 10, 0);
-leftLight.castShadow = false;
-scene.add(leftLight);
-
-// Front light
-const frontLight = new THREE.DirectionalLight(0xffffff, 1.0);
-frontLight.position.set(0, 10, 15);
-frontLight.castShadow = false;
-scene.add(frontLight);
 
 // Ray caster for interaction
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-
-// Orbit controls - only used for damping, NOT for mouse input
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = false;
-controls.enabled = false;
-controls.target.set(0, 1.5, 0);
-// Disable all mouse buttons on OrbitControls - we handle input manually
-controls.mouseButtons = {};
 
 // --- Manual middle-mouse drag (Blender-style) ---
 let isMiddleMouseDown = false;
