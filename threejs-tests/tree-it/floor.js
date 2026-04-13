@@ -1,11 +1,13 @@
 import * as THREE from "three";
 
 export function createFloor() {
-  const floorGeometry = new THREE.PlaneGeometry(100, 100);
+  const floorGeometry = new THREE.PlaneGeometry(12, 12);
 
   const floorMaterial = new THREE.MeshLambertMaterial({
-    color: 0xdddddd,
+    color: 0x3a7f3f,
     side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.4,
   });
 
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
