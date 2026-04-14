@@ -18,9 +18,9 @@ scene.fog = new THREE.Fog(0x2a4a5a, 1, 20);
 const camera = createCamera();
 
 const cameraParams = {
-  radius: 3,
-  theta: 0,
-  phi: Math.PI / 2.2,
+  distance: 3,
+  rotation: 0,
+  height: Math.PI / 2.2,
 };
 
 // Load camera parameters from URL if available

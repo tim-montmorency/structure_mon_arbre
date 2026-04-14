@@ -5,9 +5,9 @@ export function createCamera() {
 }
 
 export function updateCamera(camera, params, center) {
-  const x = params.radius * Math.sin(params.phi) * Math.cos(params.theta);
-  const y = params.radius * Math.cos(params.phi);
-  const z = params.radius * Math.sin(params.phi) * Math.sin(params.theta);
+  const x = params.distance * Math.sin(params.height) * Math.cos(params.rotation);
+  const y = params.distance * Math.cos(params.height);
+  const z = params.distance * Math.sin(params.height) * Math.sin(params.rotation);
 
   camera.position.set(center.x + x, center.y + y, center.z + z);
 

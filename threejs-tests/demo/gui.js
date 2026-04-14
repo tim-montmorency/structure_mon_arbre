@@ -10,12 +10,12 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
   const updateSliders = () => {
     const sliders = document.querySelectorAll("input[type='range']");
     if (sliders.length >= 3) {
-      sliders[0].value = cameraParams.theta;
-      sliders[0].nextElementSibling.textContent = cameraParams.theta.toFixed(2);
-      sliders[1].value = cameraParams.phi;
-      sliders[1].nextElementSibling.textContent = cameraParams.phi.toFixed(2);
-      sliders[2].value = cameraParams.radius;
-      sliders[2].nextElementSibling.textContent = cameraParams.radius.toFixed(2);
+      sliders[0].value = cameraParams.rotation;
+      sliders[0].nextElementSibling.textContent = cameraParams.rotation.toFixed(2);
+      sliders[1].value = cameraParams.height;
+      sliders[1].nextElementSibling.textContent = cameraParams.height.toFixed(2);
+      sliders[2].value = cameraParams.distance;
+      sliders[2].nextElementSibling.textContent = cameraParams.distance.toFixed(2);
     }
   };
 
@@ -41,10 +41,10 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     lastMouseY = e.clientY;
 
     const rotateSpeed = 0.005;
-    cameraParams.theta -= dx * rotateSpeed;
-    cameraParams.theta = Math.max(-Math.PI, Math.min(Math.PI, cameraParams.theta));
-    cameraParams.phi -= dy * rotateSpeed;
-    cameraParams.phi = Math.max(0.01, Math.min(Math.PI / 2, cameraParams.phi));
+    cameraParams.rotation -= dx * rotateSpeed;
+    cameraParams.rotation = Math.max(-Math.PI, Math.min(Math.PI, cameraParams.rotation));
+    cameraParams.height -= dy * rotateSpeed;
+    cameraParams.height = Math.max(0.01, Math.min(Math.PI / 2, cameraParams.height));
 
     updateURL();
     updateSliders();
@@ -60,8 +60,8 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     (e) => {
       e.preventDefault();
       const zoomSpeed = 0.5;
-      cameraParams.radius += e.deltaY > 0 ? zoomSpeed : -zoomSpeed;
-      cameraParams.radius = Math.max(1, Math.min(50, cameraParams.radius));
+      cameraParams.distance += e.deltaY > 0 ? zoomSpeed : -zoomSpeed;
+      cameraParams.distance = Math.max(1, Math.min(50, cameraParams.distance));
       updateURL();
       updateSliders();
     },
@@ -70,9 +70,9 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
 
   // --- Sliders ---
   const sliderDefs = [
-    { key: "theta", min: -Math.PI, max: Math.PI, label: "Gauche / Droite" },
-    { key: "phi", min: 0.01, max: Math.PI / 2, label: "Haut / Bas" },
-    { key: "radius", min: 1, max: 5, label: "Zoom" },
+    { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
+    { key: "height", min: 0.01, max: Math.PI / 2, label: "Hauteur" },
+    { key: "distance", min: 1, max: 5, label: "Distance" },
   ];
 
   sliderDefs.forEach((slider, index) => {
@@ -84,7 +84,7 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
       width: 320px;
       background: rgba(15, 15, 15, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
+      border-distance: 8px;
       padding: 16px 18px;
       backdrop-filter: blur(10px);
       z-index: 1000;
@@ -105,7 +105,7 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     sliderInput.type = "range";
     sliderInput.min = slider.min;
     sliderInput.max = slider.max;
-    sliderInput.step = slider.key === "radius" ? 0.1 : 0.01;
+    sliderInput.step = slider.key === "distance" ? 0.1 : 0.01;
     sliderInput.value = cameraParams[slider.key];
     sliderInput.style.cssText = `
       width: 100%;
@@ -116,6 +116,8 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     `;
 
     const valueDisplay = document.createElement("div");
+    console.log(slider.key);
+    console.log(cameraParams);
     valueDisplay.textContent = cameraParams[slider.key].toFixed(2);
     valueDisplay.style.cssText = `
       color: rgba(255, 255, 255, 0.5);
@@ -148,7 +150,7 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     background: rgba(15, 15, 15, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #ffffff;
-    border-radius: 8px;
+    border-distance: 8px;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
@@ -175,9 +177,9 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
   resetButton.addEventListener("mouseenter", () => buttonHoverOn(resetButton));
   resetButton.addEventListener("mouseleave", () => buttonHoverOff(resetButton));
   resetButton.addEventListener("click", () => {
-    cameraParams.theta = 0;
-    cameraParams.phi = Math.PI / 2;
-    cameraParams.radius = 3;
+    cameraParams.rotation = 0;
+    cameraParams.height = Math.PI / 2;
+    cameraParams.distance = 3;
     updateURL();
     updateSliders();  // ← utilise maintenant la fonction locale
   });
