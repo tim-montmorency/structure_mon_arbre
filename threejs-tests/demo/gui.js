@@ -6,16 +6,24 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
   const totalHeight = 3 * (sliderHeight + gap) + numButtons * (50 + gap);
   const baseTop = Math.round((window.innerHeight - totalHeight) / 2);
 
-  // --- Mise à jour des sliders ---
-  const updateSliders = () => {
-    const sliders = document.querySelectorAll("input[type='range']");
-    if (sliders.length >= 3) {
-      sliders[0].value = cameraParams.rotation;
-      sliders[0].nextElementSibling.textContent = cameraParams.rotation.toFixed(2);
-      sliders[1].value = cameraParams.height;
-      sliders[1].nextElementSibling.textContent = cameraParams.height.toFixed(2);
-      sliders[2].value = cameraParams.distance;
-      sliders[2].nextElementSibling.textContent = cameraParams.distance.toFixed(2);
+  // --- Définition des paramètres de caméra ---
+  const sliderDefs = [
+    { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
+    { key: "height", min: 0.01, max: Math.PI / 2, label: "Hauteur" },
+    { key: "distance", min: 1, max: 5, label: "Distance" },
+  ];
+
+  // --- Référence aux sliders (sera rempli après création) ---
+  const sliderRefs = {};
+
+  // --- Fonction pour modifier un slider (déclenche l'événement input) ---
+  const setSliderValue = (key, value) => {
+    const slider = sliderRefs[key];
+    if (slider) {
+      const def = sliderDefs.find(d => d.key === key);
+      const clampedValue = Math.max(def.min, Math.min(def.max, value));
+      slider.value = clampedValue;
+      slider.dispatchEvent(new Event("input"));
     }
   };
 
@@ -41,13 +49,8 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     lastMouseY = e.clientY;
 
     const rotateSpeed = 0.005;
-    cameraParams.rotation -= dx * rotateSpeed;
-    cameraParams.rotation = Math.max(-Math.PI, Math.min(Math.PI, cameraParams.rotation));
-    cameraParams.height -= dy * rotateSpeed;
-    cameraParams.height = Math.max(0.01, Math.min(Math.PI / 2, cameraParams.height));
-
-    updateURL();
-    updateSliders();
+    setSliderValue("rotation", cameraParams.rotation - dx * rotateSpeed);
+    setSliderValue("height", cameraParams.height - dy * rotateSpeed);
   });
 
   window.addEventListener("mouseup", (e) => {
@@ -60,21 +63,13 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
     (e) => {
       e.preventDefault();
       const zoomSpeed = 0.5;
-      cameraParams.distance += e.deltaY > 0 ? zoomSpeed : -zoomSpeed;
-      cameraParams.distance = Math.max(1, Math.min(50, cameraParams.distance));
-      updateURL();
-      updateSliders();
+      const newDistance = cameraParams.distance + (e.deltaY > 0 ? zoomSpeed : -zoomSpeed);
+      setSliderValue("distance", newDistance);
     },
     { passive: false },
   );
 
   // --- Sliders ---
-  const sliderDefs = [
-    { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
-    { key: "height", min: 0.01, max: Math.PI / 2, label: "Hauteur" },
-    { key: "distance", min: 1, max: 5, label: "Distance" },
-  ];
-
   sliderDefs.forEach((slider, index) => {
     const container = document.createElement("div");
     container.style.cssText = `
@@ -133,6 +128,9 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
       updateURL();
     });
 
+    // Enregistrer la référence au slider
+    sliderRefs[slider.key] = sliderInput;
+
     container.appendChild(label);
     container.appendChild(sliderInput);
     container.appendChild(valueDisplay);
@@ -177,11 +175,9 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
   resetButton.addEventListener("mouseenter", () => buttonHoverOn(resetButton));
   resetButton.addEventListener("mouseleave", () => buttonHoverOff(resetButton));
   resetButton.addEventListener("click", () => {
-    cameraParams.rotation = 0;
-    cameraParams.height = Math.PI / 2;
-    cameraParams.distance = 3;
-    updateURL();
-    updateSliders();  // ← utilise maintenant la fonction locale
+    setSliderValue("rotation", 0);
+    setSliderValue("height", Math.PI / 2);
+    setSliderValue("distance", 3);
   });
 
   document.body.appendChild(resetButton);
