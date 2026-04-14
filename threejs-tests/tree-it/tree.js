@@ -1,11 +1,9 @@
 // tree.js - Tree interaction with raycasting and highlighting
 import * as THREE from "three";
-import { setupBranchDotIndicators } from "./dotIndicators.js";
 
 export function setupTreeInteraction(scene, camera, raycaster, mouse, tree) {
   let hoveredMesh = null;
   const meshMaterials = new Map(); // Store cloned materials per mesh
-  const meshToDotMap = new Map(); // Map mesh to its dot elements
 
   // Helper function to find the first mesh with geometry/material (skip parent Groups and indicator dots)
   function getLeafMesh(intersects) {
@@ -143,40 +141,21 @@ export function setupTreeInteraction(scene, camera, raycaster, mouse, tree) {
 
     const badStatus = checkBadStatus(clickedMesh);
     let statusMessage = "GOOD BRANCH";
-    
+
     if (badStatus.isBad) {
       statusMessage = "BAD BRANCH";
     } else if (badStatus.isParentBad) {
       statusMessage = "Parent is bad branch";
     }
-    
-    console.log(
-      "Clicked and removing mesh:",
-      clickedMesh.name || "unnamed mesh",
-      `[${statusMessage}]`
-    );
+
+    console.log("Clicked and removing mesh:", clickedMesh.name || "unnamed mesh", `[${statusMessage}]`);
 
     // Clean up material from map if it exists
     meshMaterials.delete(clickedMesh);
 
-    // Remove associated dots via the dots module
-    if (removeMeshDots) {
-      removeMeshDots(clickedMesh);
-    }
-
     clickedMesh.removeFromParent();
   });
 
-  // Setup branch dot indicators (2D UI)
-  let removeMeshDots = null;
-  let updateDotPositions = null;
-
-  if (tree) {
-    const dotFunctions = setupBranchDotIndicators(scene, camera, tree, meshToDotMap, highlightBranch, unhighlightBranch);
-    removeMeshDots = dotFunctions.removeMeshDots;
-    updateDotPositions = dotFunctions.updateDotPositions;
-  }
-
-  // Return the update function to be called in animation loop
-  return { updateDotPositions };
+  // Return (no more dot indicators)
+  return {};
 }

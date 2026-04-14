@@ -54,13 +54,13 @@ const mouse = new THREE.Vector2();
 
 const loader = new GLTFLoader();
 loader.load(
-  "./TreeA.glb",
+  "./ActualBadTree.glb",
   (gltf) => {
     const tree = gltf.scene;
     tree.position.y = 0; // ← Changed to 0 so it sits on the floor
     scene.add(tree);
 
-    console.log("✅ TreeA.glb loaded");
+    console.log("✅ ActualBadTree.glb loaded");
 
     const floor = createFloor();
     scene.add(floor);
@@ -68,12 +68,11 @@ loader.load(
     addPersonSilhouette(scene);
 
     // Setup tree interaction (only tree is clickable)
-    const { updateDotPositions } = setupTreeInteraction(scene, camera, raycaster, mouse, tree);
+    setupTreeInteraction(scene, camera, raycaster, mouse, tree);
 
     // Animation
     function animate() {
       controls.update();
-      updateDotPositions(); // Update UI dot positions based on camera
       renderer.render(scene, camera);
     }
     renderer.setAnimationLoop(animate);

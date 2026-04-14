@@ -1,8 +1,8 @@
-export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElement) {
+export function createGUI(cameraParams, updateURL, domElement) {
   const baseRight = 20;
   const sliderHeight = 110;
   const gap = 10;
-  const numButtons = toggleDotsVisibility ? 2 : 1;
+  const numButtons = 1;
   const totalHeight = 3 * (sliderHeight + gap) + numButtons * (50 + gap);
   const baseTop = Math.round((window.innerHeight - totalHeight) / 2);
 
@@ -20,7 +20,7 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
   const setSliderValue = (key, value) => {
     const slider = sliderRefs[key];
     if (slider) {
-      const def = sliderDefs.find(d => d.key === key);
+      const def = sliderDefs.find((d) => d.key === key);
       const clampedValue = Math.max(def.min, Math.min(def.max, value));
       slider.value = clampedValue;
       slider.dispatchEvent(new Event("input"));
@@ -181,18 +181,4 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElem
   });
 
   document.body.appendChild(resetButton);
-
-  // Points de Coupe
-  if (toggleDotsVisibility) {
-    const dotsButton = document.createElement("button");
-    dotsButton.textContent = "Points de Coupe";
-    dotsButton.style.cssText = buttonStyle;
-    dotsButton.style.top = `${buttonsStartTop + 50 + gap}px`;
-
-    dotsButton.addEventListener("mouseenter", () => buttonHoverOn(dotsButton));
-    dotsButton.addEventListener("mouseleave", () => buttonHoverOff(dotsButton));
-    dotsButton.addEventListener("click", () => toggleDotsVisibility());
-
-    document.body.appendChild(dotsButton);
-  }
 }

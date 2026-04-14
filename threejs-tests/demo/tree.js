@@ -1,11 +1,9 @@
 // tree.js - Tree interaction with raycasting and highlighting
 import * as THREE from "three";
-import { setupBranchDotIndicators } from "./dotIndicators.js";
 
 export function setupTreeInteraction(scene, camera, raycaster, mouse, tree) {
   let hoveredMesh = null;
   const meshMaterials = new Map(); // Store cloned materials per mesh
-  const meshToDotMap = new Map(); // Map mesh to its dot elements
 
   // Helper function to find the first mesh with geometry/material (skip parent Groups and indicator dots)
   function getLeafMesh(intersects) {
@@ -155,26 +153,9 @@ export function setupTreeInteraction(scene, camera, raycaster, mouse, tree) {
     // Clean up material from map if it exists
     meshMaterials.delete(clickedMesh);
 
-    // Remove associated dots via the dots module
-    if (removeMeshDots) {
-      removeMeshDots(clickedMesh);
-    }
-
     clickedMesh.removeFromParent();
   });
 
-  // Setup branch dot indicators (2D UI)
-  let removeMeshDots = null;
-  let updateDotPositions = null;
-  let toggleDotsVisibility = null;
-
-  if (tree) {
-    const dotFunctions = setupBranchDotIndicators(scene, camera, tree, meshToDotMap, highlightBranch, unhighlightBranch);
-    removeMeshDots = dotFunctions.removeMeshDots;
-    updateDotPositions = dotFunctions.updateDotPositions;
-    toggleDotsVisibility = dotFunctions.toggleDotsVisibility;
-  }
-
-  // Return the update function to be called in animation loop
-  return { updateDotPositions, toggleDotsVisibility };
+  // Return empty object (no more dot indicators)
+  return {};
 }
