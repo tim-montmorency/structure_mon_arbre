@@ -7,6 +7,7 @@ import { createFloor } from "./floor.js";
 import { createSky } from "./sky.js";
 import { addPersonSilhouette } from "./silhouette.js";
 import { setupTreeInteraction } from "./tree.js";
+import { createLighting } from "./lighting.js";
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -45,14 +46,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Lighting setup
-scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-
-
-// Sun light
-const sunLight = new THREE.DirectionalLight(0xffffff, 5.0);
-sunLight.position.set(5, 2.52, 6);
-scene.add(sunLight);
-
+createLighting(scene);
 
 // Ray caster for interaction
 const raycaster = new THREE.Raycaster();
