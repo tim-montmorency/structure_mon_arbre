@@ -27,13 +27,13 @@ export function addPersonSilhouette(scene) {
   // Arms
   const armGeo = new THREE.BoxGeometry(0.12, 0.7, 0.12);
   const leftArm = new THREE.Mesh(armGeo, mat);
-  leftArm.position.set(-0.38, 0.7, 0);
-  leftArm.rotation.z = Math.PI / 5;
+  leftArm.position.set(-0.38, 1, 0);
+  leftArm.rotation.z = -Math.PI / 5;
   group.add(leftArm);
 
   const rightArm = leftArm.clone();
   rightArm.position.x = 0.38;
-  rightArm.rotation.z = -Math.PI / 5;
+  rightArm.rotation.z = Math.PI / 5;
   group.add(rightArm);
 
   // Position and scale

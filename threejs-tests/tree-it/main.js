@@ -54,7 +54,7 @@ const mouse = new THREE.Vector2();
 
 const loader = new GLTFLoader();
 loader.load(
-  "./ActualBadTree.glb",
+  "./TreeA.glb",
   (gltf) => {
     const tree = gltf.scene;
     tree.position.y = 0; // ← Changed to 0 so it sits on the floor
