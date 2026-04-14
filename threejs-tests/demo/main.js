@@ -1,7 +1,7 @@
 // main.js
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { createCamera, updateCamera } from "./camera.js";
+import { OrbitController } from "./OrbitController.js";
 import { createGUI } from "./gui.js";
 import { createFloor } from "./floor.js";
 import { createSky } from "./sky.js";
@@ -14,29 +14,39 @@ const scene = new THREE.Scene();
 scene.background = createSky();
 scene.fog = new THREE.Fog(0x2a4a5a, 1, 20);
 
-// Camera setup with parameters
-const camera = createCamera();
+// Camera
+const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
 
-const cameraParams = {
-  distance: 3,
+// Orbit
+const orbitController = new OrbitController( camera, {
+  distance: 2,
+  height: Math.PI / 3,
   rotation: 0,
-  height: Math.PI / 2.2,
-};
+  target : new THREE.Vector3(0, 1.5, 0)
+});
+
 
 // Load camera parameters from URL if available
 const urlParams = new URLSearchParams(window.location.search);
-for (let key in cameraParams) {
-  if (urlParams.has(key)) {
-    cameraParams[key] = parseFloat(urlParams.get(key));
-  }
-}
+
+  if (urlParams.has("distance")) orbitController["distance"] = parseFloat(urlParams.get("distance"));
+  if (urlParams.has("height")) orbitController["height"] = parseFloat(urlParams.get("height"));
+  if (urlParams.has("rotation")) orbitController["rotation"] = parseFloat(urlParams.get("rotation"));
+
 
 // Update URL with camera parameters
 const updateURL = () => {
   const params = new URLSearchParams();
-  for (let key in cameraParams) {
-    params.set(key, cameraParams[key].toFixed(2));
-  }
+  
+  params.set("distance", orbitController["distance"].toFixed(2));
+  params.set("height", orbitController["height"].toFixed(2));
+  params.set("rotation", orbitController["rotation"].toFixed(2));
+  
   window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
 };
 
@@ -74,7 +84,7 @@ loader.load(
     toggleDotsVisibility = treeInteraction.toggleDotsVisibility;
 
     // On passe renderer.domElement à createGUI
-    createGUI(cameraParams, updateURL, toggleDotsVisibility, renderer.domElement);
+    createGUI(orbitController, updateURL, toggleDotsVisibility, renderer.domElement);
   },
   undefined,
   (e) => console.error(e),
@@ -83,7 +93,7 @@ loader.load(
 // Animation loop
 function animate() {
   const center = new THREE.Vector3(0, 1.5, 0);
-  updateCamera(camera, cameraParams, center);
+  orbitController.update();
   if (updateDotPositions) updateDotPositions();
   renderer.render(scene, camera);
 }
