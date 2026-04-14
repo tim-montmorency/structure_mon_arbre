@@ -1,4 +1,4 @@
-export function createGUI(cameraParams, updateURL, toggleDotsVisibility) {
+export function createGUI(cameraParams, updateURL, toggleDotsVisibility, domElement) {
   const baseRight = 20;
   const sliderHeight = 110;
   const gap = 10;
@@ -6,14 +6,76 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility) {
   const totalHeight = 3 * (sliderHeight + gap) + numButtons * (50 + gap);
   const baseTop = Math.round((window.innerHeight - totalHeight) / 2);
 
-  // Create individual slider containers
-  const sliders = [
+  // --- Mise à jour des sliders ---
+  const updateSliders = () => {
+    const sliders = document.querySelectorAll("input[type='range']");
+    if (sliders.length >= 3) {
+      sliders[0].value = cameraParams.theta;
+      sliders[0].nextElementSibling.textContent = cameraParams.theta.toFixed(2);
+      sliders[1].value = cameraParams.phi;
+      sliders[1].nextElementSibling.textContent = cameraParams.phi.toFixed(2);
+      sliders[2].value = cameraParams.radius;
+      sliders[2].nextElementSibling.textContent = cameraParams.radius.toFixed(2);
+    }
+  };
+
+  // --- Drag souris du milieu (style Blender) ---
+  let isMiddleMouseDown = false;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+
+  domElement.addEventListener("mousedown", (e) => {
+    if (e.button === 1) {
+      e.preventDefault();
+      isMiddleMouseDown = true;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    }
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isMiddleMouseDown) return;
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+
+    const rotateSpeed = 0.005;
+    cameraParams.theta -= dx * rotateSpeed;
+    cameraParams.theta = Math.max(-Math.PI, Math.min(Math.PI, cameraParams.theta));
+    cameraParams.phi -= dy * rotateSpeed;
+    cameraParams.phi = Math.max(0.01, Math.min(Math.PI / 2, cameraParams.phi));
+
+    updateURL();
+    updateSliders();
+  });
+
+  window.addEventListener("mouseup", (e) => {
+    if (e.button === 1) isMiddleMouseDown = false;
+  });
+
+  // --- Scroll pour zoomer ---
+  domElement.addEventListener(
+    "wheel",
+    (e) => {
+      e.preventDefault();
+      const zoomSpeed = 0.5;
+      cameraParams.radius += e.deltaY > 0 ? zoomSpeed : -zoomSpeed;
+      cameraParams.radius = Math.max(1, Math.min(50, cameraParams.radius));
+      updateURL();
+      updateSliders();
+    },
+    { passive: false },
+  );
+
+  // --- Sliders ---
+  const sliderDefs = [
     { key: "theta", min: -Math.PI, max: Math.PI, label: "Gauche / Droite" },
     { key: "phi", min: 0.01, max: Math.PI / 2, label: "Haut / Bas" },
     { key: "radius", min: 1, max: 5, label: "Zoom" },
   ];
 
-  sliders.forEach((slider, index) => {
+  sliderDefs.forEach((slider, index) => {
     const container = document.createElement("div");
     container.style.cssText = `
       position: fixed;
@@ -75,7 +137,8 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility) {
     document.body.appendChild(container);
   });
 
-  const buttonsStartTop = baseTop + sliders.length * (sliderHeight + gap) + gap;
+  // --- Boutons ---
+  const buttonsStartTop = baseTop + sliderDefs.length * (sliderHeight + gap) + gap;
 
   const buttonStyle = `
     position: fixed;
@@ -103,7 +166,7 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility) {
     btn.style.borderColor = "rgba(255, 255, 255, 0.15)";
   };
 
-  // Reset Camera Button
+  // Reset Caméra
   const resetButton = document.createElement("button");
   resetButton.textContent = "Reset Caméra";
   resetButton.style.cssText = buttonStyle;
@@ -111,21 +174,17 @@ export function createGUI(cameraParams, updateURL, toggleDotsVisibility) {
 
   resetButton.addEventListener("mouseenter", () => buttonHoverOn(resetButton));
   resetButton.addEventListener("mouseleave", () => buttonHoverOff(resetButton));
-
   resetButton.addEventListener("click", () => {
     cameraParams.theta = 0;
     cameraParams.phi = Math.PI / 2;
     cameraParams.radius = 3;
     updateURL();
-    document.querySelectorAll("input[type='range']").forEach((input, i) => {
-      input.value = [cameraParams.theta, cameraParams.phi, cameraParams.radius][i];
-      input.nextElementSibling.textContent = parseFloat(input.value).toFixed(2);
-    });
+    updateSliders();  // ← utilise maintenant la fonction locale
   });
 
   document.body.appendChild(resetButton);
 
-  // Points de Coupe Button
+  // Points de Coupe
   if (toggleDotsVisibility) {
     const dotsButton = document.createElement("button");
     dotsButton.textContent = "Points de Coupe";
