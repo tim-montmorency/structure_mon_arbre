@@ -5,17 +5,17 @@ export function addPersonSilhouette(scene) {
   const mat = new THREE.MeshLambertMaterial({ color: 0x1f1f1f });
 
   // Body
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.95, 0.18), mat);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.95, 0.28), mat);
   body.position.y = 0.85;
   group.add(body);
 
   // Head
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 0.24), mat);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), mat);
   head.position.y = 1.52;
   group.add(head);
 
   // Legs
-  const legGeo = new THREE.BoxGeometry(0.1, 0.72, 0.16);
+  const legGeo = new THREE.BoxGeometry(0.16, 0.72, 0.24);
   const leftLeg = new THREE.Mesh(legGeo, mat);
   leftLeg.position.set(-0.09, 0.36, 0);
   group.add(leftLeg);
@@ -24,9 +24,21 @@ export function addPersonSilhouette(scene) {
   rightLeg.position.x = 0.09;
   group.add(rightLeg);
 
+  // Arms
+  const armGeo = new THREE.BoxGeometry(0.12, 0.7, 0.12);
+  const leftArm = new THREE.Mesh(armGeo, mat);
+  leftArm.position.set(-0.38, 0.7, 0);
+  leftArm.rotation.z = Math.PI / 5;
+  group.add(leftArm);
+
+  const rightArm = leftArm.clone();
+  rightArm.position.x = 0.38;
+  rightArm.rotation.z = -Math.PI / 5;
+  group.add(rightArm);
+
   // Position and scale
   group.position.set(3.0, 0, 0);
-  group.scale.set(0.72, 0.5, 0.72);
+  group.scale.set(1.0, 1.2, 1.0);
   group.rotation.y = Math.PI / 2;
 
   // Ignore raycast
