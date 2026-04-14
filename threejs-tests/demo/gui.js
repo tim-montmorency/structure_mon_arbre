@@ -10,7 +10,7 @@ export function createGUI(cameraParams, updateURL, domElement) {
   const sliderDefs = [
     { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
     { key: "height", min: 0.01, max: Math.PI / 2, label: "Hauteur" },
-    { key: "distance", min: 1, max: 5, label: "Distance" },
+    { key: "distance", min: 1, max: 9, label: "Distance" },
   ];
 
   // --- Référence aux sliders (sera rempli après création) ---
