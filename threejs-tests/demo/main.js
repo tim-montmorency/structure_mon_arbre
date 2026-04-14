@@ -65,6 +65,9 @@ loader.load(
     tree.position.y = 0;
     scene.add(tree);
 
+    // Centrer la caméra sur l'arbre
+    orbitController.centerOn(tree);
+
     scene.add(createFloor());
     addPersonSilhouette(scene);
 
@@ -78,9 +81,9 @@ loader.load(
   (e) => console.error(e),
 );
 
+
 // Animation loop
 function animate() {
-  const center = new THREE.Vector3(0, 1.5, 0);
   orbitController.update();
   renderer.render(scene, camera);
 }

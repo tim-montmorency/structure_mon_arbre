@@ -15,8 +15,13 @@ export class OrbitController {
   }
 
 
+  centerOn(object) {
+    const box = new THREE.Box3().setFromObject(object);
+    box.getCenter(this.target);
+    this.update();
+  }
+
   update() {
-  
     const x = this.distance * Math.sin(this.height) * Math.cos(this.rotation);
     const y = this.distance * Math.cos(this.height);
     const z = this.distance * Math.sin(this.height) * Math.sin(this.rotation);
