@@ -11,8 +11,8 @@ import { createLighting } from "./lighting.js";
 
 // Scene setup
 const scene = new THREE.Scene();
-scene.background = createSky();
-scene.fog = new THREE.Fog(0x2a4a5a, 1, 20);
+scene.fog = new THREE.Fog(0x6496d2, 15, 80);
+const skyMaterial = createSky(scene);
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -83,7 +83,9 @@ loader.load(
 
 
 // Animation loop
+const clock = new THREE.Clock();
 function animate() {
+  skyMaterial.uniforms.uTime.value = clock.getElapsedTime();
   orbitController.update();
   renderer.render(scene, camera);
 }
