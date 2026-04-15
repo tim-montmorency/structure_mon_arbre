@@ -4,17 +4,17 @@ export function addPersonSilhouette(scene) {
   const group = new THREE.Group();
   const mat = new THREE.MeshLambertMaterial({ color: 0x1f1f1f });
 
-  // Body
+  // Corps
   const body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.95, 0.28), mat);
   body.position.y = 0.85;
   group.add(body);
 
-  // Head
+  // Tête
   const head = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), mat);
   head.position.y = 1.52;
   group.add(head);
 
-  // Legs
+  // Jambes
   const legGeo = new THREE.BoxGeometry(0.16, 0.72, 0.24);
   const leftLeg = new THREE.Mesh(legGeo, mat);
   leftLeg.position.set(-0.09, 0.36, 0);
@@ -24,7 +24,7 @@ export function addPersonSilhouette(scene) {
   rightLeg.position.x = 0.09;
   group.add(rightLeg);
 
-  // Arms
+  // Bras
   const armGeo = new THREE.BoxGeometry(0.12, 0.7, 0.12);
   const leftArm = new THREE.Mesh(armGeo, mat);
   leftArm.position.set(-0.38, 1, 0);
@@ -36,12 +36,12 @@ export function addPersonSilhouette(scene) {
   rightArm.rotation.z = Math.PI / 5;
   group.add(rightArm);
 
-  // Position and scale
+  // Position et échelle
   group.position.set(3.0, 0, 0);
   group.scale.set(1.0, 1.2, 1.0);
   group.rotation.y = Math.PI / 2;
 
-  // Ignore raycast
+  // Ignorer le raycast
   group.traverse((child) => {
     if (child.isMesh) {
       child.userData.ignoreRaycast = true;
