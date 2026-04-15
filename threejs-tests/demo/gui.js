@@ -161,7 +161,12 @@ export class GUI {
       if (this.onRestoreBranches) this.onRestoreBranches();
     });
 
-    this.buttonCount = 3;
+    // Valider
+    this.validateButton = this._createButton("Valider", buttonsStartTop + 3 * (50 + this.gap), () => {
+      if (this.onValidate) this.onValidate();
+    });
+
+    this.buttonCount = 4;
   }
 
   _createButton(text, top, onClick) {
