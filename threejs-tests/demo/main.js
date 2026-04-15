@@ -74,9 +74,7 @@ loader.load(
 );
 
 // Boucle d'animation
-const clock = new THREE.Clock();
 function animate() {
-  skyMaterial.uniforms.uTime.value = clock.getElapsedTime();
   orbitController.update();
   renderer.render(scene, camera);
 }
