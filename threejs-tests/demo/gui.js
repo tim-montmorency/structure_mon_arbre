@@ -23,6 +23,7 @@ export class GUI {
     this._createInfoPanel();
     this._createSliders();
     this._createButtons();
+    this._createFeedbackPanel();
     this._setupMouseControls();
     this._setupScrollControls();
   }
@@ -135,7 +136,9 @@ export class GUI {
 
       if (sliderDef.key === "rotation") {
         // Bas au centre, horizontal
-        container.style.cssText = panelStyle + `
+        container.style.cssText =
+          panelStyle +
+          `
           bottom: 20px;
           left: 50%;
           transform: translateX(-50%);
@@ -144,7 +147,9 @@ export class GUI {
         sliderInput.style.cssText = inputStyle + `width: 100%;`;
       } else if (sliderDef.key === "height") {
         // Droite, vertical
-        container.style.cssText = panelStyle + `
+        container.style.cssText =
+          panelStyle +
+          `
           right: 20px;
           top: 50%;
           transform: translateY(-50%);
@@ -154,7 +159,9 @@ export class GUI {
           flex-direction: column;
           align-items: center;
         `;
-        sliderInput.style.cssText = inputStyle + `
+        sliderInput.style.cssText =
+          inputStyle +
+          `
           width: 250px;
           transform: rotate(-90deg);
           transform-origin: center center;
@@ -162,7 +169,9 @@ export class GUI {
         `;
       } else if (sliderDef.key === "distance") {
         // Gauche, vertical
-        container.style.cssText = panelStyle + `
+        container.style.cssText =
+          panelStyle +
+          `
           left: 20px;
           top: 50%;
           transform: translateY(-50%);
@@ -172,7 +181,9 @@ export class GUI {
           flex-direction: column;
           align-items: center;
         `;
-        sliderInput.style.cssText = inputStyle + `
+        sliderInput.style.cssText =
+          inputStyle +
+          `
           width: 250px;
           transform: rotate(-90deg);
           transform-origin: center center;
@@ -220,6 +231,7 @@ export class GUI {
     document.body.appendChild(topBar);
 
     // Valider — en bas à droite
+    this._validated = false;
     const validateContainer = document.createElement("div");
     validateContainer.style.cssText = `
       position: fixed;
@@ -228,9 +240,36 @@ export class GUI {
       z-index: 1000;
     `;
     this.validateButton = this._createButton("Valider", validateContainer, () => {
-      if (this.onValidate) this.onValidate();
+      if (!this._validated) {
+        // Mode Valider
+        if (this.onValidate) this.onValidate();
+        this._validated = true;
+        this.validateButton.textContent = "Recommencer";
+        this._setButtonEnabled(this.cutButton, false);
+        this._setButtonEnabled(this.restoreButton, false);
+      } else {
+        // Mode Recommencer
+        if (this.onRestart) this.onRestart();
+        this.hideFeedback();
+        this._validated = false;
+        this.validateButton.textContent = "Valider";
+        this._setButtonEnabled(this.cutButton, true);
+        this._setButtonEnabled(this.restoreButton, true);
+      }
     });
     document.body.appendChild(validateContainer);
+  }
+
+  _setButtonEnabled(btn, enabled) {
+    if (enabled) {
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = "0.4";
+      btn.style.pointerEvents = "none";
+    }
   }
 
   _createButton(text, parent, onClick) {
@@ -262,6 +301,100 @@ export class GUI {
     btn.addEventListener("click", onClick);
     parent.appendChild(btn);
     return btn;
+  }
+
+  // --- Correspondance tag → libellé lisible ---
+  _tagToLabel(tag) {
+    const labels = {
+      interférente: "Branche interférente",
+      concurrente: "Branche concurrente",
+      aigue: "Branche angle aigu",
+      rejet: "Rejet",
+      malade: "Branche malade",
+      brisée: "Branche brisée",
+      distribution: "Branche mal répartie",
+      couronne: "Branche couronne",
+      débordante: "Branche débordante",
+      temporaire: "Branche temporaire",
+    };
+    return labels[tag] || tag || "Branche inconnue";
+  }
+
+  // --- Panneau de rétroaction (bottom-left, caché par défaut) ---
+  _createFeedbackPanel() {
+    this.feedbackPanel = document.createElement("div");
+    this.feedbackPanel.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 100px;
+      max-width: 400px;
+      max-height: 60vh;
+      overflow-y: auto;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 20px 25px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      z-index: 1000;
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    `;
+    document.body.appendChild(this.feedbackPanel);
+  }
+
+  // --- Afficher le résultat de la validation ---
+  showFeedback({ cut, missed, wrongCutCount }) {
+    let html = "";
+
+    const correctCuts = cut.filter((b) => b.isBad);
+    const hasWrongCuts = wrongCutCount > 0;
+    const allFound = missed.length === 0 && correctCuts.length > 0 && !hasWrongCuts;
+
+    if (allFound) {
+      html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">🎉 Félicitations, vous les avez toutes trouvées !</h3>`;
+      html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches retirées :</p>`;
+      html += `<ul style="margin: 0 0 0 16px; padding: 0;">`;
+      for (const b of correctCuts) {
+        html += `<li style="margin: 2px 0; color: #00ff88;">${this._tagToLabel(b.tag)}</li>`;
+      }
+      html += `</ul>`;
+    } else {
+      if (correctCuts.length > 0) {
+        html += `<p style="margin: 0 0 6px 0; color: #00cc66; font-weight: 600;">✅ Vous avez correctement retiré :</p>`;
+        html += `<ul style="margin: 0 0 14px 16px; padding: 0;">`;
+        for (const b of correctCuts) {
+          html += `<li style="margin: 2px 0; color: #00cc66;">${this._tagToLabel(b.tag)}</li>`;
+        }
+        html += `</ul>`;
+      }
+
+      if (missed.length > 0) {
+        html += `<p style="margin: 0 0 6px 0; color: #ff6666; font-weight: 600;">❌ Vous avez manqué ${missed.length} branche${missed.length > 1 ? "s" : ""} :</p>`;
+        html += `<ul style="margin: 0 0 14px 16px; padding: 0;">`;
+        for (const b of missed) {
+          html += `<li style="margin: 2px 0; color: #ff6666;">${this._tagToLabel(b.tag)}</li>`;
+        }
+        html += `</ul>`;
+      }
+
+      if (hasWrongCuts) {
+        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Vous avez coupé ${wrongCutCount} branche${wrongCutCount > 1 ? "s" : ""} qui n'aurai${wrongCutCount > 1 ? "ent" : "t"} pas dû être coupée${wrongCutCount > 1 ? "s" : ""}.</p>`;
+      }
+
+      if (correctCuts.length === 0 && missed.length === 0 && !hasWrongCuts) {
+        html += `<p style="margin: 0; color: #aaa;">Aucune branche n'a été coupée.</p>`;
+      }
+    }
+
+    this.feedbackPanel.innerHTML = html;
+    this.feedbackPanel.style.display = "block";
+  }
+
+  // --- Cacher le panneau de rétroaction ---
+  hideFeedback() {
+    this.feedbackPanel.style.display = "none";
   }
 
   // --- Glisser avec le bouton du milieu (style Blender) ---

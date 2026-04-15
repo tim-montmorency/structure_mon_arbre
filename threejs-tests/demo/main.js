@@ -67,7 +67,16 @@ loader.load(
 
     // Connecter les boutons du GUI à l'interaction de l'arbre
     gui.onCutBranch = () => treeInteraction.cutSelected();
-    gui.onRestoreBranches = () => treeInteraction.restoreAll();
+    gui.onRestoreBranches = () => {
+      treeInteraction.restoreAll();
+    };
+    gui.onValidate = () => {
+      const results = treeInteraction.validate();
+      gui.showFeedback(results);
+    };
+    gui.onRestart = () => {
+      treeInteraction.restoreAll();
+    };
   },
   undefined,
   (e) => console.error(e),

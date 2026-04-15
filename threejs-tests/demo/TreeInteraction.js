@@ -12,6 +12,16 @@ export class TreeInteraction {
     this.selectedMeshes = new Set(); // Sélection multiple
     this.meshMaterials = new Map();
     this.cutBranches = []; // {mesh, parent} pour le rétablissement
+    this.wrongCutCount = 0; // Nombre de bonnes branches coupées par erreur
+
+    // Snapshot de toutes les branches bad au chargement
+    this.allBadBranches = [];
+    this.tree.traverse((child) => {
+      if (child.userData.isBad === true) {
+        const tag = this._getTag(child);
+        this.allBadBranches.push({ node: child, name: child.name || "unnamed", tag });
+      }
+    });
 
     this._setupHover();
     this._setupClick();
@@ -291,6 +301,24 @@ export class TreeInteraction {
     if (this.selectedMeshes.size === 0) return;
 
     for (const mesh of this.selectedMeshes) {
+      // Compter le mesh lui-même + tous ses descendants qui sont de bonnes branches
+      const badNodes = new Set(this.allBadBranches.map((b) => b.node));
+      mesh.traverse((child) => {
+        if (child.isMesh && !badNodes.has(child)) {
+          // Vérifier qu'aucun ancêtre jusqu'au mesh coupé n'est bad
+          let isBad = false;
+          let current = child;
+          while (current) {
+            if (badNodes.has(current)) {
+              isBad = true;
+              break;
+            }
+            if (current === mesh) break;
+            current = current.parent;
+          }
+          if (!isBad) this.wrongCutCount++;
+        }
+      });
       const parent = mesh.parent;
       this.cutBranches.push({ mesh, parent });
       mesh.removeFromParent();
@@ -307,7 +335,34 @@ export class TreeInteraction {
       this._deselectBranch(mesh);
     }
     this.cutBranches = [];
+    this.wrongCutCount = 0;
     this.selectedMeshes.clear();
     console.log("All branches restored");
+  }
+
+  // --- Vérifier si un nœud est encore connecté à l'arbre ---
+  _isConnectedToTree(node) {
+    let current = node;
+    while (current) {
+      if (current === this.tree) return true;
+      current = current.parent;
+    }
+    return false;
+  }
+
+  // --- Valider : retourner les résultats (branches coupées vs branches manquées) ---
+  validate() {
+    const cut = []; // branches bad correctement retirées
+    const missed = []; // branches bad encore présentes
+
+    for (const bad of this.allBadBranches) {
+      if (this._isConnectedToTree(bad.node)) {
+        missed.push({ name: bad.name, tag: bad.tag });
+      } else {
+        cut.push({ name: bad.name, tag: bad.tag, isBad: true });
+      }
+    }
+
+    return { cut, missed, wrongCutCount: this.wrongCutCount };
   }
 }
