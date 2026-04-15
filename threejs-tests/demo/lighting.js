@@ -4,8 +4,8 @@ import * as THREE from "three";
 export function createLighting(scene) {
   scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-  const sunLight = new THREE.DirectionalLight(0xffffff, 5.0);
-  sunLight.position.set(5, 2.52, 6);
+  const sunLight = new THREE.DirectionalLight(0xffffff, 4.0);
+  sunLight.position.set(5, 4, 6);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
   sunLight.shadow.mapSize.height = 2048;
