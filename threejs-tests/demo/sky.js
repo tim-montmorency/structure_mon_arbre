@@ -114,6 +114,7 @@ export function createSky(scene) {
   });
 
   const skyMesh = new THREE.Mesh(new THREE.SphereGeometry(500, 32, 32), skyMaterial);
+  skyMesh.userData.ignoreRaycast = true;
   scene.add(skyMesh);
 
   return skyMaterial;
