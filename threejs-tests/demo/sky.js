@@ -69,8 +69,8 @@ export function createSky(scene) {
       float y = dir.y;
 
       // Ciel gradient
-      vec3 sky = mix(uHorizonColor, uSkyColor, smoothstep(0.0, 0.5, y));
-      sky = mix(uGroundColor, sky, smoothstep(-0.15, -0.05, y));
+      vec3 sky = mix(uHorizonColor, uSkyColor, smoothstep(0.0, 0.4, y));
+      sky = mix(uGroundColor, sky, smoothstep(-0.08, 0.02, y));
 
       // Soleil
       float sunDot = max(dot(dir, normalize(uSunDirection)), 0.0);
@@ -100,13 +100,13 @@ export function createSky(scene) {
     vertexShader,
     fragmentShader,
     uniforms: {
-      uSkyColor: { value: new THREE.Color(100 / 255, 150 / 255, 210 / 255) },
-      uHorizonColor: { value: new THREE.Color(0.76, 0.82, 0.9) },
-      uGroundColor: { value: new THREE.Color(0.4, 0.45, 0.5) },
+      uSkyColor: { value: new THREE.Color(0.48, 0.68, 0.84) },
+      uHorizonColor: { value: new THREE.Color(0.76, 0.82, 0.94) },
+      uGroundColor: { value: new THREE.Color(0.4, 0.55, 0.72) },
       uSunDirection: { value: new THREE.Vector3(0.5, 0.5, 0.3) },
       uCloudCoverage: { value: 50.0 },
-      uCloudDensity: { value: 30.0 },
-      uCloudScale: { value: 60.0 },
+      uCloudDensity: { value: 50.0 },
+      uCloudScale: { value: 30.0 },
       uTime: { value: 0.0 },
     },
     side: THREE.BackSide,
