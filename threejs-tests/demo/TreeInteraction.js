@@ -149,6 +149,34 @@ export class TreeInteraction {
     mesh.children.forEach((child) => this._deselectBranch(child));
   }
 
+  // --- Trouver le tag (string) dans le userData d'un mesh ---
+  _getTag(mesh) {
+    if (!mesh || !mesh.userData) return null;
+    for (const key of Object.keys(mesh.userData)) {
+      if (key === "name" || key === "isBad" || key === "ignoreRaycast") continue;
+      if (typeof mesh.userData[key] === "string" && mesh.userData[key].length > 0) {
+        return mesh.userData[key];
+      }
+    }
+    return null;
+  }
+
+  // --- Trouver le tag en remontant la hiérarchie ---
+  _getTagInHierarchy(mesh) {
+    let current = mesh;
+    while (current) {
+      const tag = this._getTag(current);
+      if (tag) return tag;
+      current = current.parent;
+    }
+    return null;
+  }
+
+  // --- Vérifier si ce mesh précis est indestructible (ne remonte PAS la hiérarchie) ---
+  _isIndestructible(mesh) {
+    return this._getTag(mesh) === "indestructible";
+  }
+
   // --- Vérifier le statut défectueux dans la hiérarchie ---
   _checkBadStatus(mesh) {
     if (mesh.userData.isBad === true) return { isBad: true, isParentBad: false };
@@ -178,6 +206,12 @@ export class TreeInteraction {
           this._unhighlightBranch(this.hoveredMesh);
         }
         this.hoveredMesh = null;
+      }
+
+      // Curseur interdit si la branche est indestructible
+      if (mesh && this._isIndestructible(mesh)) {
+        document.body.style.cursor = "not-allowed";
+        return;
       }
 
       // Curseur interdit si le mesh est enfant d'une branche sélectionnée
@@ -216,6 +250,9 @@ export class TreeInteraction {
         return;
       }
 
+      // Bloquer le clic si la branche est indestructible
+      if (this._isIndestructible(clicked)) return;
+
       // Bloquer le clic si un ancêtre est sélectionné
       if (this._hasSelectedAncestor(clicked)) return;
 
@@ -227,9 +264,10 @@ export class TreeInteraction {
       }
 
       const badStatus = this._checkBadStatus(clicked);
+      const tag = this._getTagInHierarchy(clicked);
       let statusMessage = "GOOD BRANCH";
-      if (badStatus.isBad) statusMessage = "BAD BRANCH";
-      else if (badStatus.isParentBad) statusMessage = "Parent is bad branch";
+      if (badStatus.isBad) statusMessage = tag ? `BAD BRANCH: ${tag}` : "BAD BRANCH";
+      else if (badStatus.isParentBad) statusMessage = tag ? `Parent is bad branch: ${tag}` : "Parent is bad branch";
 
       console.log("Selected:", clicked.name || "unnamed mesh", `[${statusMessage}]`);
 
