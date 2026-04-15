@@ -57,59 +57,65 @@ export class GUI {
     info.id = "info";
     info.style.cssText = `
       position: fixed;
-      top: 10px;
-      left: 10px;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
       color: #ffffff;
       background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
+      padding: 15px 25px;
       border-radius: 5px;
       font-size: 15px;
       z-index: 50;
-      max-width: 350px;
       font-family: Arial, sans-serif;
     `;
     info.innerHTML = `
-      <h3 style="margin: 0 0 12px 0; font-size: 18px;">Démo Interaction Arbre</h3>
-      <p style="margin: 8px 0; line-height: 1.5;"><strong>Contrôles:</strong></p>
-      <p style="margin: 8px 0; line-height: 1.5;">🖱️ Survolez les branches pour les mettre en évidence</p>
-      <p style="margin: 8px 0; line-height: 1.5;">🖱️ Cliquez sur une branche pour la sélectionner</p>
-      <p style="margin: 8px 0; line-height: 1.5;">🖱️ Clic du milieu pour déplacer la caméra</p>
-      <p style="margin: 8px 0; line-height: 1.5;">🖱️ Molette pour zoomer</p>
+      <h3 style="margin: 0 0 10px 0; font-size: 18px; text-align: center;">Démo Interaction Arbre</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 30px;">
+        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Survolez pour mettre en évidence</p>
+        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Cliquez pour sélectionner</p>
+        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Clic du milieu pour la caméra</p>
+        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Molette pour zoomer</p>
+      </div>
     `;
     document.body.appendChild(info);
   }
 
   // --- Glissières ---
   _createSliders() {
-    this.sliderDefs.forEach((sliderDef, index) => {
-      const container = document.createElement("div");
-      container.style.cssText = `
-        position: fixed;
-        right: ${this.baseRight}px;
-        top: ${this.baseTop + index * (this.sliderHeight + this.gap)}px;
-        width: 320px;
-        background: rgba(15, 15, 15, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 8px;
-        padding: 16px 18px;
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-      `;
+    const panelStyle = `
+      background: rgba(15, 15, 15, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 16px 18px;
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      position: fixed;
+    `;
+    const labelStyle = `
+      display: block;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 10px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    `;
+    const inputStyle = `
+      height: 4px;
+      accent-color: #ffffff;
+      cursor: pointer;
+      display: block;
+    `;
 
-      const label = document.createElement("label");
-      label.textContent = sliderDef.label;
-      label.style.cssText = `
-        display: block;
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 13px;
-        margin-bottom: 10px;
-        font-family: Arial, sans-serif;
-      `;
-
+    this.sliderDefs.forEach((sliderDef) => {
       const lo = Math.min(sliderDef.min, sliderDef.max);
       const hi = Math.max(sliderDef.min, sliderDef.max);
       const inverted = sliderDef.min > sliderDef.max;
+
+      const container = document.createElement("div");
+      const label = document.createElement("label");
+      label.textContent = sliderDef.label;
+      label.style.cssText = labelStyle;
 
       const sliderInput = document.createElement("input");
       sliderInput.type = "range";
@@ -117,13 +123,6 @@ export class GUI {
       sliderInput.max = hi;
       sliderInput.step = sliderDef.key === "distance" ? 0.1 : 0.01;
       sliderInput.value = inverted ? hi + lo - this.orbitController[sliderDef.key] : this.orbitController[sliderDef.key];
-      sliderInput.style.cssText = `
-        width: 100%;
-        height: 4px;
-        accent-color: #ffffff;
-        cursor: pointer;
-        display: block;
-      `;
 
       // La glissière est le SEUL endroit qui met à jour orbitController
       sliderInput.addEventListener("input", (e) => {
@@ -134,6 +133,53 @@ export class GUI {
 
       this.sliderRefs[sliderDef.key] = sliderInput;
 
+      if (sliderDef.key === "rotation") {
+        // Bas au centre, horizontal
+        container.style.cssText = panelStyle + `
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 400px;
+        `;
+        sliderInput.style.cssText = inputStyle + `width: 100%;`;
+      } else if (sliderDef.key === "height") {
+        // Droite, vertical
+        container.style.cssText = panelStyle + `
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 60px;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `;
+        sliderInput.style.cssText = inputStyle + `
+          width: 250px;
+          transform: rotate(-90deg);
+          transform-origin: center center;
+          margin-top: 130px;
+        `;
+      } else if (sliderDef.key === "distance") {
+        // Gauche, vertical
+        container.style.cssText = panelStyle + `
+          left: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 60px;
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `;
+        sliderInput.style.cssText = inputStyle + `
+          width: 250px;
+          transform: rotate(-90deg);
+          transform-origin: center center;
+          margin-top: 130px;
+        `;
+      }
+
       container.appendChild(label);
       container.appendChild(sliderInput);
       document.body.appendChild(container);
@@ -142,42 +188,58 @@ export class GUI {
 
   // --- Boutons ---
   _createButtons() {
-    const buttonsStartTop = this.baseTop + this.sliderDefs.length * (this.sliderHeight + this.gap) + this.gap;
+    // Conteneur des 3 boutons en haut au centre
+    const topBar = document.createElement("div");
+    topBar.style.cssText = `
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: ${this.gap}px;
+      z-index: 1000;
+    `;
 
     // Réinitialiser la caméra
-    this._createButton("Reset Caméra", buttonsStartTop, () => {
+    this._createButton("Reset Caméra", topBar, () => {
       this.updateSlider("rotation", 0);
       this.updateSlider("height", Math.PI / 2);
       this.updateSlider("distance", 3);
     });
 
     // Couper la branche sélectionnée
-    this.cutButton = this._createButton("Couper la branche", buttonsStartTop + 50 + this.gap, () => {
+    this.cutButton = this._createButton("Couper la branche", topBar, () => {
       if (this.onCutBranch) this.onCutBranch();
     });
 
     // Rétablir toutes les branches
-    this.restoreButton = this._createButton("Rétablir les branches", buttonsStartTop + 2 * (50 + this.gap), () => {
+    this.restoreButton = this._createButton("Rétablir les branches", topBar, () => {
       if (this.onRestoreBranches) this.onRestoreBranches();
     });
 
-    // Valider
-    this.validateButton = this._createButton("Valider", buttonsStartTop + 3 * (50 + this.gap), () => {
+    document.body.appendChild(topBar);
+
+    // Valider — en bas à droite
+    const validateContainer = document.createElement("div");
+    validateContainer.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    `;
+    this.validateButton = this._createButton("Valider", validateContainer, () => {
       if (this.onValidate) this.onValidate();
     });
-
-    this.buttonCount = 4;
+    document.body.appendChild(validateContainer);
   }
 
-  _createButton(text, top, onClick) {
+  _createButton(text, parent, onClick) {
     const btn = document.createElement("button");
     btn.textContent = text;
     btn.style.cssText = `
-      position: fixed;
-      right: ${this.baseRight}px;
-      top: ${top}px;
-      width: 320px;
-      padding: 14px 18px;
+      padding: 14px 24px;
+      width: 200px;
+      text-align: center;
       background: rgba(15, 15, 15, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
@@ -187,7 +249,7 @@ export class GUI {
       font-size: 14px;
       font-family: Arial, sans-serif;
       transition: background 0.2s ease, border-color 0.2s ease;
-      z-index: 1000;
+      white-space: nowrap;
     `;
     btn.addEventListener("mouseenter", () => {
       btn.style.background = "rgba(255, 255, 255, 0.1)";
@@ -198,7 +260,7 @@ export class GUI {
       btn.style.borderColor = "rgba(255, 255, 255, 0.15)";
     });
     btn.addEventListener("click", onClick);
-    document.body.appendChild(btn);
+    parent.appendChild(btn);
     return btn;
   }
 
