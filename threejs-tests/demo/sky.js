@@ -70,7 +70,7 @@ export function createSky(scene) {
 
       // Ciel gradient
       vec3 sky = mix(uHorizonColor, uSkyColor, smoothstep(0.0, 0.5, y));
-      sky = mix(uGroundColor, sky, smoothstep(-0.05, 0.05, y));
+      sky = mix(uGroundColor, sky, smoothstep(-0.15, -0.05, y));
 
       // Soleil
       float sunDot = max(dot(dir, normalize(uSunDirection)), 0.0);

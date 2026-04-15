@@ -16,6 +16,7 @@ export function createFloor() {
   });
 
   const pastille = new THREE.Mesh(geometry, material);
+  pastille.receiveShadow = true;
   pastille.userData.ignoreRaycast = true;
 
   return pastille;

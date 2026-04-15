@@ -44,6 +44,7 @@ export function addPersonSilhouette(scene) {
   // Ignorer le raycast
   group.traverse((child) => {
     if (child.isMesh) {
+      child.castShadow = true;
       child.userData.ignoreRaycast = true;
     }
   });

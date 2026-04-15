@@ -34,6 +34,8 @@ if (urlParams.has("rotation")) orbitController.rotation = parseFloat(urlParams.g
 // Rendu
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 // Éclairage
@@ -50,6 +52,9 @@ loader.load(
     const tree = gltf.scene;
     tree.position.y = 0;
     tree.scale.setScalar(0.7);
+    tree.traverse((child) => {
+      if (child.isMesh) child.castShadow = true;
+    });
     scene.add(tree);
 
     orbitController.centerOn(tree);
