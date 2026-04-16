@@ -353,7 +353,7 @@ export class Ui {
     const allFound = missed.length === 0 && correctCuts.length > 0 && !hasWrongCuts;
 
     if (allFound) {
-      html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">🎉 Félicitations, vous les avez toutes trouvées !</h3>`;
+      html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">Félicitations, vous les avez toutes trouvées !</h3>`;
       html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches retirées :</p>`;
       html += `<ul style="margin: 0 0 0 16px; padding: 0;">`;
       for (const b of correctCuts) {
