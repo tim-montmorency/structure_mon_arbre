@@ -12,7 +12,7 @@ export class Ui {
     // --- Définition des glissières (min/max = gauche/droite du curseur) ---
     this.sliderDefs = [
       { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
-      { key: "height", min: Math.PI / 2, max: 0.01, label: "Hauteur" },
+      { key: "height", min: 0, max: 1, label: "Hauteur" },
       { key: "distance", min: 9, max: 1, label: "Distance" },
     ];
 
