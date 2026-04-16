@@ -9,10 +9,10 @@ export class OrbitController {
     this.height = options.height ?? Math.PI / 4;
     this.rotation = options.rotation ?? 0;
     this.target = options.target ?? new THREE.Vector3(0, 1.5, 0);
-    this.maxHeight = options.maxHeight ?? 5;
+    this.maxHeight = options.maxHeight ?? 6;
     this.offset = options.offset ?? new THREE.Vector3(0, 0.2, 0);
     this.lookMin = 1.5;
-    this.lookMax = 3;
+    this.lookMax = 4;
 
     this.camera = camera;
     this.update();
