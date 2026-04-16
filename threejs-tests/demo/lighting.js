@@ -16,4 +16,6 @@ export function createLighting(scene) {
   sunLight.shadow.camera.top = 10;
   sunLight.shadow.camera.bottom = -10;
   scene.add(sunLight);
+
+  return { sunLight };
 }

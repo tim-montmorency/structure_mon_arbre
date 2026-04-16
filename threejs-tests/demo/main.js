@@ -3,11 +3,14 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitController } from "./OrbitController.js";
 import { Ui } from "./Ui.js";
-import { createFloor } from "./floor.js";
+import { createGround } from "./ground.js";
 import { createSky } from "./sky.js";
 import { addPersonSilhouette } from "./addPersonSilhouette.js";
 import { TreeInteraction } from "./TreeInteraction.js";
 import { createLighting } from "./lighting.js";
+import { Wind } from "./wind.js";
+import { createGrass } from "./grass.js";
+import { createRocks } from "./rocks.js";
 
 // Scène
 const scene = new THREE.Scene();
@@ -39,7 +42,10 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 // Éclairage
-createLighting(scene);
+const { sunLight } = createLighting(scene);
+
+// Vent
+const wind = new Wind();
 
 // GUI (gère toute l'interface : glissières, boutons, panneau d'info, contrôles souris/molette)
 const ui = new Ui(orbitController, renderer.domElement);
@@ -59,7 +65,9 @@ loader.load(
 
     orbitController.centerOn(tree);
 
-    scene.add(createFloor());
+    scene.add(createGround());
+    scene.add(createGrass(wind));
+    scene.add(createRocks());
     addPersonSilhouette(scene);
 
     // Interaction avec l'arbre (gère le raycasting, la sélection, couper/rétablir)
@@ -83,7 +91,9 @@ loader.load(
 );
 
 // Boucle d'animation
+const clock = new THREE.Clock();
 function animate() {
+  wind.update(clock.getDelta());
   orbitController.update();
   renderer.render(scene, camera);
 }
