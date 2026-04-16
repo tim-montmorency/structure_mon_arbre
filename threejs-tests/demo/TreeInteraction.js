@@ -253,12 +253,7 @@ export class TreeInteraction {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(this.scene.children, true);
       const clicked = this._getLeafMesh(intersects);
-
-      // Clic dans le vide → tout désélectionner
-      if (!clicked || clicked.userData.ignoreRaycast) {
-        this._deselectAll();
-        return;
-      }
+      if (!clicked) return;
 
       // Bloquer le clic si la branche est indestructible
       if (this._isIndestructible(clicked)) return;
