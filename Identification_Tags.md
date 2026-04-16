@@ -6,6 +6,6 @@
 6. Branche brisée - "brisée"
 7. Branche pas bien réparti - "distribution"
 8. Branche remonté la couronne - "couronne"
-9. Tronc indestructible - "indestructibl"
+9. Tronc indestructible - "indestructible"
 10. Branche débordante - "débordante"
 11. Branche basse temporaire - "temporaire"
