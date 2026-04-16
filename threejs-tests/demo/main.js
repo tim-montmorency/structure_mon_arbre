@@ -42,7 +42,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 // Éclairage
-const { sunLight } = createLighting(scene);
+createLighting(scene);
 
 // Vent
 const wind = new Wind();
@@ -59,7 +59,10 @@ loader.load(
     tree.position.y = 0;
     tree.scale.setScalar(0.7);
     tree.traverse((child) => {
-      if (child.isMesh) child.castShadow = true;
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
     });
     scene.add(tree);
 
