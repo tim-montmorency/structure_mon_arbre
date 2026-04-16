@@ -1,11 +1,11 @@
-1. Branche interférente - #interférente
-2. Branche Concurrente - #concurrente
-3. Branche angle aigue - #aigue
-4. Rejet - #rejet
-5. Branche malade - #malade
-6. Branche brisée - #brisée
-7. Branche pas bien réparti - #distribution
-8. Branche remonté la couronne - #couronne
-9. Tronc indestructible - #indestructible
-10. Branche débordante - #débordante
-11. Branche basse temporaire - #temporaire
+1. Branche interférente - "interférente"
+2. Branche Concurrente - "concurrente"
+3. Branche angle aigue - "aigue"
+4. Rejet - "rejet"
+5. Branche malade - "malade"
+6. Branche brisée - "brisée"
+7. Branche pas bien réparti - "distribution"
+8. Branche remonté la couronne - "couronne"
+9. Tronc indestructible - "indestructibl"
+10. Branche débordante - "débordante"
+11. Branche basse temporaire - "temporaire"
