@@ -1,4 +1,4 @@
-export class GUI {
+export class Ui {
   constructor(orbitController, domElement) {
     this.orbitController = orbitController;
     this.domElement = domElement;

@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitController } from "./OrbitController.js";
-import { GUI } from "./gui.js";
+import { Ui } from "./Ui.js";
 import { createFloor } from "./floor.js";
 import { createSky } from "./sky.js";
 import { addPersonSilhouette } from "./addPersonSilhouette.js";
@@ -42,7 +42,7 @@ document.body.appendChild(renderer.domElement);
 createLighting(scene);
 
 // GUI (gère toute l'interface : glissières, boutons, panneau d'info, contrôles souris/molette)
-const gui = new GUI(orbitController, renderer.domElement);
+const ui = new Ui(orbitController, renderer.domElement);
 
 // Charger le modèle d'arbre
 const loader = new GLTFLoader();
@@ -66,15 +66,15 @@ loader.load(
     const treeInteraction = new TreeInteraction(scene, camera, tree);
 
     // Connecter les boutons du GUI à l'interaction de l'arbre
-    gui.onCutBranch = () => treeInteraction.cutSelected();
-    gui.onRestoreBranches = () => {
+    ui.onCutBranch = () => treeInteraction.cutSelected();
+    ui.onRestoreBranches = () => {
       treeInteraction.restoreAll();
     };
-    gui.onValidate = () => {
+    ui.onValidate = () => {
       const results = treeInteraction.validate();
-      gui.showFeedback(results);
+      ui.showFeedback(results);
     };
-    gui.onRestart = () => {
+    ui.onRestart = () => {
       treeInteraction.restoreAll();
     };
   },
