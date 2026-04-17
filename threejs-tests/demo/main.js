@@ -62,6 +62,12 @@ loader.load(
       if (child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
+
+        // Normal map un peu plus forte que dans le modèle original pour mieux ressortir les détails sur les branches coupées
+        if (child.material?.normalMap) {
+          child.material.normalScale.set(1.8, 1.8);
+          child.material.needsUpdate = true;
+        }
       }
     });
     scene.add(tree);
