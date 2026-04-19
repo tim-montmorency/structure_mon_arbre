@@ -18,7 +18,7 @@ scene.fog = new THREE.Fog(0x6496d2, 15, 80);
 const skyMaterial = createSky(scene);
 
 // Caméra
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // Contrôleur d'orbite
 const orbitController = new OrbitController(camera, {
@@ -83,9 +83,13 @@ loader.load(
     const treeInteraction = new TreeInteraction(scene, camera, tree);
 
     // Connecter les boutons du GUI à l'interaction de l'arbre
-    ui.onCutBranch = () => treeInteraction.cutSelected();
+    ui.onCutBranch = () => {
+      treeInteraction.cutSelected();
+      ui.setRestoreEnabled(true);
+    };
     ui.onRestoreBranches = () => {
       treeInteraction.restoreAll();
+      ui.setRestoreEnabled(false);
     };
     ui.onValidate = () => {
       const results = treeInteraction.validate();
@@ -93,7 +97,9 @@ loader.load(
     };
     ui.onRestart = () => {
       treeInteraction.restoreAll();
+      ui.setRestoreEnabled(false);
     };
+    treeInteraction.onSelectionChange = (count) => ui.setCutEnabled(count > 0);
   },
   undefined,
   (e) => console.error(e),

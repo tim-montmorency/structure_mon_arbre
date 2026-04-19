@@ -13,6 +13,7 @@ export class TreeInteraction {
     this.meshMaterials = new Map();
     this.cutBranches = []; // {mesh, parent} pour le rétablissement
     this.wrongCutCount = 0; // Nombre de bonnes branches coupées par erreur
+    this.onSelectionChange = null; // callback(count)
 
     // Snapshot de toutes les branches bad au chargement
     this.allBadBranches = [];
@@ -25,6 +26,36 @@ export class TreeInteraction {
 
     this._setupHover();
     this._setupClick();
+    this._createOutline();
+  }
+
+  // --- Outline solide autour de l'arbre (ne réagit pas au survol/clic) ---
+  _createOutline() {
+    const meshes = [];
+    this.tree.traverse((child) => {
+      if (child.isMesh) meshes.push(child);
+    });
+    const outlineMat = new THREE.MeshBasicMaterial({
+      color: 0xffff00,
+      side: THREE.BackSide,
+    });
+    for (const mesh of meshes) {
+      const geo = mesh.geometry.clone();
+      const pos = geo.attributes.position;
+      const norm = geo.attributes.normal;
+      if (!pos || !norm) continue;
+      const thickness = 0.25;
+      for (let i = 0; i < pos.count; i++) {
+        pos.setXYZ(i, pos.getX(i) + norm.getX(i) * thickness, pos.getY(i) + norm.getY(i) * thickness, pos.getZ(i) + norm.getZ(i) * thickness);
+      }
+      pos.needsUpdate = true;
+      const outlineMesh = new THREE.Mesh(geo, outlineMat);
+      outlineMesh.userData.ignoreRaycast = true;
+      outlineMesh.userData.isOutline = true;
+      outlineMesh.castShadow = false;
+      outlineMesh.receiveShadow = false;
+      mesh.add(outlineMesh);
+    }
   }
 
   // --- Obtenir le premier mesh interactif des intersections ---
@@ -81,7 +112,7 @@ export class TreeInteraction {
   }
 
   _highlightChildren(mesh) {
-    if (!mesh || this._isInSelection(mesh)) return;
+    if (!mesh || mesh.userData.isOutline || this._isInSelection(mesh)) return;
     const mat = this._ensureOwnMaterial(mesh);
     if (mat) {
       mat.emissive = new THREE.Color(0xff69b4);
@@ -99,7 +130,7 @@ export class TreeInteraction {
   }
 
   _unhighlightChildren(mesh) {
-    if (!mesh || this._isInSelection(mesh)) return;
+    if (!mesh || mesh.userData.isOutline || this._isInSelection(mesh)) return;
     const mat = this.meshMaterials.get(mesh)?.cloned || mesh.material;
     if (mat) mat.emissive?.setHex(0x000000);
     mesh.children.forEach((child) => this._unhighlightChildren(child));
@@ -117,7 +148,7 @@ export class TreeInteraction {
   }
 
   _selectChildren(mesh) {
-    if (!mesh) return;
+    if (!mesh || mesh.userData.isOutline) return;
     const mat = this._ensureOwnMaterial(mesh);
     if (mat) {
       mat.emissive = new THREE.Color(0x00aa00);
@@ -138,7 +169,7 @@ export class TreeInteraction {
   }
 
   _hoverSelectedChildren(mesh) {
-    if (!mesh) return;
+    if (!mesh || mesh.userData.isOutline) return;
     const mat = this._ensureOwnMaterial(mesh);
     if (mat) {
       mat.emissive = new THREE.Color(0x008800);
@@ -149,7 +180,7 @@ export class TreeInteraction {
 
   // --- Retirer le surlignage de sélection (préserver les branches encore sélectionnées) ---
   _deselectBranch(mesh) {
-    if (!mesh) return;
+    if (!mesh || mesh.userData.isOutline) return;
     if (this.selectedMeshes.has(mesh)) {
       this._selectBranch(mesh);
       return;
@@ -265,6 +296,7 @@ export class TreeInteraction {
       if (this.selectedMeshes.has(clicked)) {
         this.selectedMeshes.delete(clicked);
         this._deselectBranch(clicked);
+        this.onSelectionChange?.(this.selectedMeshes.size);
         return;
       }
 
@@ -279,6 +311,7 @@ export class TreeInteraction {
       // Ajouter à la sélection
       this.selectedMeshes.add(clicked);
       this._selectBranch(clicked);
+      this.onSelectionChange?.(this.selectedMeshes.size);
     });
   }
 
@@ -286,6 +319,7 @@ export class TreeInteraction {
   _deselectAll() {
     const meshes = [...this.selectedMeshes];
     this.selectedMeshes.clear();
+    this.onSelectionChange?.(0);
     for (const mesh of meshes) {
       this._deselectBranch(mesh);
     }
@@ -299,6 +333,7 @@ export class TreeInteraction {
       // Compter le mesh lui-même + tous ses descendants qui sont de bonnes branches
       const badNodes = new Set(this.allBadBranches.map((b) => b.node));
       mesh.traverse((child) => {
+        if (child.userData.isOutline) return;
         if (child.isMesh && !badNodes.has(child)) {
           // Vérifier qu'aucun ancêtre jusqu'au mesh coupé n'est bad
           let isBad = false;
@@ -321,6 +356,7 @@ export class TreeInteraction {
       console.log("Cut branch:", mesh.name || "unnamed mesh");
     }
     this.selectedMeshes.clear();
+    this.onSelectionChange?.(0);
   }
 
   // --- Rétablir toutes les branches coupées ---
@@ -332,6 +368,7 @@ export class TreeInteraction {
     this.cutBranches = [];
     this.wrongCutCount = 0;
     this.selectedMeshes.clear();
+    this.onSelectionChange?.(0);
     console.log("All branches restored");
   }
 
@@ -345,19 +382,51 @@ export class TreeInteraction {
     return false;
   }
 
-  // --- Valider : retourner les résultats (branches coupées vs branches manquées) ---
+  // --- Valider : retourner les résultats (branches coupées ou sélectionnées vs manquées) ---
   validate() {
-    const cut = []; // branches bad correctement retirées
-    const missed = []; // branches bad encore présentes
+    const cut = []; // branches bad correctement retirées ou sélectionnées
+    const missed = []; // branches bad encore présentes et non sélectionnées
+
+    // Branche identifiée si coupée OU si elle (ou un ancêtre) est sélectionnée
+    const isSelectedOrDescendant = (node) => {
+      let current = node;
+      while (current) {
+        if (this.selectedMeshes.has(current)) return true;
+        current = current.parent;
+      }
+      return false;
+    };
 
     for (const bad of this.allBadBranches) {
-      if (this._isConnectedToTree(bad.node)) {
-        missed.push({ name: bad.name, tag: bad.tag });
-      } else {
+      if (!this._isConnectedToTree(bad.node) || isSelectedOrDescendant(bad.node)) {
         cut.push({ name: bad.name, tag: bad.tag, isBad: true });
+      } else {
+        missed.push({ name: bad.name, tag: bad.tag });
       }
     }
 
-    return { cut, missed, wrongCutCount: this.wrongCutCount };
+    // Compter les sélections incorrectes (même logique que cutSelected)
+    let wrongSelectionCount = 0;
+    const badNodes = new Set(this.allBadBranches.map((b) => b.node));
+    for (const mesh of this.selectedMeshes) {
+      mesh.traverse((child) => {
+        if (child.userData.isOutline) return;
+        if (child.isMesh && !badNodes.has(child)) {
+          let isBad = false;
+          let current = child;
+          while (current) {
+            if (badNodes.has(current)) {
+              isBad = true;
+              break;
+            }
+            if (current === mesh) break;
+            current = current.parent;
+          }
+          if (!isBad) wrongSelectionCount++;
+        }
+      });
+    }
+
+    return { cut, missed, wrongCutCount: this.wrongCutCount + wrongSelectionCount };
   }
 }

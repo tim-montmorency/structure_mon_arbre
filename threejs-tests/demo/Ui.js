@@ -12,7 +12,7 @@ export class Ui {
     // --- Définition des glissières (min/max = gauche/droite du curseur) ---
     this.sliderDefs = [
       { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
-      { key: "height", min: 0, max: 1, label: "Hauteur" },
+      { key: "height", min: 0.25, max: 1, label: "Hauteur" },
       { key: "distance", min: 9, max: 1, label: "Distance" },
     ];
 
@@ -222,11 +222,13 @@ export class Ui {
     this.cutButton = this._createButton("Couper la branche", topBar, () => {
       if (this.onCutBranch) this.onCutBranch();
     });
+    this._setButtonEnabled(this.cutButton, false);
 
     // Rétablir toutes les branches
     this.restoreButton = this._createButton("Rétablir les branches", topBar, () => {
       if (this.onRestoreBranches) this.onRestoreBranches();
     });
+    this._setButtonEnabled(this.restoreButton, false);
 
     document.body.appendChild(topBar);
 
@@ -253,8 +255,8 @@ export class Ui {
         this.hideFeedback();
         this._validated = false;
         this.validateButton.textContent = "Valider";
-        this._setButtonEnabled(this.cutButton, true);
-        this._setButtonEnabled(this.restoreButton, true);
+        this.setCutEnabled(false);
+        this._setButtonEnabled(this.restoreButton, false);
       }
     });
     document.body.appendChild(validateContainer);
@@ -270,6 +272,16 @@ export class Ui {
       btn.style.opacity = "0.4";
       btn.style.pointerEvents = "none";
     }
+  }
+
+  setCutEnabled(enabled) {
+    if (this._validated) return;
+    this._setButtonEnabled(this.cutButton, enabled);
+  }
+
+  setRestoreEnabled(enabled) {
+    if (this._validated) return;
+    this._setButtonEnabled(this.restoreButton, enabled);
   }
 
   _createButton(text, parent, onClick) {
@@ -354,7 +366,7 @@ export class Ui {
 
     if (allFound) {
       html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">Félicitations, vous les avez toutes trouvées !</h3>`;
-      html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches retirées :</p>`;
+      html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches correctement identifiées :</p>`;
       html += `<ul style="margin: 0 0 0 16px; padding: 0;">`;
       for (const b of correctCuts) {
         html += `<li style="margin: 2px 0; color: #00ff88;">${this._tagToLabel(b.tag)}</li>`;
@@ -362,7 +374,7 @@ export class Ui {
       html += `</ul>`;
     } else {
       if (correctCuts.length > 0) {
-        html += `<p style="margin: 0 0 6px 0; color: #00cc66; font-weight: 600;">✅ Vous avez correctement retiré :</p>`;
+        html += `<p style="margin: 0 0 6px 0; color: #00cc66; font-weight: 600;">✅ Vous avez correctement identifié :</p>`;
         html += `<ul style="margin: 0 0 14px 16px; padding: 0;">`;
         for (const b of correctCuts) {
           html += `<li style="margin: 2px 0; color: #00cc66;">${this._tagToLabel(b.tag)}</li>`;
@@ -380,11 +392,11 @@ export class Ui {
       }
 
       if (hasWrongCuts) {
-        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Vous avez coupé ${wrongCutCount} branche${wrongCutCount > 1 ? "s" : ""} qui n'aurai${wrongCutCount > 1 ? "ent" : "t"} pas dû être coupée${wrongCutCount > 1 ? "s" : ""}.</p>`;
+        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Vous avez identifié ${wrongCutCount} branche${wrongCutCount > 1 ? "s" : ""} qui n'aurai${wrongCutCount > 1 ? "ent" : "t"} pas dû être identifiée${wrongCutCount > 1 ? "s" : ""}.</p>`;
       }
 
       if (correctCuts.length === 0 && missed.length === 0 && !hasWrongCuts) {
-        html += `<p style="margin: 0; color: #aaa;">Aucune branche n'a été coupée.</p>`;
+        html += `<p style="margin: 0; color: #aaa;">Aucune branche n'a été identifiée.</p>`;
       }
     }
 
@@ -402,6 +414,19 @@ export class Ui {
     let isMiddleMouseDown = false;
     let lastMouseX = 0;
     let lastMouseY = 0;
+    let pendingDX = 0;
+    let pendingDY = 0;
+    let rafId = null;
+
+    const applyDrag = () => {
+      rafId = null;
+      if (pendingDX === 0 && pendingDY === 0) return;
+      const rotateSpeed = 0.005;
+      this.updateSlider("rotation", this.orbitController.rotation - pendingDX * rotateSpeed);
+      this.updateSlider("height", this.orbitController.height + pendingDY * rotateSpeed);
+      pendingDX = 0;
+      pendingDY = 0;
+    };
 
     this.domElement.addEventListener("mousedown", (e) => {
       if (e.button === 1) {
@@ -409,24 +434,29 @@ export class Ui {
         isMiddleMouseDown = true;
         lastMouseX = e.clientX;
         lastMouseY = e.clientY;
+        pendingDX = 0;
+        pendingDY = 0;
       }
     });
 
     window.addEventListener("mousemove", (e) => {
       if (!isMiddleMouseDown) return;
-      const dx = e.clientX - lastMouseX;
-      const dy = e.clientY - lastMouseY;
+      pendingDX += e.clientX - lastMouseX;
+      pendingDY += e.clientY - lastMouseY;
       lastMouseX = e.clientX;
       lastMouseY = e.clientY;
-
-      const rotateSpeed = 0.005;
-      // Met à jour les glissières uniquement — les glissières mettent à jour orbitController
-      this.updateSlider("rotation", this.orbitController.rotation - dx * rotateSpeed);
-      this.updateSlider("height", this.orbitController.height + dy * rotateSpeed);
+      if (!rafId) rafId = requestAnimationFrame(applyDrag);
     });
 
     window.addEventListener("mouseup", (e) => {
-      if (e.button === 1) isMiddleMouseDown = false;
+      if (e.button === 1) {
+        isMiddleMouseDown = false;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        applyDrag();
+      }
     });
   }
 

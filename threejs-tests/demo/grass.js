@@ -5,13 +5,13 @@ import * as THREE from "three";
  * ambient occlusion, and 15-vertex curved blade geometry.
  */
 export function createGrass(wind, opts = {}) {
-  const BLADE_COUNT = opts.count ?? 40000;
+  const BLADE_COUNT = opts.count ?? 80000;
   const RADIUS = opts.radius ?? 4.0;
   const BLADE_HEIGHT = opts.bladeHeight ?? 0.15;
   const BLADE_HEIGHT_VAR = opts.bladeHeightVariation ?? 0.08;
   const BLADE_WIDTH = opts.bladeWidth ?? 0.04;
   const NOISE_SCALE = opts.noiseScale ?? 0.67;
-  const PATCHINESS = opts.patchiness ?? 0.77; // 0 = all dirt, 1 = all grass
+  const PATCHINESS = opts.patchiness ?? 0.92; // 0 = all dirt, 1 = all grass
 
   // Random offset so patches change every refresh
   const noiseOffsetX = Math.random() * 1000;
