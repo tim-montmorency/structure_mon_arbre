@@ -361,13 +361,19 @@ export class TreeInteraction {
 
   // --- Rétablir toutes les branches coupées ---
   restoreAll() {
+    // Copier puis vider la sélection AVANT de retirer le surlignage
+    const selected = [...this.selectedMeshes];
+    this.selectedMeshes.clear();
+    for (const mesh of selected) {
+      this._deselectBranch(mesh);
+    }
+
     for (const { mesh, parent } of this.cutBranches) {
       if (parent) parent.add(mesh);
       this._deselectBranch(mesh);
     }
     this.cutBranches = [];
     this.wrongCutCount = 0;
-    this.selectedMeshes.clear();
     this.onSelectionChange?.(0);
     console.log("All branches restored");
   }

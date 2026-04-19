@@ -421,9 +421,10 @@ export class Ui {
     const applyDrag = () => {
       rafId = null;
       if (pendingDX === 0 && pendingDY === 0) return;
-      const rotateSpeed = 0.005;
+      const rotateSpeed = 0.0025; // Sensibilité à la rotation horizontale
+      const heightSpeed = 0.004; // Sensibilité à la hauteur
       this.updateSlider("rotation", this.orbitController.rotation - pendingDX * rotateSpeed);
-      this.updateSlider("height", this.orbitController.height + pendingDY * rotateSpeed);
+      this.updateSlider("height", this.orbitController.height + pendingDY * heightSpeed);
       pendingDX = 0;
       pendingDY = 0;
     };
