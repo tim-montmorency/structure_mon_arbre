@@ -199,7 +199,7 @@ export class Ui {
 
   // --- Boutons ---
   _createButtons() {
-    // Conteneur des 3 boutons en haut au centre
+    // Conteneur des boutons en haut au centre
     const topBar = document.createElement("div");
     topBar.style.cssText = `
       position: fixed;
@@ -229,6 +229,14 @@ export class Ui {
       if (this.onRestoreBranches) this.onRestoreBranches();
     });
     this._setButtonEnabled(this.restoreButton, false);
+
+    // Toggle Grass button
+    this.grassEnabled = true;
+    this.grassToggleButton = this._createButton("🌱 ON", topBar, () => {
+      this.grassEnabled = !this.grassEnabled;
+      this.grassToggleButton.textContent = this.grassEnabled ? "🌱 ON" : "🌱 OFF";
+      if (this.onToggleGrass) this.onToggleGrass(this.grassEnabled);
+    });
 
     document.body.appendChild(topBar);
 

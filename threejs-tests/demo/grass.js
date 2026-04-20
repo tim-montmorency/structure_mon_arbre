@@ -3,111 +3,113 @@ import * as THREE from "three";
 /**
  * Grass system using noise-based wind, easeIn color gradient,
  * ambient occlusion, and 15-vertex curved blade geometry.
+ * Usage: const grass = new Grass(wind, opts); scene.add(grass.mesh);
  */
-export function createGrass(wind, opts = {}) {
-  const BLADE_COUNT = opts.count ?? 80000;
-  const RADIUS = opts.radius ?? 4.0;
-  const BLADE_HEIGHT = opts.bladeHeight ?? 0.15;
-  const BLADE_HEIGHT_VAR = opts.bladeHeightVariation ?? 0.08;
-  const BLADE_WIDTH = opts.bladeWidth ?? 0.04;
-  const NOISE_SCALE = opts.noiseScale ?? 0.67;
-  const PATCHINESS = opts.patchiness ?? 0.92; // 0 = all dirt, 1 = all grass
+export class Grass {
+  constructor(wind, opts = {}) {
+    const BLADE_COUNT = opts.count ?? 80000;
+    const RADIUS = opts.radius ?? 4.0;
+    const BLADE_HEIGHT = opts.bladeHeight ?? 0.15;
+    const BLADE_HEIGHT_VAR = opts.bladeHeightVariation ?? 0.08;
+    const BLADE_WIDTH = opts.bladeWidth ?? 0.04;
+    const NOISE_SCALE = opts.noiseScale ?? 0.67;
+    const PATCHINESS = opts.patchiness ?? 0.92; // 0 = all dirt, 1 = all grass
 
-  // Random offset so patches change every refresh
-  const noiseOffsetX = Math.random() * 1000;
-  const noiseOffsetZ = Math.random() * 1000;
+    // Random offset so patches change every refresh
+    const noiseOffsetX = Math.random() * 1000;
+    const noiseOffsetZ = Math.random() * 1000;
 
-  // Smooth value noise (matches eztree's simplex approach)
-  function hash(x, y) {
-    const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
-    return n - Math.floor(n);
-  }
+    // Smooth value noise (matches eztree's simplex approach)
+    function hash(x, y) {
+      const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      return n - Math.floor(n);
+    }
 
-  function smoothNoise(x, y) {
-    const ix = Math.floor(x),
-      iy = Math.floor(y);
-    const fx = x - ix,
-      fy = y - iy;
-    const sx = fx * fx * (3 - 2 * fx);
-    const sy = fy * fy * (3 - 2 * fy);
-    const a = hash(ix, iy) + (hash(ix + 1, iy) - hash(ix, iy)) * sx;
-    const b = hash(ix, iy + 1) + (hash(ix + 1, iy + 1) - hash(ix, iy + 1)) * sx;
-    return a + (b - a) * sy;
-  }
+    function smoothNoise(x, y) {
+      const ix = Math.floor(x),
+        iy = Math.floor(y);
+      const fx = x - ix,
+        fy = y - iy;
+      const sx = fx * fx * (3 - 2 * fx);
+      const sy = fy * fy * (3 - 2 * fy);
+      const a = hash(ix, iy) + (hash(ix + 1, iy) - hash(ix, iy)) * sx;
+      const b = hash(ix, iy + 1) + (hash(ix + 1, iy + 1) - hash(ix, iy + 1)) * sx;
+      return a + (b - a) * sy;
+    }
 
-  // Multi-octave noise for natural look
-  function fbmNoise(x, y) {
-    return smoothNoise(x, y) * 0.6 + smoothNoise(x * 2.3 + 5.2, y * 2.3 + 1.3) * 0.3 + smoothNoise(x * 5.1 + 2.8, y * 5.1 + 7.9) * 0.1;
-  }
+    // Multi-octave noise for natural look
+    function fbmNoise(x, y) {
+      return smoothNoise(x, y) * 0.6 + smoothNoise(x * 2.3 + 5.2, y * 2.3 + 1.3) * 0.3 + smoothNoise(x * 5.1 + 2.8, y * 5.1 + 7.9) * 0.1;
+    }
 
-  function isDirt(px, pz) {
-    const n = fbmNoise((px + noiseOffsetX) * NOISE_SCALE, (pz + noiseOffsetZ) * NOISE_SCALE);
-    return n < 1.0 - PATCHINESS;
-  }
+    function isDirt(px, pz) {
+      const n = fbmNoise((px + noiseOffsetX) * NOISE_SCALE, (pz + noiseOffsetZ) * NOISE_SCALE);
+      return n < 1.0 - PATCHINESS;
+    }
 
-  // --- Blade template: 7 rows of pairs + 1 tip = 15 vertices ---
-  const ROWS = 7;
-  const templatePos = [];
-  const templateH = [];
-  const templateIdx = [];
+    // --- Blade template: 7 rows of pairs + 1 tip = 15 vertices ---
+    const ROWS = 7;
+    const templatePos = [];
+    const templateH = [];
+    const templateIdx = [];
 
-  for (let i = 0; i < ROWS; i++) {
-    const t = i / ROWS;
-    const w = 1.0 - t * 0.92; // taper toward tip
-    templatePos.push(-0.5 * w, t, 0.0); // left
-    templatePos.push(0.5 * w, t, 0.0); // right
-    templateH.push(t, t);
-  }
-  // Tip vertex
-  templatePos.push(0.0, 1.0, 0.0);
-  templateH.push(1.0);
+    for (let i = 0; i < ROWS; i++) {
+      const t = i / ROWS;
+      const w = 1.0 - t * 0.92; // taper toward tip
+      templatePos.push(-0.5 * w, t, 0.0); // left
+      templatePos.push(0.5 * w, t, 0.0); // right
+      templateH.push(t, t);
+    }
+    // Tip vertex
+    templatePos.push(0.0, 1.0, 0.0);
+    templateH.push(1.0);
 
-  // Quad strip indices
-  for (let i = 0; i < ROWS - 1; i++) {
-    const b = i * 2;
-    templateIdx.push(b, b + 1, b + 2);
-    templateIdx.push(b + 2, b + 1, b + 3);
-  }
-  // Last pair -> tip
-  const last = (ROWS - 1) * 2;
-  templateIdx.push(last, last + 1, ROWS * 2);
+    // Quad strip indices
+    for (let i = 0; i < ROWS - 1; i++) {
+      const b = i * 2;
+      templateIdx.push(b, b + 1, b + 2);
+      templateIdx.push(b + 2, b + 1, b + 3);
+    }
+    // Last pair -> tip
+    const last = (ROWS - 1) * 2;
+    templateIdx.push(last, last + 1, ROWS * 2);
 
-  const geo = new THREE.InstancedBufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(templatePos), 3));
-  geo.setAttribute("aHeightPercent", new THREE.BufferAttribute(new Float32Array(templateH), 1));
-  geo.setIndex(templateIdx);
+    const geo = new THREE.InstancedBufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(templatePos), 3));
+    geo.setAttribute("aHeightPercent", new THREE.BufferAttribute(new Float32Array(templateH), 1));
+    geo.setIndex(templateIdx);
 
-  // --- Per-instance attributes ---
-  const offsets = new Float32Array(BLADE_COUNT * 2);
-  const bladeData = new Float32Array(BLADE_COUNT * 4); // height, width, yaw, hash
+    // --- Per-instance attributes ---
+    const offsets = new Float32Array(BLADE_COUNT * 2);
+    const bladeData = new Float32Array(BLADE_COUNT * 4); // height, width, yaw, hash
 
-  let placed = 0;
-  for (let attempt = 0; placed < BLADE_COUNT && attempt < BLADE_COUNT * 3; attempt++) {
-    const angle = Math.random() * Math.PI * 2;
-    const r = RADIUS * Math.sqrt(Math.random());
-    const px = Math.cos(angle) * r;
-    const pz = Math.sin(angle) * r;
+    let placed = 0;
+    for (let attempt = 0; placed < BLADE_COUNT && attempt < BLADE_COUNT * 3; attempt++) {
+      const angle = Math.random() * Math.PI * 2;
+      const r = RADIUS * Math.sqrt(Math.random());
+      const px = Math.cos(angle) * r;
+      const pz = Math.sin(angle) * r;
 
-    // Skip blade if in a dirt patch
-    if (isDirt(px, pz)) continue;
+      // Skip blade if in a dirt patch
+      if (isDirt(px, pz)) continue;
 
-    offsets[placed * 2] = px;
-    offsets[placed * 2 + 1] = pz;
-    bladeData[placed * 4] = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VAR;
-    bladeData[placed * 4 + 1] = BLADE_WIDTH * (0.6 + Math.random() * 0.8);
-    bladeData[placed * 4 + 2] = Math.random() * Math.PI * 2; // yaw
-    bladeData[placed * 4 + 3] = Math.random(); // hash
-    placed++;
-  }
+      offsets[placed * 2] = px;
+      offsets[placed * 2 + 1] = pz;
+      bladeData[placed * 4] = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VAR;
+      bladeData[placed * 4 + 1] = BLADE_WIDTH * (0.6 + Math.random() * 0.8);
+      bladeData[placed * 4 + 2] = Math.random() * Math.PI * 2; // yaw
+      bladeData[placed * 4 + 3] = Math.random(); // hash
+      placed++;
+    }
 
-  // Trim to actual placed count
-  geo.instanceCount = placed;
+    // Trim to actual placed count
+    geo.instanceCount = placed;
 
-  geo.setAttribute("aOffset", new THREE.InstancedBufferAttribute(offsets, 2));
-  geo.setAttribute("aBladeData", new THREE.InstancedBufferAttribute(bladeData, 4));
+    geo.setAttribute("aOffset", new THREE.InstancedBufferAttribute(offsets, 2));
+    geo.setAttribute("aBladeData", new THREE.InstancedBufferAttribute(bladeData, 4));
 
-  // --- Vertex shader ---
-  const vertexShader = /* glsl */ `
+    // --- Vertex shader ---
+    const vertexShader = /* glsl */ `
     attribute vec2 aOffset;
     attribute vec4 aBladeData; // height, width, yaw, hash
     attribute float aHeightPercent;
@@ -309,10 +311,32 @@ export function createGrass(wind, opts = {}) {
     side: THREE.DoubleSide,
   });
 
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.frustumCulled = false;
-  mesh.receiveShadow = true;
-  mesh.userData.ignoreRaycast = true;
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.frustumCulled = false;
+    mesh.receiveShadow = true;
+    mesh.userData.ignoreRaycast = true;
 
-  return mesh;
+    this.mesh = mesh;
+    this._geometry = geo;
+    this._material = mat;
+    this._active = true;
+  }
+
+  activate(scene) {
+    if (!this._active && this.mesh && scene && !scene.children.includes(this.mesh)) {
+      scene.add(this.mesh);
+      this._active = true;
+    } else if (!this._active && this.mesh && scene) {
+      this.mesh.visible = true;
+      this._active = true;
+    }
+  }
+
+  deactivate() {
+    if (this.mesh) {
+      this.mesh.visible = false;
+      this._active = false;
+    }
+  }
+
 }

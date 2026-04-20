@@ -9,8 +9,13 @@ import { addPersonSilhouette } from "./addPersonSilhouette.js";
 import { TreeInteraction } from "./TreeInteraction.js";
 import { createLighting } from "./lighting.js";
 import { Wind } from "./wind.js";
-import { createGrass } from "./grass.js";
+import { Grass } from "./grass.js";
 import { createRocks } from "./rocks.js";
+import Stats from "stats";
+
+  const stats = new Stats();
+  stats.showPanel(0); // 0: FPS, 1: ms/frame, 2: memory
+  document.body.appendChild(stats.dom);
 
 // Scène
 const scene = new THREE.Scene();
@@ -75,8 +80,11 @@ loader.load(
     orbitController.centerOn(tree);
 
     scene.add(createGround());
-    scene.add(createGrass(wind));
-    scene.add(createRocks());
+    // Add grass and keep reference for toggling
+    let grass = new Grass(wind);
+    scene.add(grass.mesh);
+    const rocks = createRocks();
+    scene.add(rocks);
     addPersonSilhouette(scene);
 
     // Interaction avec l'arbre (gère le raycasting, la sélection, couper/rétablir)
@@ -100,6 +108,24 @@ loader.load(
       ui.setRestoreEnabled(false);
     };
     treeInteraction.onSelectionChange = (count) => ui.setCutEnabled(count > 0);
+
+    // Toggle grass and rocks presence in the scene
+    ui.onToggleGrass = (enabled) => {
+      if (grass) {
+        if (enabled) {
+          grass.activate(scene);
+        } else {
+          grass.deactivate();
+        }
+      }
+      if (rocks) {
+        if (enabled && !scene.children.includes(rocks)) {
+          scene.add(rocks);
+        } else if (!enabled && scene.children.includes(rocks)) {
+          scene.remove(rocks);
+        }
+      }
+    };
   },
   undefined,
   (e) => console.error(e),
@@ -108,9 +134,11 @@ loader.load(
 // Boucle d'animation
 const clock = new THREE.Clock();
 function animate() {
+  stats.begin();
   wind.update(clock.getDelta());
   orbitController.update();
   renderer.render(scene, camera);
+   stats.end();
 }
 renderer.setAnimationLoop(animate);
 
