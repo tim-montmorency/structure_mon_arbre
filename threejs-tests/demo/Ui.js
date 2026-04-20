@@ -52,52 +52,73 @@ export class Ui {
     }, 100);
   }
 
-  // --- Panneau d'information ---
+  // --- Panneau d'information (à gauche) ---
   _createInfoPanel() {
     const info = document.createElement("div");
     info.id = "info";
     info.style.cssText = `
       position: fixed;
-      top: 75px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 60px;
+      left: 20px;
       color: #ffffff;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 15px 25px;
-      border-radius: 5px;
+      background: rgba(15, 15, 15, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 14px 16px;
+      border-radius: 8px;
       font-size: 15px;
-      z-index: 50;
+      z-index: 1000;
       font-family: Arial, sans-serif;
+      width: 260px;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
     `;
     info.innerHTML = `
-      <h3 style="margin: 0 0 10px 0; font-size: 18px; text-align: center;">Démo Interaction Arbre</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 30px;">
-        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Survolez pour mettre en évidence</p>
-        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Cliquez pour sélectionner</p>
-        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Clic du milieu pour la caméra</p>
-        <p style="margin: 4px 0; line-height: 1.5;">🖱️ Molette pour zoomer</p>
+      <div style="font-weight:700; margin-bottom:8px; font-size:16px;">Démo Interaction Arbre</div>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
+        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Survolez pour mettre en évidence</div>
+        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Cliquez pour sélectionner</div>
+        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Clic du milieu pour la caméra</div>
+        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Molette pour zoomer</div>
       </div>
     `;
     document.body.appendChild(info);
   }
 
-  // --- Glissières ---
+  // --- Glissières (panneau regroupé à droite) ---
   _createSliders() {
-    const panelStyle = `
+    // Colonne de droite contenant sliders + boutons
+    this.rightColumn = document.createElement("div");
+    this.rightColumn.style.cssText = `
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    `;
+
+    // Panneau des sliders
+    const sliderPanel = document.createElement("div");
+    sliderPanel.style.cssText = `
       background: rgba(15, 15, 15, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       padding: 16px 18px;
       backdrop-filter: blur(10px);
-      z-index: 1000;
-      position: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: 260px;
+      box-sizing: border-box;
     `;
+
     const labelStyle = `
       display: block;
       color: #ffffff;
       font-weight: 600;
-      font-size: 13px;
-      margin-bottom: 10px;
+      font-size: 15px;
+      margin-bottom: 8px;
       font-family: Arial, sans-serif;
       text-align: center;
     `;
@@ -106,6 +127,8 @@ export class Ui {
       accent-color: #ffffff;
       cursor: pointer;
       display: block;
+      width: 100%;
+      box-sizing: border-box;
     `;
 
     this.sliderDefs.forEach((sliderDef) => {
@@ -114,6 +137,7 @@ export class Ui {
       const inverted = sliderDef.min > sliderDef.max;
 
       const container = document.createElement("div");
+      container.style.cssText = "margin-bottom: 16px; width: 100%;";
       const label = document.createElement("label");
       label.textContent = sliderDef.label;
       label.style.cssText = labelStyle;
@@ -124,8 +148,8 @@ export class Ui {
       sliderInput.max = hi;
       sliderInput.step = sliderDef.key === "distance" ? 0.1 : 0.01;
       sliderInput.value = inverted ? hi + lo - this.orbitController[sliderDef.key] : this.orbitController[sliderDef.key];
+      sliderInput.style.cssText = inputStyle;
 
-      // La glissière est le SEUL endroit qui met à jour orbitController
       sliderInput.addEventListener("input", (e) => {
         const raw = parseFloat(e.target.value);
         this.orbitController[sliderDef.key] = inverted ? hi + lo - raw : raw;
@@ -134,131 +158,79 @@ export class Ui {
 
       this.sliderRefs[sliderDef.key] = sliderInput;
 
-      if (sliderDef.key === "rotation") {
-        // Bas au centre, horizontal
-        container.style.cssText =
-          panelStyle +
-          `
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 400px;
-        `;
-        sliderInput.style.cssText = inputStyle + `width: 100%;`;
-      } else if (sliderDef.key === "height") {
-        // Droite, vertical
-        container.style.cssText =
-          panelStyle +
-          `
-          right: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 60px;
-          height: 300px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        `;
-        sliderInput.style.cssText =
-          inputStyle +
-          `
-          width: 250px;
-          transform: rotate(-90deg);
-          transform-origin: center center;
-          margin-top: 130px;
-        `;
-      } else if (sliderDef.key === "distance") {
-        // Gauche, vertical
-        container.style.cssText =
-          panelStyle +
-          `
-          left: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 60px;
-          height: 300px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        `;
-        sliderInput.style.cssText =
-          inputStyle +
-          `
-          width: 250px;
-          transform: rotate(-90deg);
-          transform-origin: center center;
-          margin-top: 130px;
-        `;
-      }
-
       container.appendChild(label);
       container.appendChild(sliderInput);
-      document.body.appendChild(container);
+      sliderPanel.appendChild(container);
     });
+
+    // Bouton Reset Caméra sous les sliders
+    this.sliderButtonBar = document.createElement("div");
+    this.sliderButtonBar.style.cssText = `
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+    `;
+    sliderPanel.appendChild(this.sliderButtonBar);
+
+    this.rightColumn.appendChild(sliderPanel);
+    document.body.appendChild(this.rightColumn);
   }
 
   // --- Boutons ---
   _createButtons() {
-    // Conteneur des boutons en haut au centre
-    const topBar = document.createElement("div");
-    topBar.style.cssText = `
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: ${this.gap}px;
-      z-index: 1000;
-    `;
-
-    // Réinitialiser la caméra
-    this._createButton("Reset Caméra", topBar, () => {
+    // Bouton Reset Caméra dans le panneau des sliders
+    this._createButton("Reset Caméra", this.sliderButtonBar, () => {
       this.updateSlider("rotation", 0);
       this.updateSlider("height", Math.PI / 2);
       this.updateSlider("distance", 3);
     });
 
+    // Panneau des boutons d'action (sous les sliders)
+    const buttonPanel = document.createElement("div");
+    buttonPanel.style.cssText = `
+      background: rgba(15, 15, 15, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 260px;
+      align-items: stretch;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    `;
+
     // Couper la branche sélectionnée
-    this.cutButton = this._createButton("Couper la branche", topBar, () => {
+    this.cutButton = this._createButton("Couper la branche", buttonPanel, () => {
       if (this.onCutBranch) this.onCutBranch();
     });
     this._setButtonEnabled(this.cutButton, false);
 
     // Rétablir toutes les branches
-    this.restoreButton = this._createButton("Rétablir les branches", topBar, () => {
+    this.restoreButton = this._createButton("Rétablir les branches", buttonPanel, () => {
       if (this.onRestoreBranches) this.onRestoreBranches();
     });
     this._setButtonEnabled(this.restoreButton, false);
 
     // Toggle Grass button
     this.grassEnabled = true;
-    this.grassToggleButton = this._createButton("🌱 ON", topBar, () => {
+    this.grassToggleButton = this._createButton("🌱 ON", buttonPanel, () => {
       this.grassEnabled = !this.grassEnabled;
       this.grassToggleButton.textContent = this.grassEnabled ? "🌱 ON" : "🌱 OFF";
       if (this.onToggleGrass) this.onToggleGrass(this.grassEnabled);
     });
 
-    document.body.appendChild(topBar);
-
-    // Valider — en bas à droite
+    // Valider
     this._validated = false;
-    const validateContainer = document.createElement("div");
-    validateContainer.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
-    `;
-    this.validateButton = this._createButton("Valider", validateContainer, () => {
+    this.validateButton = this._createButton("Valider", buttonPanel, () => {
       if (!this._validated) {
-        // Mode Valider
         if (this.onValidate) this.onValidate();
         this._validated = true;
         this.validateButton.textContent = "Recommencer";
         this._setButtonEnabled(this.cutButton, false);
         this._setButtonEnabled(this.restoreButton, false);
       } else {
-        // Mode Recommencer
         if (this.onRestart) this.onRestart();
         this.hideFeedback();
         this._validated = false;
@@ -267,7 +239,8 @@ export class Ui {
         this._setButtonEnabled(this.restoreButton, false);
       }
     });
-    document.body.appendChild(validateContainer);
+
+    this.rightColumn.appendChild(buttonPanel);
   }
 
   _setButtonEnabled(btn, enabled) {
@@ -296,8 +269,9 @@ export class Ui {
     const btn = document.createElement("button");
     btn.textContent = text;
     btn.style.cssText = `
-      padding: 14px 24px;
-      width: 200px;
+      padding: 12px 16px;
+      width: 100%;
+      box-sizing: border-box;
       text-align: center;
       background: rgba(15, 15, 15, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -305,7 +279,7 @@ export class Ui {
       color: #ffffff;
       cursor: pointer;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px;
       font-family: Arial, sans-serif;
       transition: background 0.2s ease, border-color 0.2s ease;
       white-space: nowrap;
