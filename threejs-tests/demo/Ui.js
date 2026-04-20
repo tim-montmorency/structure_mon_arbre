@@ -12,8 +12,8 @@ export class Ui {
     // --- Définition des glissières (min/max = gauche/droite du curseur) ---
     this.sliderDefs = [
       { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
-      { key: "height", min: 0.25, max: 1, label: "Hauteur" },
-      { key: "distance", min: 9, max: 1, label: "Distance" },
+      { key: "height", min: 0.15, max: 1, label: "Hauteur" },
+      { key: "distance", min: 5, max: 1, label: "Distance" },
     ];
 
     this.buttonCount = 2; // Reset + Couper
