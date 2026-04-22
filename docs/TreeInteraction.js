@@ -151,7 +151,7 @@ export class TreeInteraction {
     if (!mesh || mesh.userData.isOutline) return;
     const mat = this._ensureOwnMaterial(mesh);
     if (mat) {
-      mat.emissive = new THREE.Color(0x00aa00);
+      mat.emissive = new THREE.Color(0xffb3b3);
       mat.emissiveIntensity = 0.4;
     }
     mesh.children.forEach((child) => this._selectChildren(child));
