@@ -1,16 +1,16 @@
 // main.js
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { OrbitController } from "./OrbitController.js";
-import { Ui } from "./Ui.js";
-import { createGround } from "./ground.js";
-import { createSky } from "./sky.js";
-import { addPersonSilhouette } from "./addPersonSilhouette.js";
-import { TreeInteraction } from "./TreeInteraction.js";
-import { createLighting } from "./lighting.js";
-import { Wind } from "./wind.js";
-import { Grass } from "./grass.js";
-import { createRocks } from "./rocks.js";
+import { OrbitController } from "./scripts/OrbitController.js";
+import { Ui } from "./scripts/Ui.js";
+import { createGround } from "./scripts/ground.js";
+import { createSky } from "./scripts/sky.js";
+import { addPersonSilhouette } from "./scripts/addPersonSilhouette.js";
+import { TreeInteraction } from "./scripts/TreeInteraction.js";
+import { createLighting } from "./scripts/lighting.js";
+import { Wind } from "./scripts/wind.js";
+import { Grass } from "./scripts/grass.js";
+import { createRocks } from "./scripts/rocks.js";
 import Stats from "stats";
 
 const stats = new Stats();
@@ -58,7 +58,7 @@ const ui = new Ui(orbitController, renderer.domElement);
 // Charger le modèle d'arbre
 const loader = new GLTFLoader();
 loader.load(
-  "./Tree0.glb",
+  "./models/Tree0.glb",
   (gltf) => {
     const tree = gltf.scene;
     tree.position.y = 0;

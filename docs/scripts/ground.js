@@ -5,14 +5,14 @@ export function createGround() {
 
   const textureLoader = new THREE.TextureLoader();
 
-  const dirtColor = textureLoader.load("./dirt_color.jpg");
+  const dirtColor = textureLoader.load("./textures/dirt_color.jpg");
   dirtColor.wrapS = THREE.RepeatWrapping;
   dirtColor.wrapT = THREE.RepeatWrapping;
   dirtColor.repeat.set(3, 3);
   dirtColor.anisotropy = 8;
   dirtColor.colorSpace = THREE.SRGBColorSpace;
 
-  const dirtNormal = textureLoader.load("./dirt_normal.jpg");
+  const dirtNormal = textureLoader.load("./textures/dirt_normal.jpg");
   dirtNormal.wrapS = THREE.RepeatWrapping;
   dirtNormal.wrapT = THREE.RepeatWrapping;
   dirtNormal.repeat.set(3, 3);
