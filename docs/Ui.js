@@ -310,6 +310,7 @@ export class Ui {
       couronne: "Branche couronne",
       débordante: "Branche débordante",
       temporaire: "Branche temporaire",
+      flèche: "Supression de la double flèche",
     };
     return labels[tag] || tag || "Branche inconnue";
   }

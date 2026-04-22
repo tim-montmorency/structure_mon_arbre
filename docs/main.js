@@ -13,9 +13,9 @@ import { Grass } from "./grass.js";
 import { createRocks } from "./rocks.js";
 import Stats from "stats";
 
-  const stats = new Stats();
-  stats.showPanel(0); // 0: FPS, 1: ms/frame, 2: memory
-  document.body.appendChild(stats.dom);
+const stats = new Stats();
+stats.showPanel(0); // 0: FPS, 1: ms/frame, 2: memory
+document.body.appendChild(stats.dom);
 
 // Scène
 const scene = new THREE.Scene();
@@ -58,7 +58,7 @@ const ui = new Ui(orbitController, renderer.domElement);
 // Charger le modèle d'arbre
 const loader = new GLTFLoader();
 loader.load(
-  "./ActualBadTree.glb",
+  "./Tree0.glb",
   (gltf) => {
     const tree = gltf.scene;
     tree.position.y = 0;
@@ -138,7 +138,7 @@ function animate() {
   wind.update(clock.getDelta());
   orbitController.update();
   renderer.render(scene, camera);
-   stats.end();
+  stats.end();
 }
 renderer.setAnimationLoop(animate);
 
