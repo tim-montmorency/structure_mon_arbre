@@ -315,16 +315,6 @@ export class TreeInteraction {
     });
   }
 
-  // --- Désélectionner toutes les branches ---
-  _deselectAll() {
-    const meshes = [...this.selectedMeshes];
-    this.selectedMeshes.clear();
-    this.onSelectionChange?.(0);
-    for (const mesh of meshes) {
-      this._deselectBranch(mesh);
-    }
-  }
-
   // --- Couper toutes les branches sélectionnées ---
   cutSelected() {
     if (this.selectedMeshes.size === 0) return;
@@ -361,20 +351,14 @@ export class TreeInteraction {
 
   // --- Rétablir toutes les branches coupées ---
   restoreAll() {
-    // Copier puis vider la sélection AVANT de retirer le surlignage
-    const selected = [...this.selectedMeshes];
-    this.selectedMeshes.clear();
-    for (const mesh of selected) {
-      this._deselectBranch(mesh);
-    }
-
     for (const { mesh, parent } of this.cutBranches) {
       if (parent) parent.add(mesh);
-      this._deselectBranch(mesh);
+      this.selectedMeshes.add(mesh);
+      this._selectBranch(mesh);
     }
     this.cutBranches = [];
     this.wrongCutCount = 0;
-    this.onSelectionChange?.(0);
+    this.onSelectionChange?.(this.selectedMeshes.size);
     console.log("All branches restored");
   }
 

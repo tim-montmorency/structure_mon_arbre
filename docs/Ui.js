@@ -231,11 +231,10 @@ export class Ui {
         this._setButtonEnabled(this.cutButton, false);
         this._setButtonEnabled(this.restoreButton, false);
       } else {
+        this._validated = false;
         if (this.onRestart) this.onRestart();
         this.hideFeedback();
-        this._validated = false;
         this.validateButton.textContent = "Valider";
-        this.setCutEnabled(false);
         this._setButtonEnabled(this.restoreButton, false);
       }
     });
