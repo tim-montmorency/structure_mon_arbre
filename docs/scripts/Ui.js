@@ -399,7 +399,7 @@ export class Ui {
   }
 
   // --- Afficher le résultat de la validation ---
-  showFeedback({ cut, missed, wrongCutCount }) {
+  showFeedback({ cut, missed, wrongCutCount, overCut }) {
     let html = "";
 
     const correctCuts = cut.filter((b) => b.isBad);
@@ -407,8 +407,12 @@ export class Ui {
     const allFound = missed.length === 0 && correctCuts.length > 0 && !hasWrongCuts;
 
     // Met à jour le texte du bouton selon le résultat
-    this._wasAllFound = allFound;
-    this.validateButton.textContent = allFound ? "Prochain Exercice" : "Recommencer";
+    this._wasAllFound = allFound && !overCut;
+    this.validateButton.textContent = allFound && !overCut ? "Prochain Exercice" : "Recommencer";
+
+    if (overCut) {
+      html += `<p style="margin: 0 0 10px 0; color: #ff6666; font-weight: 600;">Vous avez coupé plus de 30% de l'arbre. Faites attention à ne pas retirer trop de branches.</p>`;
+    }
 
     if (allFound) {
       html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">Félicitations, vous les avez toutes trouvées !</h3>`;
@@ -448,6 +452,16 @@ export class Ui {
 
     this.feedbackPanel.innerHTML = html;
     this.feedbackPanel.style.display = "block";
+  }
+
+  // --- Réinitialiser l'état de l'exercice (appelé lors du changement d'arbre) ---
+  resetExercise() {
+    this._validated = false;
+    this._wasAllFound = false;
+    this.validateButton.textContent = "Valider";
+    this._setButtonEnabled(this.cutButton, false);
+    this._setButtonEnabled(this.restoreButton, false);
+    this.hideFeedback();
   }
 
   // --- Cacher le panneau de rétroaction ---
@@ -507,6 +521,7 @@ export class Ui {
   }
 
   selectTree(index) {
+    if (index === this._activeTreeIndex) return;
     this._activeTreeIndex = index;
     this._updateTreeSelectorActive();
     if (this.onTreeSelect) this.onTreeSelect(index);

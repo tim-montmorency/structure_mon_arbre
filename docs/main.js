@@ -71,6 +71,15 @@ let grass = null;
 let rocks = null;
 
 function loadTree(config) {
+  // Réinitialiser l'état de l'UI
+  ui.resetExercise();
+
+  // Nettoyer l'ancienne interaction (retire les écouteurs d'événements)
+  if (treeInteraction) {
+    treeInteraction.destroy();
+    treeInteraction = null;
+  }
+
   // Retirer l'arbre précédent
   if (currentTree) {
     scene.remove(currentTree);

@@ -24,9 +24,21 @@ export class TreeInteraction {
       }
     });
 
+    // Compter tous les meshes de l'arbre (hors outlines) pour la règle des 30%
+    this.totalMeshCount = 0;
+    this.tree.traverse((child) => {
+      if (child.isMesh && !child.userData.isOutline) this.totalMeshCount++;
+    });
+
     this._setupHover();
     this._setupClick();
     this._createOutline();
+  }
+
+  // --- Nettoyer les écouteurs d'événements (appelé avant de charger un nouvel arbre) ---
+  destroy() {
+    window.removeEventListener("mousemove", this._onMouseMove);
+    window.removeEventListener("click", this._onClick);
   }
 
   // --- Outline solide autour de l'arbre (ne réagit pas au survol/clic) ---
@@ -231,7 +243,7 @@ export class TreeInteraction {
 
   // --- Survol ---
   _setupHover() {
-    window.addEventListener("mousemove", (event) => {
+    this._onMouseMove = (event) => {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -272,12 +284,13 @@ export class TreeInteraction {
       } else {
         document.body.style.cursor = "default";
       }
-    });
+    };
+    window.addEventListener("mousemove", this._onMouseMove);
   }
 
   // --- Clic pour sélectionner / désélectionner ---
   _setupClick() {
-    window.addEventListener("click", (event) => {
+    this._onClick = (event) => {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -312,7 +325,8 @@ export class TreeInteraction {
       this.selectedMeshes.add(clicked);
       this._selectBranch(clicked);
       this.onSelectionChange?.(this.selectedMeshes.size);
-    });
+    };
+    window.addEventListener("click", this._onClick);
   }
 
   // --- Couper toutes les branches sélectionnées ---
@@ -417,6 +431,20 @@ export class TreeInteraction {
       });
     }
 
-    return { cut, missed, wrongCutCount: this.wrongCutCount + wrongSelectionCount };
+    // Calculer le pourcentage de meshes coupés ou sélectionnés
+    let cutMeshCount = 0;
+    for (const { mesh } of this.cutBranches) {
+      mesh.traverse((child) => {
+        if (child.isMesh && !child.userData.isOutline) cutMeshCount++;
+      });
+    }
+    for (const mesh of this.selectedMeshes) {
+      mesh.traverse((child) => {
+        if (child.isMesh && !child.userData.isOutline) cutMeshCount++;
+      });
+    }
+    const overCut = this.totalMeshCount > 0 && cutMeshCount / this.totalMeshCount > 0.3;
+
+    return { cut, missed, wrongCutCount: this.wrongCutCount + wrongSelectionCount, overCut };
   }
 }
