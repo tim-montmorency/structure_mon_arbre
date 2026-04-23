@@ -109,7 +109,7 @@ loader.load(
     };
     treeInteraction.onSelectionChange = (count) => ui.setCutEnabled(count > 0);
 
-    // Toggle grass and rocks presence in the scene
+    // Connecter le toggle de l'herbe et des rochers
     ui.onToggleGrass = (enabled) => {
       if (grass) {
         if (enabled) {
