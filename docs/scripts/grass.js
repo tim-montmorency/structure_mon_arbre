@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 /**
- * Grass system using noise-based wind, easeIn color gradient,
- * ambient occlusion, and 15-vertex curved blade geometry.
- * Usage: const grass = new Grass(wind, opts); scene.add(grass.mesh);
+ * Crée un groupe de brins d'herbe animés par le vent, avec des zones de terre nue (dirt
+ * patches) pour plus de réalisme. Utilise une géométrie instanciée pour des performances
+ * optimales, et un shader personnalisé pour l'animation du vent et l'éclairage.
  */
 export class Grass {
   constructor(wind, opts = {}) {
@@ -13,13 +13,13 @@ export class Grass {
     const BLADE_HEIGHT_VAR = opts.bladeHeightVariation ?? 0.08;
     const BLADE_WIDTH = opts.bladeWidth ?? 0.04;
     const NOISE_SCALE = opts.noiseScale ?? 0.67;
-    const PATCHINESS = opts.patchiness ?? 0.92; // 0 = all dirt, 1 = all grass
+    const PATCHINESS = opts.patchiness ?? 0.92; // 0 = tout terre, 1 = toute herbe
 
-    // Random offset so patches change every refresh
+    // Un offset aléatoire pour les échantillons de bruit, afin que chaque pastille ait une répartition différente des zones d'herbe/terre
     const noiseOffsetX = Math.random() * 1000;
     const noiseOffsetZ = Math.random() * 1000;
 
-    // Smooth value noise (matches eztree's simplex approach)
+    // Une fonction de hash rapide pour générer du bruit à partir de coordonnées, utilisée pour les zones d'herbe/terre et la variation des brins
     function hash(x, y) {
       const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
       return n - Math.floor(n);
@@ -37,7 +37,7 @@ export class Grass {
       return a + (b - a) * sy;
     }
 
-    // Multi-octave noise for natural look
+    // Une fonction de bruit à plusieurs octaves (fractal brownian motion) pour des motifs plus intéressants
     function fbmNoise(x, y) {
       return smoothNoise(x, y) * 0.6 + smoothNoise(x * 2.3 + 5.2, y * 2.3 + 1.3) * 0.3 + smoothNoise(x * 5.1 + 2.8, y * 5.1 + 7.9) * 0.1;
     }
@@ -47,7 +47,7 @@ export class Grass {
       return n < 1.0 - PATCHINESS;
     }
 
-    // --- Blade template: 7 rows of pairs + 1 tip = 15 vertices ---
+    // --- Modèle de brin d'herbe : 7 rangées de paires + 1 pointe = 15 sommets ---
     const ROWS = 7;
     const templatePos = [];
     const templateH = [];
@@ -55,22 +55,22 @@ export class Grass {
 
     for (let i = 0; i < ROWS; i++) {
       const t = i / ROWS;
-      const w = 1.0 - t * 0.92; // taper toward tip
-      templatePos.push(-0.5 * w, t, 0.0); // left
-      templatePos.push(0.5 * w, t, 0.0); // right
+      const w = 1.0 - t * 0.92; // taille du brin, plus fin vers le haut
+      templatePos.push(-0.5 * w, t, 0.0); // gauche
+      templatePos.push(0.5 * w, t, 0.0); // droite
       templateH.push(t, t);
     }
-    // Tip vertex
+    // Pointe du brin
     templatePos.push(0.0, 1.0, 0.0);
     templateH.push(1.0);
 
-    // Quad strip indices
+    // Indices pour les triangles : deux par paire de rangées, plus un pour la pointe
     for (let i = 0; i < ROWS - 1; i++) {
       const b = i * 2;
       templateIdx.push(b, b + 1, b + 2);
       templateIdx.push(b + 2, b + 1, b + 3);
     }
-    // Last pair -> tip
+    // Dernière paire -> pointe
     const last = (ROWS - 1) * 2;
     templateIdx.push(last, last + 1, ROWS * 2);
 
@@ -79,9 +79,9 @@ export class Grass {
     geo.setAttribute("aHeightPercent", new THREE.BufferAttribute(new Float32Array(templateH), 1));
     geo.setIndex(templateIdx);
 
-    // --- Per-instance attributes ---
+    // --- Attributs par instance ---
     const offsets = new Float32Array(BLADE_COUNT * 2);
-    const bladeData = new Float32Array(BLADE_COUNT * 4); // height, width, yaw, hash
+    const bladeData = new Float32Array(BLADE_COUNT * 4); // hauteur, largeur, yaw, hash
 
     let placed = 0;
     for (let attempt = 0; placed < BLADE_COUNT && attempt < BLADE_COUNT * 3; attempt++) {
@@ -90,7 +90,7 @@ export class Grass {
       const px = Math.cos(angle) * r;
       const pz = Math.sin(angle) * r;
 
-      // Skip blade if in a dirt patch
+      // Vérifier si cette position doit être de l'herbe ou de la terre, en utilisant le bruit procédural
       if (isDirt(px, pz)) continue;
 
       offsets[placed * 2] = px;
@@ -102,7 +102,7 @@ export class Grass {
       placed++;
     }
 
-    // Trim to actual placed count
+    // Si on n'a pas réussi à placer tous les brins (à cause des zones de terre), on ajuste le compte dans la géométrie
     geo.instanceCount = placed;
 
     geo.setAttribute("aOffset", new THREE.InstancedBufferAttribute(offsets, 2));
@@ -111,7 +111,7 @@ export class Grass {
     // --- Vertex shader ---
     const vertexShader = /* glsl */ `
     attribute vec2 aOffset;
-    attribute vec4 aBladeData; // height, width, yaw, hash
+    attribute vec4 aBladeData; // hauteur, largeur, yaw, hash
     attribute float aHeightPercent;
 
     uniform float iTime;
@@ -133,7 +133,7 @@ export class Grass {
       return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin));
     }
 
-    // 2D gradient noise -> float in [-1, 1]
+    // Bruit de gradient 2D -> float dans [-1, 1]
     vec2 hash2(vec2 p) {
       p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
       return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
@@ -164,12 +164,12 @@ export class Grass {
       float time = iTime;
       vec3 grassBladeWorldPos = vec3(aOffset.x, 0.0, aOffset.y);
 
-      // Scale blade template
+      // Position de base du brin avant toute animation : appliquer la largeur, la hauteur, et la rotation de yaw
       vec3 pos = position;
       pos.x *= bladeWidth;
       pos.y *= bladeHeight;
 
-      // Rotate by yaw (around Y)
+      // Appliquer la rotation de yaw autour de l'axe Y pour orienter le brin dans la direction souhaitée
       float cy = cos(yaw);
       float sy = sin(yaw);
       vec3 rotated = vec3(
@@ -178,49 +178,49 @@ export class Grass {
         pos.x * sy + pos.z * cy
       );
 
-      // --- Natural curve ---
+      // --- Courbure naturelle ---
       float curveAmount = 0.15 + hash * 0.2;
 
-      // Sample noise using time + world position
+      // Échantillonner le bruit en utilisant le temps + la position dans le monde
       float noiseSample = noise12(vec2(time * 0.35) + grassBladeWorldPos.xz);
-      // Add the animated noise onto the grass curve
+      // Ajouter le bruit animé à la courbure de l'herbe
       curveAmount += noiseSample * 0.1;
 
-      // --- Wind direction from noise ---
-      // Sample noise and then remap into the range [0, 2PI]
+      // --- Direction du vent à partir du bruit ---
+      // Échantillonner le bruit puis le remapper dans la plage [0, 2PI]
       float windDir = noise12(grassBladeWorldPos.xz * 0.05 + 0.05 * time);
       windDir = remap(windDir, -1.0, 1.0, 0.0, PI * 2.0);
 
-      // --- Wind strength from noise ---
-      // Another noise sample for the strength of the wind
+      // --- Intensité du vent à partir du bruit ---
+      // Un autre échantillon de bruit pour la force du vent
       float windNoiseSample = noise12(grassBladeWorldPos.xz * 0.25 + time);
-      // Try and shape it a bit with easeIn(), this is pretty arbitrary
+      // Essayer de le façonner un peu avec easeIn(), c'est assez arbitraire
       float windLeanAngle = remap(windNoiseSample, -1.0, 1.0, 0.25, 1.0);
       windLeanAngle = easeIn(windLeanAngle, 2.0) * 1.25;
 
-      // --- Apply curve + wind (world space, after yaw rotation) ---
+      // --- Appliquer la courbure + le vent (espace monde, après la rotation de yaw) ---
       float bendFactor = easeIn(h, 2.0);
 
-      // Natural lean
+      // Inclinaison naturelle
       float naturalDir = yaw + 1.5;
       rotated.x += cos(naturalDir) * curveAmount * bendFactor * bladeHeight;
       rotated.z += sin(naturalDir) * curveAmount * bendFactor * bladeHeight;
 
-      // Wind lean
+      // Inclinaison due au vent
       rotated.x += cos(windDir) * windLeanAngle * bendFactor * bladeHeight * 0.4;
       rotated.z += sin(windDir) * windLeanAngle * bendFactor * bladeHeight * 0.4;
 
-      // Final world position (0.05 = floor surface)
+      // Position finale dans le monde (0.05 = surface du sol)
       vec3 worldPos = rotated + vec3(aOffset.x, 0.05, aOffset.y);
 
-      // Approximate blade normal (facing outward from blade surface)
-      vec3 bladeForward = vec3(-sy, 0.0, cy); // perpendicular to yaw
+      // Approximation de la normale du brin (orientée vers l'extérieur de la surface du brin)
+      vec3 bladeForward = vec3(-sy, 0.0, cy); // perpendiculaire à yaw
       vec3 bladeUp = vec3(0.0, 1.0, 0.0);
       vec3 bladeNormal = normalize(mix(bladeForward, bladeUp, 0.5));
       vWorldNormal = normalize((modelMatrix * vec4(bladeNormal, 0.0)).xyz);
       vWorldPos = (modelMatrix * vec4(worldPos, 1.0)).xyz;
 
-      // Required by Three.js shadow chunks: view-space normal + world position
+      // Requis par les chunks d'ombre de Three.js : normale en espace vue + position dans le monde
       vec3 transformedNormal = normalize(normalMatrix * bladeNormal);
       vec4 worldPosition = modelMatrix * vec4(worldPos, 1.0);
       #include <shadowmap_vertex>
@@ -229,8 +229,8 @@ export class Grass {
     }
   `;
 
-  // --- Fragment shader ---
-  const fragmentShader = /* glsl */ `
+    // --- Fragment shader ---
+    const fragmentShader = /* glsl */ `
     uniform vec3 sunDirection;
     uniform vec3 sunColor;
     uniform vec3 ambientColor;
@@ -252,37 +252,37 @@ export class Grass {
     void main() {
       float h = vHeightPercent;
 
-      // Color: dark green base, yellowish-green tip
+      // Couleur : base vert foncé, pointe vert jaunâtre
       vec3 baseColour = vec3(0.04, 0.18, 0.02);
       vec3 tipColour  = vec3(0.35, 0.52, 0.12);
-      // Gradient from base to tip, controlled by shaping function
+      // Dégradé de la base à la pointe, contrôlé par la fonction de mise en forme
       vec3 diffuseColour = mix(baseColour, tipColour, easeIn(h, 4.0));
 
-      // Ambient occlusion
+      // Occlusion ambiante
       float density = 0.8;
       float aoForDensity = mix(1.0, 0.25, density);
       float ao = mix(aoForDensity, 1.0, easeIn(h, 2.0));
 
-      // --- Lighting ---
+      // --- Éclairage ---
       vec3 N = normalize(vWorldNormal);
       vec3 L = normalize(sunDirection);
       vec3 V = normalize(cameraPosition - vWorldPos);
       vec3 H = normalize(L + V);
 
-      // Shadow (Three.js built-in)
+      // Ombre (intégrée à Three.js)
       float shadow = getShadowMask();
 
-      // Diffuse (wrap lighting for softer look)
+      // Diffuse (éclairage enveloppé pour un rendu plus doux)
       float NdotL = dot(N, L);
       float diffuse = max(0.0, NdotL * 0.5 + 0.5); // half-lambert
 
-      // Translucency: light shining through blades from behind
+      // Translucence : lumière traversant les brins par l'arrière
       float translucency = max(0.0, dot(-N, L)) * 0.5 * easeIn(h, 2.0);
 
-      // Specular
+      // Spéculaire
       float spec = pow(max(0.0, dot(N, H)), 24.0) * 0.2 * easeIn(h, 2.0);
 
-      // Combine — shadow affects sun contributions
+      // Combinaison — l'ombre affecte les contributions du soleil
       vec3 ambient = ambientColor * diffuseColour * 0.7;
       vec3 sun = sunColor * diffuseColour * diffuse * 1.2 * shadow;
       vec3 trans = sunColor * tipColour * translucency * shadow;
@@ -294,22 +294,22 @@ export class Grass {
     }
   `;
 
-  // Sun direction matches lighting.js: position (5, 4, 6) normalized
-  const sunDir = new THREE.Vector3(5, 4, 6).normalize();
+    // Direction du soleil correspond à lighting.js : position (5, 4, 6) normalisée
+    const sunDir = new THREE.Vector3(5, 4, 6).normalize();
 
-  const mat = new THREE.ShaderMaterial({
-    lights: true,
-    uniforms: {
-      ...THREE.UniformsLib.lights,
-      ...wind.uniforms,
-      sunDirection: { value: sunDir },
-      sunColor: { value: new THREE.Color(1.0, 0.95, 0.85) },
-      ambientColor: { value: new THREE.Color(0.6, 0.65, 0.8) },
-    },
-    vertexShader,
-    fragmentShader,
-    side: THREE.DoubleSide,
-  });
+    const mat = new THREE.ShaderMaterial({
+      lights: true,
+      uniforms: {
+        ...THREE.UniformsLib.lights,
+        ...wind.uniforms,
+        sunDirection: { value: sunDir },
+        sunColor: { value: new THREE.Color(1.0, 0.95, 0.85) },
+        ambientColor: { value: new THREE.Color(0.6, 0.65, 0.8) },
+      },
+      vertexShader,
+      fragmentShader,
+      side: THREE.DoubleSide,
+    });
 
     const mesh = new THREE.Mesh(geo, mat);
     mesh.frustumCulled = false;
@@ -338,5 +338,4 @@ export class Grass {
       this._active = false;
     }
   }
-
 }

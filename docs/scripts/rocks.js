@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 /**
- * Creates procedural rocks scattered across the pastille.
+ * Crée un groupe de rochers dispersés sur la pastille. Utilise une géométrie d'icosaèdre déformée pour chaque rocher, instanciée pour de meilleures performances.
  */
 export function createRocks(opts = {}) {
   const MIN_SCALE = opts.minScale ?? 0.06;
@@ -10,7 +10,7 @@ export function createRocks(opts = {}) {
 
   const group = new THREE.Group();
 
-  // Single rock template (distorted icosahedron)
+  // Géométrie de base pour les rochers : un icosaèdre légèrement déformé pour plus de réalisme
   const geo = new THREE.IcosahedronGeometry(1, 1);
   const pos = geo.attributes.position;
   for (let i = 0; i < pos.count; i++) {
@@ -30,7 +30,7 @@ export function createRocks(opts = {}) {
     flatShading: true,
   });
 
-  // Scatter rocks across pastille
+  // Générer des positions aléatoires pour les rochers, en les dispersant sur la pastille tout en évitant le centre
   const rockPositions = [];
   for (let i = 0; i < 8; i++) {
     const angle = Math.random() * Math.PI * 2;

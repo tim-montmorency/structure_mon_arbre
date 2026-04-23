@@ -1,5 +1,5 @@
 export class Ui {
-  constructor(orbitController, domElement) {
+  constructor(orbitController, domElement, trees = []) {
     this.orbitController = orbitController;
     this.domElement = domElement;
     this.sliderRefs = {};
@@ -20,10 +20,15 @@ export class Ui {
     const totalHeight = this.sliderDefs.length * (this.sliderHeight + this.gap) + this.buttonCount * (50 + this.gap);
     this.baseTop = Math.round((window.innerHeight - totalHeight) / 2);
 
+    this._activeTreeIndex = 0;
+    this._treeButtons = [];
+    this.onTreeSelect = null;
+
     this._createInfoPanel();
     this._createSliders();
     this._createButtons();
     this._createFeedbackPanel();
+    this._createTreeSelector(trees);
     this._setupMouseControls();
     this._setupScrollControls();
   }
@@ -213,29 +218,84 @@ export class Ui {
     });
     this._setButtonEnabled(this.restoreButton, false);
 
-    // Toggle Grass button
+    // Toggle Gazon
     this.grassEnabled = true;
-    this.grassToggleButton = this._createButton("🌱 ON", buttonPanel, () => {
+    const grassRow = document.createElement("div");
+    grassRow.style.cssText = `
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 4px;
+    `;
+    const grassLabel = document.createElement("span");
+    grassLabel.textContent = "Gazon :";
+    grassLabel.style.cssText = `
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: Arial, sans-serif;
+    `;
+    const grassTrack = document.createElement("div");
+    grassTrack.style.cssText = `
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: rgba(100, 180, 100, 0.7);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    `;
+    const grassThumb = document.createElement("div");
+    grassThumb.style.cssText = `
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      position: absolute;
+      top: 3px;
+      left: 23px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    `;
+    grassTrack.appendChild(grassThumb);
+    grassTrack.addEventListener("click", () => {
       this.grassEnabled = !this.grassEnabled;
-      this.grassToggleButton.textContent = this.grassEnabled ? "🌱 ON" : "🌱 OFF";
+      if (this.grassEnabled) {
+        grassTrack.style.background = "rgba(100, 180, 100, 0.7)";
+        grassThumb.style.left = "23px";
+      } else {
+        grassTrack.style.background = "rgba(255, 255, 255, 0.15)";
+        grassThumb.style.left = "3px";
+      }
       if (this.onToggleGrass) this.onToggleGrass(this.grassEnabled);
     });
+    grassRow.appendChild(grassLabel);
+    grassRow.appendChild(grassTrack);
+    buttonPanel.appendChild(grassRow);
 
-    // Valider
+    // Valider -> Recommencer / Prochain Exercice (un seul bouton)
     this._validated = false;
+    this._allFound = false;
     this.validateButton = this._createButton("Valider", buttonPanel, () => {
       if (!this._validated) {
         if (this.onValidate) this.onValidate();
         this._validated = true;
-        this.validateButton.textContent = "Recommencer";
         this._setButtonEnabled(this.cutButton, false);
         this._setButtonEnabled(this.restoreButton, false);
+        // Le texte du bouton est mis à jour dans showFeedback()
       } else {
         this._validated = false;
-        if (this.onRestart) this.onRestart();
+        this._allFound = false;
         this.hideFeedback();
-        this.validateButton.textContent = "Valider";
         this._setButtonEnabled(this.restoreButton, false);
+        this.validateButton.textContent = "Valider";
+        if (this._wasAllFound) {
+          if (this.onNextExercise) this.onNextExercise();
+        } else {
+          if (this.onRestart) this.onRestart();
+        }
+        this._wasAllFound = false;
       }
     });
 
@@ -346,6 +406,10 @@ export class Ui {
     const hasWrongCuts = wrongCutCount > 0;
     const allFound = missed.length === 0 && correctCuts.length > 0 && !hasWrongCuts;
 
+    // Met à jour le texte du bouton selon le résultat
+    this._wasAllFound = allFound;
+    this.validateButton.textContent = allFound ? "Prochain Exercice" : "Recommencer";
+
     if (allFound) {
       html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">Félicitations, vous les avez toutes trouvées !</h3>`;
       html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches correctement identifiées :</p>`;
@@ -389,6 +453,81 @@ export class Ui {
   // --- Cacher le panneau de rétroaction ---
   hideFeedback() {
     this.feedbackPanel.style.display = "none";
+  }
+
+  // --- Sélecteur d'arbres (rangée de boutons numérotés en haut au centre) ---
+  _createTreeSelector(trees) {
+    this._treeSelectorPanel = document.createElement("div");
+    this._treeSelectorPanel.style.cssText = `
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      background: rgba(15, 15, 15, 0.85);
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      font-family: Arial, sans-serif;
+    `;
+    trees.forEach((tree, i) => this._addTreeButton(tree, i));
+    document.body.appendChild(this._treeSelectorPanel);
+    this._updateTreeSelectorActive();
+  }
+
+  _addTreeButton(tree, i) {
+    const btn = document.createElement("button");
+    btn.textContent = String(i + 1);
+    btn.title = tree.label;
+    btn.style.cssText = `
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      transition: background 0.15s, border-color 0.15s;
+    `;
+    btn.addEventListener("click", () => this.selectTree(i));
+    btn.addEventListener("mouseenter", () => {
+      if (i !== this._activeTreeIndex) btn.style.background = "rgba(255, 255, 255, 0.18)";
+    });
+    btn.addEventListener("mouseleave", () => {
+      if (i !== this._activeTreeIndex) btn.style.background = "rgba(255, 255, 255, 0.08)";
+    });
+    this._treeButtons.push(btn);
+    this._treeSelectorPanel.appendChild(btn);
+  }
+
+  selectTree(index) {
+    this._activeTreeIndex = index;
+    this._updateTreeSelectorActive();
+    if (this.onTreeSelect) this.onTreeSelect(index);
+  }
+
+  _updateTreeSelectorActive() {
+    this._treeButtons.forEach((btn, i) => {
+      if (i === this._activeTreeIndex) {
+        btn.style.background = "rgba(100, 180, 100, 0.45)";
+        btn.style.borderColor = "rgba(100, 255, 100, 0.5)";
+      } else {
+        btn.style.background = "rgba(255, 255, 255, 0.08)";
+        btn.style.borderColor = "rgba(255, 255, 255, 0.2)";
+      }
+    });
+  }
+
+  addTree(treeConfig) {
+    const i = this._treeButtons.length;
+    this._addTreeButton(treeConfig, i);
+    this._updateTreeSelectorActive();
   }
 
   // --- Glisser avec le bouton du milieu (style Blender) ---

@@ -2,7 +2,7 @@
 import * as THREE from "three";
 
 export function createLighting(scene) {
-  // Hemisphere light: sky blue above, warm brown below — gives natural ambient fill
+  // Lumière ambiante douce pour éclairer les zones à l'ombre
   scene.add(new THREE.HemisphereLight(0x87ceeb, 0x553322, 0.7));
 
   const sunLight = new THREE.DirectionalLight(0xfff8ee, 5.0);
