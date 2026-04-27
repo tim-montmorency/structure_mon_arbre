@@ -72,7 +72,7 @@ export class Ui {
       border-radius: 8px;
       font-size: 15px;
       z-index: 1000;
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       width: 260px;
       box-sizing: border-box;
       backdrop-filter: blur(10px);
@@ -462,7 +462,7 @@ export class Ui {
       padding: 20px 25px;
       border-radius: 8px;
       font-size: 14px;
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       z-index: 1000;
       display: none;
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -547,9 +547,9 @@ export class Ui {
     this._treeSelectorPanel.style.cssText = `
       position: fixed;
       top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 20px;
       display: flex;
+      
       gap: 8px;
       z-index: 1000;
       background: rgba(15, 15, 15, 0.85);
@@ -557,7 +557,7 @@ export class Ui {
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     `;
     trees.forEach((tree, i) => this._addTreeButton(tree, i));
     document.body.appendChild(this._treeSelectorPanel);
@@ -578,7 +578,7 @@ export class Ui {
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       transition: background 0.15s, border-color 0.15s;
     `;
     btn.addEventListener("click", () => this.selectTree(i));
@@ -602,11 +602,13 @@ export class Ui {
   _updateTreeSelectorActive() {
     this._treeButtons.forEach((btn, i) => {
       if (i === this._activeTreeIndex) {
-        btn.style.background = "rgba(100, 180, 100, 0.45)";
-        btn.style.borderColor = "rgba(100, 255, 100, 0.5)";
+        btn.style.background = "rgba(57, 64, 50, 1)";
+        btn.style.borderColor = "rgba(83, 94, 73, 1)";
+        btn.style.color = "rgba(255, 255, 255, 1)";
       } else {
         btn.style.background = "rgba(255, 255, 255, 0.08)";
-        btn.style.borderColor = "rgba(255, 255, 255, 0.2)";
+        btn.style.borderColor = "rgba(255, 255, 255, 0.03)";
+        btn.style.color = "rgba(255, 255, 255, 0.23)";
       }
     });
   }
