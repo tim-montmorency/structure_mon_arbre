@@ -11,11 +11,7 @@ import { createLighting } from "./scripts/lighting.js";
 import { Wind } from "./scripts/wind.js";
 import { Grass } from "./scripts/grass.js";
 import { createRocks } from "./scripts/rocks.js";
-import Stats from "stats";
 
-const stats = new Stats();
-stats.showPanel(0); // 0: FPS, 1: ms/frame, 2: memory
-document.body.appendChild(stats.dom);
 
 // Scène
 const scene = new THREE.Scene();
@@ -178,11 +174,9 @@ loadTree(TREES[0]);
 // Boucle d'animation
 const clock = new THREE.Clock();
 function animate() {
-  stats.begin();
   wind.update(clock.getDelta());
   orbitController.update();
   renderer.render(scene, camera);
-  stats.end();
 }
 renderer.setAnimationLoop(animate);
 
