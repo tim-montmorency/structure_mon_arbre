@@ -129,7 +129,7 @@ export class Ui {
       margin-bottom: 12px;
       padding-bottom: 5px;
       text-align: center;
-      border-bottom: 3px solid rgba(255, 255, 255, 0.15);
+      border-bottom: 4px solid rgba(255, 255, 255, 0.15);
     `;
     sliderPanel.appendChild(panelTitle);
 
@@ -168,7 +168,7 @@ export class Ui {
       color: #ffffff;
       font-size: 15px;
       font-weight: 600;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans';
       margin-bottom: 6px;
     `;
     const grassTrack = document.createElement("div");
@@ -287,17 +287,38 @@ export class Ui {
       backdrop-filter: blur(10px);
     `;
 
-    // Couper la branche sélectionnée
-    this.cutButton = this._createButton("Couper la branche", buttonPanel, () => {
+    // Couper + Rétablir côte à côte
+    const actionRow = document.createElement("div");
+    actionRow.style.cssText = `
+      display: flex;
+      gap: 8px;
+    `;
+
+    this.cutButton = this._createButton("Couper", actionRow, () => {
       if (this.onCutBranch) this.onCutBranch();
-    });
+    }, { bg: "rgba(180, 40, 40, 0.85)", border: "rgba(255, 80, 80, 0.5)", hover: "rgba(220, 60, 60, 0.9)", icon: "./icons/scissors.png", iconPos: "top" });
+    this.cutButton.style.padding = "6px 8px";
+    this.cutButton.style.fontSize = "15px";
     this._setButtonEnabled(this.cutButton, false);
 
-    // Rétablir toutes les branches
-    this.restoreButton = this._createButton("Rétablir les branches", buttonPanel, () => {
+    this.restoreButton = this._createButton("Rétablir", actionRow, () => {
       if (this.onRestoreBranches) this.onRestoreBranches();
-    });
+    }, { bg: "rgba(30, 80, 180, 0.85)", border: "rgba(80, 130, 255, 0.5)", hover: "rgba(50, 110, 220, 0.9)", icon: "./icons/restore.png", iconPos: "top" });
+    this.restoreButton.style.padding = "0px 2px";
+    this.restoreButton.style.fontSize = "15px";
     this._setButtonEnabled(this.restoreButton, false);
+
+    buttonPanel.appendChild(actionRow);
+
+    // Ligne de séparation
+    const separator = document.createElement("div");
+    separator.style.cssText = `
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 2px 0;
+    `;
+    buttonPanel.appendChild(separator);
 
     // Valider -> Recommencer / Prochain Exercice (un seul bouton)
     this._validated = false;
@@ -314,7 +335,7 @@ export class Ui {
         this._allFound = false;
         this.hideFeedback();
         this._setButtonEnabled(this.restoreButton, false);
-        this.validateButton.textContent = "Valider";
+        this.validateButton.querySelector("span").textContent = "Valider";
         if (this._wasAllFound) {
           if (this.onNextExercise) this.onNextExercise();
         } else {
@@ -322,7 +343,7 @@ export class Ui {
         }
         this._wasAllFound = false;
       }
-    });
+    }, { bg: "rgba(85, 99, 45, 1)", border: "rgba(150, 174, 80, 1)", hover: "rgba(150, 174, 80, 1)", icon: "./icons/check.png", iconPos: "left" });
 
     this.rightColumn.appendChild(buttonPanel);
   }
@@ -349,32 +370,59 @@ export class Ui {
     this._setButtonEnabled(this.restoreButton, enabled);
   }
 
-  _createButton(text, parent, onClick) {
+  _createButton(text, parent, onClick, color = null) {
     const btn = document.createElement("button");
-    btn.textContent = text;
+    const bg = color ? color.bg : "rgba(15, 15, 15, 0.9)";
+    const border = color ? color.border : "rgba(255, 255, 255, 0.15)";
+    const hoverBg = color ? color.hover : "rgba(255, 255, 255, 0.1)";
+    const icon = color ? color.icon : null;
+    const iconPos = color ? color.iconPos : null;
+
     btn.style.cssText = `
       padding: 12px 16px;
       width: 100%;
       box-sizing: border-box;
       text-align: center;
-      background: rgba(15, 15, 15, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: ${bg};
+      border: 1px solid ${border};
       border-radius: 8px;
       color: #ffffff;
       cursor: pointer;
       font-weight: 600;
       font-size: 15px;
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       transition: background 0.2s ease, border-color 0.2s ease;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-direction: ${iconPos === "top" ? "column" : "row"};
     `;
+
+    if (icon) {
+      const img = document.createElement("img");
+      img.src = icon;
+      img.style.cssText = `
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        pointer-events: none;
+      `;
+      btn.appendChild(img);
+    }
+
+    const span = document.createElement("span");
+    span.textContent = text;
+    btn.appendChild(span);
+
     btn.addEventListener("mouseenter", () => {
-      btn.style.background = "rgba(255, 255, 255, 0.1)";
-      btn.style.borderColor = "rgba(255, 255, 255, 0.4)";
+      btn.style.background = hoverBg;
+      btn.style.borderColor = border;
     });
     btn.addEventListener("mouseleave", () => {
-      btn.style.background = "rgba(15, 15, 15, 0.9)";
-      btn.style.borderColor = "rgba(255, 255, 255, 0.15)";
+      btn.style.background = bg;
+      btn.style.borderColor = border;
     });
     btn.addEventListener("click", onClick);
     parent.appendChild(btn);
@@ -433,7 +481,7 @@ export class Ui {
 
     // Met à jour le texte du bouton selon le résultat
     this._wasAllFound = allFound && !overCut;
-    this.validateButton.textContent = allFound && !overCut ? "Prochain Exercice" : "Recommencer";
+    this.validateButton.querySelector("span").textContent = allFound && !overCut ? "Prochain Exercice" : "Recommencer";
 
     if (overCut) {
       html += `<p style="margin: 0 0 10px 0; color: #ff6666; font-weight: 600;">Vous avez coupé plus de 30% de l'arbre. Faites attention à ne pas retirer trop de branches.</p>`;
@@ -483,8 +531,7 @@ export class Ui {
   resetExercise() {
     this._validated = false;
     this._wasAllFound = false;
-    this.validateButton.textContent = "Valider";
-    this._setButtonEnabled(this.cutButton, false);
+    this.validateButton.querySelector("span").textContent = "Valider";
     this._setButtonEnabled(this.restoreButton, false);
     this.hideFeedback();
   }
