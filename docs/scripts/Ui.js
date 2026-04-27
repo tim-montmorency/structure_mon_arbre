@@ -306,6 +306,8 @@ export class Ui {
         this.hideFeedback();
         this._setButtonEnabled(this.restoreButton, false);
         this.validateButton.querySelector("span").textContent = "Valider";
+        const validateImg1 = this.validateButton.querySelector("img");
+        if (validateImg1) validateImg1.src = "./icons/check.png";
         if (this._wasAllFound) {
           if (this.onNextExercise) this.onNextExercise();
         } else {
@@ -424,7 +426,7 @@ export class Ui {
       position: fixed;
       bottom: 20px;
       left: 20px;
-      max-width: 400px;
+      max-width: 260px;
       max-height: 60vh;
       overflow-y: auto;
       color: #ffffff;
@@ -451,15 +453,19 @@ export class Ui {
 
     // Met à jour le texte du bouton selon le résultat
     this._wasAllFound = allFound && !overCut;
-    this.validateButton.querySelector("span").textContent = allFound && !overCut ? "Prochain Exercice" : "Recommencer";
+    const newText = allFound && !overCut ? "Prochain Exercice" : "Recommencer";
+    const newIcon = allFound && !overCut ? "./icons/next.png" : "./icons/retry.png";
+    this.validateButton.querySelector("span").textContent = newText;
+    const validateImg = this.validateButton.querySelector("img");
+    if (validateImg) validateImg.src = newIcon;
 
     if (overCut) {
       html += `<p style="margin: 0 0 10px 0; color: #ff6666; font-weight: 600;">Vous avez coupé plus de 30% de l'arbre. Faites attention à ne pas retirer trop de branches.</p>`;
     }
 
     if (allFound) {
-      html += `<h3 style="margin: 0 0 10px 0; color: #00ff88;">Félicitations, vous les avez toutes trouvées !</h3>`;
-      html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches correctement identifiées :</p>`;
+      html += `<h3 style="margin: 0 0 10px 0; color: #00ff88; font-size: 20px;">Félicitations !</h3>`;
+      html += `<p style="margin: 0 0 6px 0; color: #aaa;">Branches bien identifiées :</p>`;
       html += `<ul style="margin: 0 0 0 16px; padding: 0;">`;
       for (const b of correctCuts) {
         html += `<li style="margin: 2px 0; color: #00ff88;">${this._tagToLabel(b.tag)}</li>`;
@@ -476,7 +482,7 @@ export class Ui {
       }
 
       if (missed.length > 0) {
-        html += `<p style="margin: 0 0 6px 0; color: #ff6666; font-weight: 600;">❌ Vous avez manqué ${missed.length} branche${missed.length > 1 ? "s" : ""} :</p>`;
+        html += `<p style="margin: 0 0 6px 0; color: #ff6666; font-weight: 600;">❌ Branche${missed.length > 1 ? "s" : ""} manquée${wrongCutCount > 1 ? "s" : ""}: ${missed.length} </p>`;
         html += `<ul style="margin: 0 0 14px 16px; padding: 0;">`;
         for (const b of missed) {
           html += `<li style="margin: 2px 0; color: #ff6666;">${this._tagToLabel(b.tag)}</li>`;
@@ -485,7 +491,7 @@ export class Ui {
       }
 
       if (hasWrongCuts) {
-        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Vous avez identifié ${wrongCutCount} branche${wrongCutCount > 1 ? "s" : ""} qui n'aurai${wrongCutCount > 1 ? "ent" : "t"} pas dû être identifiée${wrongCutCount > 1 ? "s" : ""}.</p>`;
+        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Branche${wrongCutCount > 1 ? "s" : ""} mal identifiée${wrongCutCount > 1 ? "s" : ""}: ${wrongCutCount} branche${wrongCutCount > 1 ? "s" : ""}</p>`;
       }
 
       if (correctCuts.length === 0 && missed.length === 0 && !hasWrongCuts) {
@@ -502,7 +508,8 @@ export class Ui {
     this._validated = false;
     this._wasAllFound = false;
     this.validateButton.querySelector("span").textContent = "Valider";
-    this._setButtonEnabled(this.restoreButton, false);
+    const validateImg2 = this.validateButton.querySelector("img");
+    if (validateImg2) validateImg2.src = "./icons/check.png";
     this.hideFeedback();
   }
 
@@ -529,7 +536,7 @@ export class Ui {
       backdrop-filter: blur(10px);
       font-family: 'Plus Jakarta Sans', sans-serif;
       color: #ffffff;
-
+      max-width: 260px;
     `;
     
     const buttonsRow = document.createElement("div");
