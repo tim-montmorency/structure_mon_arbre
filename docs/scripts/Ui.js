@@ -24,6 +24,7 @@ export class Ui {
     this._treeButtons = [];
     this.onTreeSelect = null;
 
+
     this._createSliders();
     this._createButtons();
     this._createFeedbackPanel();
@@ -75,7 +76,7 @@ export class Ui {
     // Panneau des sliders
     const sliderPanel = document.createElement("div");
     sliderPanel.style.cssText = `
-      background: rgba(15, 15, 15, 0.9);
+      background: rgba(15, 15, 15, 1);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       padding: 16px 18px;
@@ -243,7 +244,7 @@ export class Ui {
     // Panneau des boutons d'action (sous les sliders)
     const buttonPanel = document.createElement("div");
     buttonPanel.style.cssText = `
-      background: rgba(15, 15, 15, 0.9);
+      background: rgba(15, 15, 15, 1);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       padding: 12px;
@@ -422,15 +423,15 @@ export class Ui {
     this.feedbackPanel.style.cssText = `
       position: fixed;
       bottom: 20px;
-      left: 100px;
+      left: 20px;
       max-width: 400px;
       max-height: 60vh;
       overflow-y: auto;
       color: #ffffff;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 1);
       padding: 20px 25px;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 15px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       z-index: 1000;
       display: none;
@@ -515,20 +516,41 @@ export class Ui {
     this._treeSelectorPanel = document.createElement("div");
     this._treeSelectorPanel.style.cssText = `
       position: fixed;
-      top: 20px;
+      top: 60px;
       left: 20px;
       display: flex;
-      
+      flex-direction: column;
       gap: 8px;
       z-index: 1000;
-      background: rgba(15, 15, 15, 0.85);
-      padding: 8px 14px;
+      background: rgba(15, 15, 15, 1);
+      padding: 18px 20px;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
       font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #ffffff;
+
     `;
+    
+    const buttonsRow = document.createElement("div");
+    buttonsRow.style.cssText = `display: flex; gap: 16px;`;
+    this._treeSelectorPanel.appendChild(buttonsRow);
+    this._buttonsRow = buttonsRow;
+
     trees.forEach((tree, i) => this._addTreeButton(tree, i));
+
+    const levelLabel = document.createElement("span");
+    levelLabel.textContent = "Niveau :";
+    levelLabel.style.cssText = `
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding-top: 4px;
+      padding-bottom: 10px;
+    `;
+    this._treeSelectorPanel.insertBefore(levelLabel, this._treeSelectorPanel.firstChild);
+
     document.body.appendChild(this._treeSelectorPanel);
     this._updateTreeSelectorActive();
   }
@@ -538,8 +560,8 @@ export class Ui {
     btn.textContent = String(i + 1);
     btn.title = tree.label;
     btn.style.cssText = `
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 42px;
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.08);
@@ -558,7 +580,7 @@ export class Ui {
       if (i !== this._activeTreeIndex) btn.style.background = "rgba(255, 255, 255, 0.08)";
     });
     this._treeButtons.push(btn);
-    this._treeSelectorPanel.appendChild(btn);
+    (this._buttonsRow || this._treeSelectorPanel).appendChild(btn);
   }
 
   selectTree(index) {
