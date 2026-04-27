@@ -24,7 +24,6 @@ export class Ui {
     this._treeButtons = [];
     this.onTreeSelect = null;
 
-    this._createInfoPanel();
     this._createSliders();
     this._createButtons();
     this._createFeedbackPanel();
@@ -57,37 +56,7 @@ export class Ui {
     }, 100);
   }
 
-  // --- Panneau d'information (à gauche) ---
-  _createInfoPanel() {
-    const info = document.createElement("div");
-    info.id = "info";
-    info.style.cssText = `
-      position: fixed;
-      top: 60px;
-      left: 20px;
-      color: #ffffff;
-      background: rgba(15, 15, 15, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 14px 16px;
-      border-radius: 8px;
-      font-size: 15px;
-      z-index: 1000;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      width: 260px;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    `;
-    info.innerHTML = `
-      <div style="font-weight:700; margin-bottom:8px; font-size:16px;">Démo Interaction Arbre</div>
-      <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
-        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Survolez pour mettre en évidence</div>
-        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Cliquez pour sélectionner</div>
-        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Clic du milieu pour la caméra</div>
-        <div style="margin: 2px 0; line-height: 1.3; font-size:15px;">🖱️ Molette pour zoomer</div>
-      </div>
-    `;
-    document.body.appendChild(info);
-  }
+
 
   // --- Glissières (panneau regroupé à droite) ---
   _createSliders() {
