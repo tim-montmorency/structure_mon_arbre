@@ -11,9 +11,9 @@ export class Ui {
 
     // --- Définition des glissières (min/max = gauche/droite du curseur) ---
     this.sliderDefs = [
-      { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation" },
-      { key: "height", min: 0.15, max: 1, label: "Hauteur" },
-      { key: "distance", min: 5, max: 1, label: "Distance" },
+      { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation caméra:" },
+      { key: "height", min: 0.15, max: 1, label: "Hauteur caméra:" },
+      { key: "distance", min: 5, max: 1, label: "Distance caméra:" },
     ];
 
     this.buttonCount = 2; // Reset + Couper
@@ -118,23 +118,104 @@ export class Ui {
       box-sizing: border-box;
     `;
 
+    // Titre du panneau
+    const panelTitle = document.createElement("div");
+    panelTitle.textContent = "Structure mon arbre";
+    panelTitle.style.cssText = `
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 34px;
+      font-family: 'Lush Garden';
+      margin-bottom: 12px;
+      padding-bottom: 5px;
+      text-align: center;
+      border-bottom: 3px solid rgba(255, 255, 255, 0.15);
+    `;
+    sliderPanel.appendChild(panelTitle);
+
     const labelStyle = `
       display: block;
       color: #ffffff;
       font-weight: 600;
       font-size: 15px;
       margin-bottom: 8px;
-      font-family: Arial, sans-serif;
-      text-align: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      text-align: left;
+      width: 100%;
     `;
     const inputStyle = `
-      height: 4px;
-      accent-color: #ffffff;
+      height: 5px;
+      accent-color:  rgba(95, 102, 89, 1);
       cursor: pointer;
       display: block;
-      width: 100%;
+      width: 75%;
       box-sizing: border-box;
     `;
+
+    // Toggle Gazon (en haut du panneau)
+    this.grassEnabled = true;
+    const grassRow = document.createElement("div");
+    grassRow.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      width: 100%;
+    `;
+    const grassLabel = document.createElement("span");
+    grassLabel.textContent = "Gazon :";
+    grassLabel.style.cssText = `
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin-bottom: 6px;
+    `;
+    const grassTrack = document.createElement("div");
+    grassTrack.style.cssText = `
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: rgba(95, 102, 89, 1);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    `;
+    const grassThumb = document.createElement("div");
+    grassThumb.style.cssText = `
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #948c8cff;
+      position: absolute;
+      top: 3px;
+      left: 23px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    `;
+    grassTrack.appendChild(grassThumb);
+    grassTrack.addEventListener("click", () => {
+      this.grassEnabled = !this.grassEnabled;
+      if (this.grassEnabled) {
+        grassTrack.style.background = "rgba(95, 102, 89, 1)";
+        grassThumb.style.left = "23px";
+      } else {
+        grassTrack.style.background = "rgba(255, 249, 249, 1)";
+        grassThumb.style.left = "3px";
+      }
+      if (this.onToggleGrass) this.onToggleGrass(this.grassEnabled);
+    });
+    const grassTrackWrapper = document.createElement("div");
+    grassTrackWrapper.style.cssText = `
+      width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+    `;
+    grassTrackWrapper.appendChild(grassTrack);
+
+    grassRow.appendChild(grassLabel);
+    grassRow.appendChild(grassTrackWrapper);
+    sliderPanel.appendChild(grassRow);
 
     this.sliderDefs.forEach((sliderDef) => {
       const lo = Math.min(sliderDef.min, sliderDef.max);
@@ -153,7 +234,7 @@ export class Ui {
       sliderInput.max = hi;
       sliderInput.step = sliderDef.key === "distance" ? 0.1 : 0.01;
       sliderInput.value = inverted ? hi + lo - this.orbitController[sliderDef.key] : this.orbitController[sliderDef.key];
-      sliderInput.style.cssText = inputStyle;
+      sliderInput.style.cssText = inputStyle + "margin-left: auto; margin-right: auto;";
 
       sliderInput.addEventListener("input", (e) => {
         const raw = parseFloat(e.target.value);
@@ -217,62 +298,6 @@ export class Ui {
       if (this.onRestoreBranches) this.onRestoreBranches();
     });
     this._setButtonEnabled(this.restoreButton, false);
-
-    // Toggle Gazon
-    this.grassEnabled = true;
-    const grassRow = document.createElement("div");
-    grassRow.style.cssText = `
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 4px;
-    `;
-    const grassLabel = document.createElement("span");
-    grassLabel.textContent = "Gazon :";
-    grassLabel.style.cssText = `
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 600;
-      font-family: Arial, sans-serif;
-    `;
-    const grassTrack = document.createElement("div");
-    grassTrack.style.cssText = `
-      width: 44px;
-      height: 24px;
-      border-radius: 12px;
-      background: rgba(100, 180, 100, 0.7);
-      position: relative;
-      cursor: pointer;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    `;
-    const grassThumb = document.createElement("div");
-    grassThumb.style.cssText = `
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #ffffff;
-      position: absolute;
-      top: 3px;
-      left: 23px;
-      transition: left 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-    `;
-    grassTrack.appendChild(grassThumb);
-    grassTrack.addEventListener("click", () => {
-      this.grassEnabled = !this.grassEnabled;
-      if (this.grassEnabled) {
-        grassTrack.style.background = "rgba(100, 180, 100, 0.7)";
-        grassThumb.style.left = "23px";
-      } else {
-        grassTrack.style.background = "rgba(255, 255, 255, 0.15)";
-        grassThumb.style.left = "3px";
-      }
-      if (this.onToggleGrass) this.onToggleGrass(this.grassEnabled);
-    });
-    grassRow.appendChild(grassLabel);
-    grassRow.appendChild(grassTrack);
-    buttonPanel.appendChild(grassRow);
 
     // Valider -> Recommencer / Prochain Exercice (un seul bouton)
     this._validated = false;
