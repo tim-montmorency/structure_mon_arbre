@@ -65,7 +65,7 @@ export class Ui {
     this.rightColumn = document.createElement("div");
     this.rightColumn.style.cssText = `
       position: fixed;
-      top: 60px;
+      top: 20px;
       right: 20px;
       z-index: 1000;
       display: flex;
@@ -523,7 +523,7 @@ export class Ui {
     this._treeSelectorPanel = document.createElement("div");
     this._treeSelectorPanel.style.cssText = `
       position: fixed;
-      top: 60px;
+      top: 20px;
       left: 20px;
       display: flex;
       flex-direction: column;
