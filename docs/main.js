@@ -12,7 +12,6 @@ import { Wind } from "./scripts/wind.js";
 import { Grass } from "./scripts/grass.js";
 import { createRocks } from "./scripts/rocks.js";
 
-
 // Scène
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x6496d2, 15, 80);
@@ -142,10 +141,13 @@ function loadTree(config) {
       ui.onCutBranch = () => {
         treeInteraction.cutSelected();
         ui.setRestoreEnabled(true);
+        ui.setValidateEnabled(true); // des branches ont été coupées -> on peut valider
       };
       ui.onRestoreBranches = () => {
         treeInteraction.restoreAll();
         ui.setRestoreEnabled(false);
+        // Après rétablissement, valider n'est possible que s'il reste des sélections
+        ui.setValidateEnabled(treeInteraction.selectedMeshes.size > 0);
       };
       ui.onValidate = () => {
         const results = treeInteraction.validate();
@@ -155,7 +157,11 @@ function loadTree(config) {
         treeInteraction.restoreAll();
         ui.setRestoreEnabled(false);
       };
-      treeInteraction.onSelectionChange = (count) => ui.setCutEnabled(count > 0);
+      treeInteraction.onSelectionChange = (count) => {
+        ui.setCutEnabled(count > 0);
+        // Permettre la validation si des branches sont sélectionnées OU déjà coupées
+        ui.setValidateEnabled(count > 0 || treeInteraction.cutBranches.length > 0);
+      };
     },
     undefined,
     (e) => console.error(e),
@@ -165,7 +171,7 @@ function loadTree(config) {
 // Prochain exercice : passe à l'arbre suivant dans la liste
 ui.onNextExercise = () => {
   const nextIndex = (ui._activeTreeIndex + 1) % TREES.length;
-  ui.selectTree(nextIndex);
+  ui._advanceToTree(nextIndex);
 };
 
 // Charger le premier arbre

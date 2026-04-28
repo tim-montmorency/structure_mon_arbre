@@ -387,34 +387,23 @@ export class TreeInteraction {
   }
 
   // --- Valider : retourner les résultats (branches coupées ou sélectionnées vs manquées) ---
+  //
+  // Chaque entrée de cut porte un flag caughtByMixedParent :
+  //   true  -> la branche défectueuse a été couverte par un noeud cliqué qui contient
+  //            aussi des branches saines (parent mixte). Aucun point n'est accordé.
+  //   false -> la branche a été identifiée précisément (clic direct ou parent 100 % défectueux).
   validate() {
-    const cut = []; // branches bad correctement retirées ou sélectionnées
-    const missed = []; // branches bad encore présentes et non sélectionnées
-
-    // Branche identifiée si coupée OU si elle (ou un ancêtre) est sélectionnée
-    const isSelectedOrDescendant = (node) => {
-      let current = node;
-      while (current) {
-        if (this.selectedMeshes.has(current)) return true;
-        current = current.parent;
-      }
-      return false;
-    };
-
-    for (const bad of this.allBadBranches) {
-      if (!this._isConnectedToTree(bad.node) || isSelectedOrDescendant(bad.node)) {
-        cut.push({ name: bad.name, tag: bad.tag, isBad: true });
-      } else {
-        missed.push({ name: bad.name, tag: bad.tag });
-      }
-    }
-
-    // Compter les sélections incorrectes (même logique que cutSelected)
-    let wrongSelectionCount = 0;
     const badNodes = new Set(this.allBadBranches.map((b) => b.node));
-    for (const mesh of this.selectedMeshes) {
+
+    // --- 1. Noeuds cliqués/coupés qui sont des parents mixtes (contiennent des meshes sains) ---
+    // Un noeud est «mixte» s'il inclut au moins un mesh sain qui n'est pas sous un sous-noeud bad.
+    const wrongCuts = [];
+    const wrongCutMeshes = new Set(); // références pour lookup O(1)
+
+    const isWrongCutBranch = (mesh) => {
+      let hasGoodMesh = false;
       mesh.traverse((child) => {
-        if (child.userData.isOutline) return;
+        if (hasGoodMesh || child.userData.isOutline) return;
         if (child.isMesh && !badNodes.has(child)) {
           let isBad = false;
           let current = child;
@@ -426,12 +415,74 @@ export class TreeInteraction {
             if (current === mesh) break;
             current = current.parent;
           }
-          if (!isBad) wrongSelectionCount++;
+          if (!isBad) hasGoodMesh = true;
         }
       });
+      return hasGoodMesh;
+    };
+
+    for (const { mesh } of this.cutBranches) {
+      if (isWrongCutBranch(mesh)) {
+        wrongCuts.push({ name: mesh.name || mesh.uuid });
+        wrongCutMeshes.add(mesh);
+      }
+    }
+    for (const mesh of this.selectedMeshes) {
+      if (isWrongCutBranch(mesh)) {
+        wrongCuts.push({ name: mesh.name || mesh.uuid });
+        wrongCutMeshes.add(mesh);
+      }
     }
 
-    // Calculer le pourcentage de meshes coupés ou sélectionnés
+    // --- 2. Trouver quel noeud sélectionné/coupé couvre une branche défectueuse donnée ---
+    const findCatchingMesh = (badNode) => {
+      // Sélectionné directement
+      if (this.selectedMeshes.has(badNode)) return badNode;
+      // Coupé directement
+      for (const { mesh } of this.cutBranches) {
+        if (mesh === badNode) return mesh;
+      }
+      // Un ancêtre est sélectionné
+      let current = badNode.parent;
+      while (current) {
+        if (this.selectedMeshes.has(current)) return current;
+        current = current.parent;
+      }
+      // Contenu dans un noeud coupé (parcourt les sous-arbres des branches coupées)
+      for (const { mesh } of this.cutBranches) {
+        let found = false;
+        mesh.traverse((child) => {
+          if (child === badNode) found = true;
+        });
+        if (found) return mesh;
+      }
+      return null;
+    };
+
+    // --- 3. Classer les branches défectueuses en coupées/manquées ---
+    const cut = [];
+    const missed = [];
+
+    const isSelectedOrDescendant = (node) => {
+      let current = node;
+      while (current) {
+        if (this.selectedMeshes.has(current)) return true;
+        current = current.parent;
+      }
+      return false;
+    };
+
+    for (const bad of this.allBadBranches) {
+      if (!this._isConnectedToTree(bad.node) || isSelectedOrDescendant(bad.node)) {
+        const catchingMesh = findCatchingMesh(bad.node);
+        const caughtByMixedParent = catchingMesh !== null && wrongCutMeshes.has(catchingMesh);
+        cut.push({ name: bad.name, tag: bad.tag, isBad: true, caughtByMixedParent });
+      } else {
+        missed.push({ name: bad.name, tag: bad.tag });
+      }
+    }
+
+    // --- 4. Calculer le pourcentage de meshes coupés ou sélectionnés ---
     let cutMeshCount = 0;
     for (const { mesh } of this.cutBranches) {
       mesh.traverse((child) => {
@@ -445,6 +496,6 @@ export class TreeInteraction {
     }
     const overCut = this.totalMeshCount > 0 && cutMeshCount / this.totalMeshCount > 0.3;
 
-    return { cut, missed, wrongCutCount: this.wrongCutCount + wrongSelectionCount, overCut };
+    return { cut, missed, wrongCuts, wrongCutCount: wrongCuts.length, overCut };
   }
 }
