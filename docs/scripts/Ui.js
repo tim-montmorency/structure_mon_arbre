@@ -252,6 +252,72 @@ export class Ui {
 
     grassRow.appendChild(grassLabel);
     grassRow.appendChild(grassTrackWrapper);
+
+    // --- Boutons préréglages caméra (au-dessus du gazon) ---
+    const cameraPresetsRow = document.createElement("div");
+    cameraPresetsRow.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+      width: 100%;
+    `;
+
+    const presetDefs = [
+      {
+        label: "Vue haute",
+        action: () => {
+          this.updateSlider("height", 1);
+        },
+      },
+      {
+        label: "Vue mi-hauteur",
+        action: () => {
+          this.updateSlider("height", 0.575);
+          this.updateSlider("distance", 5);
+        },
+      },
+      {
+        label: "Vue sol",
+        action: () => {
+          this.updateSlider("height", 0.15);
+          this.updateSlider("distance", 5);
+        },
+      },
+    ];
+
+    presetDefs.forEach(({ label, action }) => {
+      const btn = document.createElement("button");
+      btn.title = label;
+      btn.style.cssText = `
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(50, 50, 50, 0.95);
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.15s;
+        padding: 0;
+      `;
+      const icon = document.createElement("img");
+      icon.src = "./icons/camera.png";
+      icon.style.cssText = "width: 22px; height: 22px; object-fit: contain;";
+      btn.appendChild(icon);
+      btn.addEventListener("mouseenter", () => {
+        btn.style.background = "rgba(90, 90, 90, 0.95)";
+      });
+      btn.addEventListener("mouseleave", () => {
+        btn.style.background = "rgba(50, 50, 50, 0.95)";
+      });
+      btn.addEventListener("click", action);
+      cameraPresetsRow.appendChild(btn);
+    });
+
+    sliderPanel.appendChild(cameraPresetsRow);
     sliderPanel.appendChild(grassRow);
 
     this.sliderDefs.forEach((sliderDef) => {
