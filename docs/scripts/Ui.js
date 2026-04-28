@@ -183,9 +183,9 @@ export class Ui {
     const labelStyle = `
       display: block;
       color: #ffffff;
-      font-weight: 600;
+      font-weight: 400;
       font-size: 15px;
-      margin-bottom: 8px;
+      margin-bottom: 15px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       text-align: left;
       width: 100%;
@@ -206,23 +206,23 @@ export class Ui {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      margin-bottom: 16px;
       width: 100%;
+      margin-bottom: 16px;
     `;
     const grassLabel = document.createElement("span");
     grassLabel.textContent = "Gazon :";
     grassLabel.style.cssText = `
       color: #ffffff;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 400;
       font-family: 'Plus Jakarta Sans';
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     `;
     const grassTrack = document.createElement("div");
     grassTrack.style.cssText = `
-      width: 44px;
-      height: 24px;
-      border-radius: 12px;
+      width: 38px;
+      height: 21px;
+      border-radius: 11px;
       background: rgba(95, 102, 89, 1);
       position: relative;
       cursor: pointer;
@@ -230,13 +230,13 @@ export class Ui {
     `;
     const grassThumb = document.createElement("div");
     grassThumb.style.cssText = `
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       background: #948c8cff;
       position: absolute;
       top: 3px;
-      left: 23px;
+      left: 20px;
       transition: left 0.2s;
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     `;
@@ -245,7 +245,7 @@ export class Ui {
       this.grassEnabled = !this.grassEnabled;
       if (this.grassEnabled) {
         grassTrack.style.background = "rgba(95, 102, 89, 1)";
-        grassThumb.style.left = "23px";
+        grassThumb.style.left = "20px";
       } else {
         grassTrack.style.background = "rgba(255, 249, 249, 1)";
         grassThumb.style.left = "3px";
@@ -414,8 +414,11 @@ export class Ui {
       },
       { bg: "rgba(180, 40, 40, 0.85)", border: "rgba(255, 80, 80, 0.5)", hover: "rgba(220, 60, 60, 0.9)", icon: "./icons/scissors.png", iconPos: "top" },
     );
-    this.cutButton.style.padding = "6px 8px";
+    this.cutButton.style.padding = "4px 6px";
     this.cutButton.style.fontSize = "15px";
+    this.cutButton.style.flex = "1";
+    this.cutButton.querySelector("img").style.width = "28px";
+    this.cutButton.querySelector("img").style.height = "28px";
     this._setButtonEnabled(this.cutButton, false);
 
     this.restoreButton = this._createButton(
@@ -426,8 +429,11 @@ export class Ui {
       },
       { bg: "rgba(30, 80, 180, 0.85)", border: "rgba(80, 130, 255, 0.5)", hover: "rgba(50, 110, 220, 0.9)", icon: "./icons/restore.png", iconPos: "top" },
     );
-    this.restoreButton.style.padding = "0px 2px";
-    this.restoreButton.style.fontSize = "15px";
+    this.restoreButton.style.padding = "4px 6px";
+    this.restoreButton.style.fontSize = "13px";
+    this.restoreButton.style.flex = "1";
+    this.restoreButton.querySelector("img").style.width = "28px";
+    this.restoreButton.querySelector("img").style.height = "28px";
     this._setButtonEnabled(this.restoreButton, false);
 
     buttonPanel.appendChild(actionRow);
@@ -534,7 +540,7 @@ export class Ui {
       border-radius: 8px;
       color: #ffffff;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 400;
       font-size: 15px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       transition: background 0.2s ease, border-color 0.2s ease;
@@ -797,7 +803,7 @@ export class Ui {
     levelLabel.style.cssText = `
       color: #ffffff;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 400;
       font-family: 'Plus Jakarta Sans', sans-serif;
       padding-top: 4px;
       padding-bottom: 10px;
@@ -1117,7 +1123,7 @@ export class Ui {
     headerTitle.textContent = "Chrono & Score";
     headerTitle.style.cssText = `
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 400;
       color: rgba(255,255,255,0.85);
     `;
 
