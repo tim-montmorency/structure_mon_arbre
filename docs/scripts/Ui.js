@@ -157,7 +157,7 @@ export class Ui {
 
     // Titre du panneau
     const panelTitle = document.createElement("div");
-    panelTitle.textContent = "Structure mon arbre";
+    panelTitle.innerHTML = "Structure<br>mon arbre";
     panelTitle.style.cssText = `
       color: #ffffff;
       font-weight: 500;
@@ -174,14 +174,11 @@ export class Ui {
     this._treePreviewImg = document.createElement("img");
     this._treePreviewImg.src = "./img/arbre1.png";
     this._treePreviewImg.style.cssText = `
-      width: 50%;
-      height: 140px;
+      width: 150px;
+      height: 150px;
       object-fit: contain;
-      display: block;
-      margin-bottom: 12px;
-      margin-left: auto;
+      flex-shrink: 0;
     `;
-    sliderPanel.appendChild(this._treePreviewImg);
 
     const labelStyle = `
       display: block;
@@ -271,20 +268,21 @@ export class Ui {
     cameraPresetsRow.style.cssText = `
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
-      width: 100%;
+      gap: 8px;
+      width: fit-content;
     `;
 
     const presetDefs = [
       {
         label: "Vue haute",
+        iconRotation: "15deg",
         action: () => {
           this.updateSlider("height", 1);
         },
       },
       {
         label: "Vue mi-hauteur",
+        iconRotation: "0deg",
         action: () => {
           this.updateSlider("height", 0.575);
           this.updateSlider("distance", 5);
@@ -292,6 +290,7 @@ export class Ui {
       },
       {
         label: "Vue sol",
+        iconRotation: "-15deg",
         action: () => {
           this.updateSlider("height", 0.15);
           this.updateSlider("distance", 5);
@@ -299,14 +298,14 @@ export class Ui {
       },
     ];
 
-    presetDefs.forEach(({ label, action }) => {
+    presetDefs.forEach(({ label, iconRotation, action }) => {
       const btn = document.createElement("button");
       btn.title = label;
       btn.style.cssText = `
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(50, 50, 50, 0.95);
+        background: rgba(57, 64, 50, 1);
         border: none;
         border-radius: 50%;
         width: 44px;
@@ -318,19 +317,32 @@ export class Ui {
       `;
       const icon = document.createElement("img");
       icon.src = "./icons/camera.png";
-      icon.style.cssText = "width: 22px; height: 22px; object-fit: contain;";
+      icon.style.cssText = `width: 20px; height: 20px; object-fit: contain; transform: rotate(${iconRotation});`;
       btn.appendChild(icon);
       btn.addEventListener("mouseenter", () => {
-        btn.style.background = "rgba(90, 90, 90, 0.95)";
+        btn.style.background = "rgba(95, 102, 89, 1)";
       });
       btn.addEventListener("mouseleave", () => {
-        btn.style.background = "rgba(50, 50, 50, 0.95)";
+        btn.style.background = "rgba(57, 64, 50, 1)";
       });
       btn.addEventListener("click", action);
       cameraPresetsRow.appendChild(btn);
     });
 
-    sliderPanel.appendChild(cameraPresetsRow);
+    // Rangée horizontale : boutons caméra à gauche, image à droite
+    const previewRow = document.createElement("div");
+    previewRow.style.cssText = `
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      margin-bottom: 12px;
+      width: 100%;
+    `;
+    previewRow.appendChild(cameraPresetsRow);
+    previewRow.appendChild(this._treePreviewImg);
+    sliderPanel.appendChild(previewRow);
     sliderPanel.appendChild(grassRow);
 
     this.sliderDefs.forEach((sliderDef) => {
@@ -365,28 +377,12 @@ export class Ui {
       sliderPanel.appendChild(container);
     });
 
-    // Bouton Reset Caméra sous les sliders
-    this.sliderButtonBar = document.createElement("div");
-    this.sliderButtonBar.style.cssText = `
-      display: flex;
-      justify-content: center;
-      margin-top: 8px;
-    `;
-    sliderPanel.appendChild(this.sliderButtonBar);
-
     this.rightColumn.appendChild(sliderPanel);
     document.body.appendChild(this.rightColumn);
   }
 
   // --- Boutons ---
   _createButtons() {
-    // Bouton Reset Caméra dans le panneau des sliders
-    this._createButton("Reset Caméra", this.sliderButtonBar, () => {
-      this.updateSlider("rotation", 0);
-      this.updateSlider("height", Math.PI / 2);
-      this.updateSlider("distance", 3);
-    });
-
     // Panneau des boutons d'action (sous les sliders)
     const buttonPanel = document.createElement("div");
     buttonPanel.style.cssText = `
