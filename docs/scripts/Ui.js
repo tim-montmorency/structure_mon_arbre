@@ -938,7 +938,7 @@ export class Ui {
     if (this._bonusHintEl) {
       if (elapsed < this._FAST_THRESHOLD_SEC) {
         const restant = this._FAST_THRESHOLD_SEC - elapsed;
-        this._bonusHintEl.textContent = `Répondez avant ${this._formatTime(this._FAST_THRESHOLD_SEC)} pour x${this._FAST_MULTIPLIER}`;
+        this._bonusHintEl.textContent = `Répondez avant ${this._formatTime(this._FAST_THRESHOLD_SEC)} pour x${this._FAST_MULTIPLIER} points`;
         this._bonusHintEl.style.color = restant < 30 ? "rgba(255,140,40,1)" : "rgba(255,255,255,0.65)";
       } else {
         this._bonusHintEl.textContent = "Bonus expiré";
