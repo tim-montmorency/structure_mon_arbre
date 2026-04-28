@@ -496,6 +496,26 @@ export class TreeInteraction {
     }
     const overCut = this.totalMeshCount > 0 && cutMeshCount / this.totalMeshCount > 0.3;
 
-    return { cut, missed, wrongCuts, wrongCutCount: wrongCuts.length, overCut };
+    // --- 5. Compter les branches saines enfants des parents mixtes (affichage uniquement) ---
+    // On parcourt les enfants directs de chaque parent mixte pour obtenir un compte
+    // représentatif des branches saines accidentellement incluses dans la coupe.
+    // Ce chiffre n'affecte pas le calcul du score (seul wrongCuts.length compte).
+    let wrongBranchDisplayCount = 0;
+    for (const mesh of wrongCutMeshes) {
+      mesh.children.forEach((child) => {
+        if (child.userData.isOutline) return;
+        if (badNodes.has(child)) return;
+        let hasMesh = child.isMesh;
+        if (!hasMesh)
+          child.traverse((c) => {
+            if (c.isMesh && !c.userData.isOutline) hasMesh = true;
+          });
+        if (hasMesh) wrongBranchDisplayCount++;
+      });
+    }
+    // Si aucun enfant direct trouvé (arbre très plat), retomber sur le compte de parents mixtes
+    if (wrongBranchDisplayCount === 0) wrongBranchDisplayCount = wrongCuts.length;
+
+    return { cut, missed, wrongCuts, wrongCutCount: wrongCuts.length, wrongBranchDisplayCount, overCut };
   }
 }

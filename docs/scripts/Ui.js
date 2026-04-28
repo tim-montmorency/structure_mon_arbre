@@ -550,7 +550,7 @@ export class Ui {
   //   wrongCuts    : branches saines cliquées par erreur — tableau [{name}] (un élément par noeud cliqué)
   //   wrongCutCount: longueur de wrongCuts (fourni pour l'affichage dans le feedback)
   //   overCut      : booléen — vrai si > 30 % des meshes de l'arbre ont été retirés
-  showFeedback({ cut, missed, wrongCuts, wrongCutCount, overCut }) {
+  showFeedback({ cut, missed, wrongCuts, wrongCutCount, wrongBranchDisplayCount, overCut }) {
     // 1. Figer le chrono
     const elapsed = this._stopLevelTimer();
 
@@ -632,7 +632,8 @@ export class Ui {
       }
 
       if (hasWrongCuts) {
-        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Branche${wrongCutCount > 1 ? "s" : ""} mal identifiée${wrongCutCount > 1 ? "s" : ""}: ${wrongCutCount} branche${wrongCutCount > 1 ? "s" : ""}</p>`;
+        const wCount = wrongBranchDisplayCount ?? wrongCutCount;
+        html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Branche${wCount > 1 ? "s" : ""} mal identifiée${wCount > 1 ? "s" : ""}: ${wCount} branche${wCount > 1 ? "s" : ""}</p>`;
       }
 
       if (correctCuts.length === 0 && missed.length === 0 && !hasWrongCuts) {
