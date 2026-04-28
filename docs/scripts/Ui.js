@@ -170,6 +170,19 @@ export class Ui {
     `;
     sliderPanel.appendChild(panelTitle);
 
+    // Image de l'arbre (change selon le niveau)
+    this._treePreviewImg = document.createElement("img");
+    this._treePreviewImg.src = "./img/arbre1.png";
+    this._treePreviewImg.style.cssText = `
+      width: 50%;
+      height: 140px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 12px;
+      margin-left: auto;
+    `;
+    sliderPanel.appendChild(this._treePreviewImg);
+
     const labelStyle = `
       display: block;
       color: #ffffff;
@@ -766,6 +779,9 @@ export class Ui {
     if (index === this._activeTreeIndex) return;
     this._activeTreeIndex = index;
     this._updateTreeSelectorActive();
+    if (this._treePreviewImg) {
+      this._treePreviewImg.src = `./img/arbre${index + 1}.png`;
+    }
     // Sélection manuelle -> réinitialisation complète du chrono et du score
     this._totalScore = 0;
     this._levelTimers = [];
