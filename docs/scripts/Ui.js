@@ -278,14 +278,17 @@ export class Ui {
         iconRotation: "15deg",
         action: () => {
           this.updateSlider("height", 1);
+          this.updateSlider("distance", 5);
+          this.updateSlider("rotation", 2.34);
         },
       },
       {
-        label: "Vue mi-hauteur",
+        label: "Vue milieu",
         iconRotation: "0deg",
         action: () => {
           this.updateSlider("height", 0.575);
           this.updateSlider("distance", 5);
+          this.updateSlider("rotation", 2.34);
         },
       },
       {
@@ -294,6 +297,7 @@ export class Ui {
         action: () => {
           this.updateSlider("height", 0.15);
           this.updateSlider("distance", 5);
+          this.updateSlider("rotation", 2.34);
         },
       },
     ];
