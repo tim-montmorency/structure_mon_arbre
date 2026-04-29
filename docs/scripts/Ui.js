@@ -163,7 +163,7 @@ export class Ui {
       font-weight: 500;
       font-size: 34px;
       font-family: 'Lush Garden';
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       padding-bottom: 5px;
       text-align: center;
       border-bottom: 4px solid rgba(255, 255, 255, 0.15);
@@ -174,8 +174,8 @@ export class Ui {
     this._treePreviewImg = document.createElement("img");
     this._treePreviewImg.src = "./img/arbre1.png";
     this._treePreviewImg.style.cssText = `
-      width: 150px;
-      height: 150px;
+      width: 135px;
+      height: 135px;
       object-fit: contain;
       flex-shrink: 0;
     `;
@@ -184,15 +184,15 @@ export class Ui {
       display: block;
       color: #ffffff;
       font-weight: 400;
-      font-size: 15px;
-      margin-bottom: 15px;
+      font-size: 14px;
+      margin-bottom: 8px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       text-align: left;
       width: 100%;
     `;
     const inputStyle = `
       height: 5px;
-      accent-color:  rgba(95, 102, 89, 1);
+      accent-color: rgba(95, 102, 89, 1);
       cursor: pointer;
       display: block;
       width: 75%;
@@ -213,10 +213,10 @@ export class Ui {
     grassLabel.textContent = "Gazon :";
     grassLabel.style.cssText = `
       color: #ffffff;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 400;
       font-family: 'Plus Jakarta Sans';
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     `;
     const grassTrack = document.createElement("div");
     grassTrack.style.cssText = `
@@ -308,8 +308,8 @@ export class Ui {
         background: rgba(57, 64, 50, 1);
         border: none;
         border-radius: 50%;
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         cursor: pointer;
         flex-shrink: 0;
         transition: background 0.15s;
@@ -351,7 +351,7 @@ export class Ui {
       const inverted = sliderDef.min > sliderDef.max;
 
       const container = document.createElement("div");
-      container.style.cssText = "margin-bottom: 16px; width: 100%;";
+      container.style.cssText = "margin-bottom: 14px; width: 100%;";
       const label = document.createElement("label");
       label.textContent = sliderDef.label;
       label.style.cssText = labelStyle;
