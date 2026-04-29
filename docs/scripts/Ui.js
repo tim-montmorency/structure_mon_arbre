@@ -163,12 +163,44 @@ export class Ui {
       font-weight: 500;
       font-size: 34px;
       font-family: 'Lush Garden';
-      margin-bottom: 10px;
+      margin-bottom: 0px;
       padding-bottom: 5px;
       text-align: center;
       border-bottom: 4px solid rgba(255, 255, 255, 0.15);
     `;
     sliderPanel.appendChild(panelTitle);
+
+    // Bouton aide sous la ligne du titre, aligné à droite
+    const aideBtn = document.createElement("a");
+    aideBtn.href = "./aide.html";
+    aideBtn.target = "_blank";
+    aideBtn.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+      align-self: flex-end;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    `;
+    aideBtn.addEventListener("mouseenter", () => aideBtn.style.opacity = "1");
+    aideBtn.addEventListener("mouseleave", () => aideBtn.style.opacity = "0.75");
+
+    const aideIcon = document.createElement("img");
+    aideIcon.src = "./icons/help.png";
+    aideIcon.style.cssText = "width: 20px; height: 20px; object-fit: contain; display: block;";
+    const aideText = document.createElement("span");
+    aideText.textContent = "aide";
+    aideText.style.cssText = "line-height: 1; display: block;";
+    aideBtn.appendChild(aideIcon);
+    aideBtn.appendChild(aideText);
+    sliderPanel.appendChild(aideBtn);
 
     // Image de l'arbre (change selon le niveau)
     this._treePreviewImg = document.createElement("img");
@@ -796,7 +828,11 @@ export class Ui {
     `;
 
     const buttonsRow = document.createElement("div");
-    buttonsRow.style.cssText = `display: flex; gap: 16px;`;
+    buttonsRow.style.cssText = `
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    `;
     this._treeSelectorPanel.appendChild(buttonsRow);
     this._buttonsRow = buttonsRow;
 
@@ -820,27 +856,54 @@ export class Ui {
 
   _addTreeButton(tree, i) {
     const btn = document.createElement("button");
-    btn.textContent = String(i + 1);
     btn.title = tree.label;
     btn.style.cssText = `
-      width: 42px;
-      height: 42px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: url('./img/arbre${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9);
       cursor: pointer;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: background 0.15s, border-color 0.15s;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.15s, opacity 0.15s;
+      padding: 0;
     `;
+
+    // Overlay sombre pour diminuer l'opacité de l'image
+    const overlay = document.createElement("div");
+    overlay.style.cssText = `
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 20, 10, 0.6);
+      border-radius: 8px;
+      pointer-events: none;
+    `;
+    btn.appendChild(overlay);
+
+    // Numéro centré
+    const num = document.createElement("span");
+    num.textContent = String(i + 1);
+    num.style.cssText = `
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    `;
+    btn.appendChild(num);
+
     btn.addEventListener("click", () => this.selectTree(i));
     btn.addEventListener("mouseenter", () => {
-      if (i !== this._activeTreeIndex) btn.style.background = "rgba(255, 255, 255, 0.18)";
+      if (i !== this._activeTreeIndex) btn.style.opacity = "0.55";
     });
     btn.addEventListener("mouseleave", () => {
-      if (i !== this._activeTreeIndex) btn.style.background = "rgba(255, 255, 255, 0.08)";
+      if (i !== this._activeTreeIndex) btn.style.opacity = "0.25";
     });
     this._treeButtons.push(btn);
     (this._buttonsRow || this._treeSelectorPanel).appendChild(btn);
@@ -875,13 +938,15 @@ export class Ui {
   _updateTreeSelectorActive() {
     this._treeButtons.forEach((btn, i) => {
       if (i === this._activeTreeIndex) {
-        btn.style.background = "rgba(57, 64, 50, 1)";
-        btn.style.borderColor = "rgba(83, 94, 73, 1)";
-        btn.style.color = "rgba(255, 255, 255, 1)";
+        btn.style.borderColor = "rgba(95, 120, 60, 0.8)";
+        btn.style.boxShadow = "inset 0 0 0 2px rgba(95, 120, 60, 0.5)";
+        btn.style.opacity = "1";
+        btn.style.background = `url('./img/arbre${i + 1}.png') center / contain no-repeat rgba(40, 60, 25, 0.95)`;
       } else {
-        btn.style.background = "rgba(255, 255, 255, 0.08)";
-        btn.style.borderColor = "rgba(255, 255, 255, 0.03)";
-        btn.style.color = "rgba(255, 255, 255, 0.23)";
+        btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
+        btn.style.boxShadow = "none";
+        btn.style.opacity = "0.25";
+        btn.style.background = `url('./img/arbre${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9)`;
       }
     });
   }
