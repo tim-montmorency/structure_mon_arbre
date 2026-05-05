@@ -28,6 +28,7 @@ export class TreeInteraction {
     this.totalMeshCount = 0;
     this.tree.traverse((child) => {
       if (child.isMesh && !child.userData.isOutline) this.totalMeshCount++;
+
     });
 
     this._setupHover();
@@ -483,17 +484,24 @@ export class TreeInteraction {
     }
 
     // --- 4. Calculer le pourcentage de meshes coupés ou sélectionnés ---
-    let cutMeshCount = 0;
+    // Utiliser un Set pour éviter de compter deux fois les mêmes meshes
+    // (ex: si un enfant est sélectionné ET son parent aussi)
+    const uniqueCutMeshes = new Set();
     for (const { mesh } of this.cutBranches) {
       mesh.traverse((child) => {
-        if (child.isMesh && !child.userData.isOutline) cutMeshCount++;
+        if (child.isMesh && !child.userData.isOutline) {
+          uniqueCutMeshes.add(child);
+        }
       });
     }
     for (const mesh of this.selectedMeshes) {
       mesh.traverse((child) => {
-        if (child.isMesh && !child.userData.isOutline) cutMeshCount++;
+        if (child.isMesh && !child.userData.isOutline) {
+          uniqueCutMeshes.add(child);
+        }
       });
     }
+    const cutMeshCount = uniqueCutMeshes.size;
     const overCut = this.totalMeshCount > 0 && cutMeshCount / this.totalMeshCount > 0.3;
 
     // --- 5. Compter les branches saines enfants des parents mixtes (affichage uniquement) ---
