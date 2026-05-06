@@ -50,7 +50,9 @@ const wind = new Wind();
 // Arbres disponibles
 const TREES = [
   { id: 1, label: "Arbre 1", model: "./models/Tree1.glb", scale: 0.7 },
-  { id: 2, label: "Abre 2", model: "./models/Tree2.glb", scale: 0.7 },
+  { id: 2, label: "Arbre 2", model: "./models/Tree2.glb", scale: 0.7 },
+  { id: 3, label: "Arbre 3", model: "./models/Tree3.glb", scale: 0.7 }
+
 ];
 
 // GUI (gère toute l'interface : glissières, boutons, panneau d'info, contrôles souris/molette)
