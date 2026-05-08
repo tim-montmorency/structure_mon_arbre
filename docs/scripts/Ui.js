@@ -932,7 +932,11 @@ export class Ui {
   _advanceToTree(index) {
     this._activeTreeIndex = index;
     this._updateTreeSelectorActive();
-    if (this.onTreeSelect) this.onTreeSelect(index);
+
+      if (this._treePreviewImg) {
+    this._treePreviewImg.src = `./img/arbre${index + 1}.png`;
+  }
+  if (this.onTreeSelect) this.onTreeSelect(index);
   }
 
   _updateTreeSelectorActive() {
