@@ -52,8 +52,8 @@ const TREES = [
   { id: 1, label: "Arbre 1", model: "./models/Tree1.glb", scale: 0.7 },
   { id: 2, label: "Arbre 2", model: "./models/Tree2.glb", scale: 0.7 },
   { id: 3, label: "Arbre 3", model: "./models/Tree3.glb", scale: 0.7 },
-  { id: 4, label: "Arbre 4", model: "./models/Tree4.glb", scale: 0.7 }
-
+  { id: 4, label: "Arbre 4", model: "./models/Tree4.glb", scale: 0.7 },
+  { id: 8, label: "Arbre 8", model: "./models/Tree8.glb", scale: 0.7 },
 ];
 
 // GUI (gère toute l'interface : glissières, boutons, panneau d'info, contrôles souris/molette)
