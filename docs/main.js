@@ -49,7 +49,7 @@ const wind = new Wind();
 
 // Arbres disponibles
 const TREES = [
-  { id: 1, label: "Arbre 1", model: "./models/Tree1.glb", scale: 0.8 },
+  { id: 1, label: "Arbre 1", model: "./models/Tree1.glb", scale: 0.85 },
   { id: 2, label: "Arbre 2", model: "./models/Tree2.glb", scale: 0.7 },
   { id: 3, label: "Arbre 3", model: "./models/Tree3.glb", scale: 0.7 },
   { id: 4, label: "Arbre 4", model: "./models/Tree4.glb", scale: 0.7 },
