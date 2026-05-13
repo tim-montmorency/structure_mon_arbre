@@ -883,7 +883,7 @@ export class Ui {
 
     // Numéro centré
     const num = document.createElement("span");
-    num.textContent = String(i + 1);
+    num.textContent = String(tree.id);
     num.style.cssText = `
       position: absolute;
       inset: 0;
