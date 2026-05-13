@@ -54,6 +54,7 @@ const TREES = [
   { id: 3, label: "Arbre 3", model: "./models/Tree3.glb", scale: 0.7 },
   { id: 4, label: "Arbre 4", model: "./models/Tree4.glb", scale: 0.7 },
   { id: 6, label: "Arbre 6", model: "./models/Tree6.glb", scale: 0.7 },
+  { id: 8, label: "Arbre 8", model: "./models/Tree8.glb", scale: 0.7 },
   { id: 9, label: "Arbre 9", model: "./models/Tree9.glb", scale: 0.7 },
 ];
 
