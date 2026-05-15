@@ -10,24 +10,10 @@ export class Ui {
     this.gap = 10;
 
     // --- Définition des glissières (min/max = gauche/droite du curseur) ---
-    this.sliderDefs = [{
-        key: "rotation",
-        min: -Math.PI,
-        max: Math.PI,
-        label: "Rotation caméra:"
-      },
-      {
-        key: "height",
-        min: 0.15,
-        max: 1,
-        label: "Hauteur caméra:"
-      },
-      {
-        key: "distance",
-        min: 5,
-        max: 1,
-        label: "Distance caméra:"
-      },
+    this.sliderDefs = [
+      { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation caméra:" },
+      { key: "height", min: 0.15, max: 1, label: "Hauteur caméra:" },
+      { key: "distance", min: 5, max: 1, label: "Distance caméra:" },
     ];
 
     this.buttonCount = 2; // Reset + Couper
@@ -186,19 +172,19 @@ export class Ui {
 
     // Bouton aide sous la ligne du titre, aligné à droite
     const aideBtn = document.createElement("a");
-    let aideWindow = null;
+ let aideWindow = null;
 
-    aideBtn.href = "#";
+aideBtn.href = "#";
 
-    aideBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+aideBtn.addEventListener("click", (e) => {
+  e.preventDefault();
 
-      if (aideWindow && !aideWindow.closed) {
-        aideWindow.focus(); // réutilise l'onglet existant
-      } else {
-        aideWindow = window.open("./aide.html", "aideWindow");
-      }
-    });
+  if (aideWindow && !aideWindow.closed) {
+    aideWindow.focus(); // réutilise l'onglet existant
+  } else {
+    aideWindow = window.open("./aide.html", "aideWindow");
+  }
+});
     aideBtn.style.cssText = `
       display: flex;
       align-items: center;
@@ -229,7 +215,7 @@ export class Ui {
 
     // Image de l'arbre (change selon le niveau)
     this._treePreviewImg = document.createElement("img");
-    this._treePreviewImg.src = "./img/arbre1.png";
+    this._treePreviewImg.src = "./img/Tree1.png";
     this._treePreviewImg.style.cssText = `
       width: 135px;
       height: 135px;
@@ -329,7 +315,8 @@ export class Ui {
       width: fit-content;
     `;
 
-    const presetDefs = [{
+    const presetDefs = [
+      {
         label: "Vue haute",
         iconRotation: "15deg",
         action: () => {
@@ -358,11 +345,7 @@ export class Ui {
       },
     ];
 
-    presetDefs.forEach(({
-      label,
-      iconRotation,
-      action
-    }) => {
+    presetDefs.forEach(({ label, iconRotation, action }) => {
       const btn = document.createElement("button");
       btn.title = label;
       btn.style.cssText = `
@@ -475,13 +458,8 @@ export class Ui {
       actionRow,
       () => {
         if (this.onCutBranch) this.onCutBranch();
-      }, {
-        bg: "rgba(180, 40, 40, 0.85)",
-        border: "rgba(255, 80, 80, 0.5)",
-        hover: "rgba(220, 60, 60, 0.9)",
-        icon: "./icons/scissors.png",
-        iconPos: "top"
       },
+      { bg: "rgba(180, 40, 40, 0.85)", border: "rgba(255, 80, 80, 0.5)", hover: "rgba(220, 60, 60, 0.9)", icon: "./icons/scissors.png", iconPos: "top" },
     );
     this.cutButton.style.padding = "4px 6px";
     this.cutButton.style.fontSize = "15px";
@@ -495,13 +473,8 @@ export class Ui {
       actionRow,
       () => {
         if (this.onRestoreBranches) this.onRestoreBranches();
-      }, {
-        bg: "rgba(30, 80, 180, 0.85)",
-        border: "rgba(80, 130, 255, 0.5)",
-        hover: "rgba(50, 110, 220, 0.9)",
-        icon: "./icons/restore.png",
-        iconPos: "top"
       },
+      { bg: "rgba(30, 80, 180, 0.85)", border: "rgba(80, 130, 255, 0.5)", hover: "rgba(50, 110, 220, 0.9)", icon: "./icons/restore.png", iconPos: "top" },
     );
     this.restoreButton.style.padding = "4px 6px";
     this.restoreButton.style.fontSize = "13px";
@@ -545,10 +518,7 @@ export class Ui {
           if (validateImg1) validateImg1.src = "./icons/check.png";
           if (this._wasAllFound) {
             // Niveau terminé -> sauvegarder le temps puis passer au suivant
-            this._levelTimers.push({
-              levelIndex: this._activeTreeIndex,
-              elapsed: this._currentLevelElapsed
-            });
+            this._levelTimers.push({ levelIndex: this._activeTreeIndex, elapsed: this._currentLevelElapsed });
             this._updateTimerScorePanel();
             if (this.onNextExercise) this.onNextExercise();
           } else {
@@ -563,13 +533,8 @@ export class Ui {
           }
           this._wasAllFound = false;
         }
-      }, {
-        bg: "rgba(85, 99, 45, 1)",
-        border: "rgba(150, 174, 80, 1)",
-        hover: "rgba(150, 174, 80, 1)",
-        icon: "./icons/check.png",
-        iconPos: "left"
       },
+      { bg: "rgba(85, 99, 45, 1)", border: "rgba(150, 174, 80, 1)", hover: "rgba(150, 174, 80, 1)", icon: "./icons/check.png", iconPos: "left" },
     );
     // Désactivé par défaut : il faut sélectionner ou couper une branche pour valider
     this._setButtonEnabled(this.validateButton, false);
@@ -713,14 +678,7 @@ export class Ui {
   //   wrongCuts    : branches saines cliquées par erreur — tableau [{name}] (un élément par noeud cliqué)
   //   wrongCutCount: longueur de wrongCuts (fourni pour l'affichage dans le feedback)
   //   overCut      : booléen — vrai si > 30 % des meshes de l'arbre ont été retirés
-  showFeedback({
-    cut,
-    missed,
-    wrongCuts,
-    wrongCutCount,
-    wrongBranchDisplayCount,
-    overCut
-  }) {
+  showFeedback({ cut, missed, wrongCuts, wrongCutCount, wrongBranchDisplayCount, overCut }) {
     // 1. Figer le chrono
     const elapsed = this._stopLevelTimer();
 
@@ -802,7 +760,7 @@ export class Ui {
       }
 
       if (hasWrongCuts) {
-        const wCount = wrongBranchDisplayCount ? ? wrongCutCount;
+        const wCount = wrongBranchDisplayCount ?? wrongCutCount;
         html += `<p style="margin: 0 0 6px 0; color: #ffaa00; font-weight: 600;">⚠️ Branche${wCount > 1 ? "s" : ""} mal identifiée${wCount > 1 ? "s" : ""}: ${wCount} branche${wCount > 1 ? "s" : ""}</p>`;
       }
 
@@ -915,7 +873,7 @@ export class Ui {
       aspect-ratio: 1;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      background: url('./img/arbre${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9);
+      background: url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9);
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -968,7 +926,7 @@ export class Ui {
     this._activeTreeIndex = index;
     this._updateTreeSelectorActive();
     if (this._treePreviewImg) {
-      this._treePreviewImg.src = `./img/arbre${index + 1}.png`;
+      this._treePreviewImg.src = `./img/Tree${index + 1}.png`;
     }
     // Sélection manuelle -> réinitialisation complète du chrono et du score
     this._totalScore = 0;
@@ -986,10 +944,10 @@ export class Ui {
     this._activeTreeIndex = index;
     this._updateTreeSelectorActive();
 
-    if (this._treePreviewImg) {
-      this._treePreviewImg.src = `./img/arbre${index + 1}.png`;
-    }
-    if (this.onTreeSelect) this.onTreeSelect(index);
+      if (this._treePreviewImg) {
+    this._treePreviewImg.src = `./img/Tree${index + 1}.png`;
+  }
+  if (this.onTreeSelect) this.onTreeSelect(index);
   }
 
   _updateTreeSelectorActive() {
@@ -998,12 +956,12 @@ export class Ui {
         btn.style.borderColor = "rgba(95, 120, 60, 0.8)";
         btn.style.boxShadow = "inset 0 0 0 2px rgba(95, 120, 60, 0.5)";
         btn.style.opacity = "1";
-        btn.style.background = `url('./img/arbre${i + 1}.png') center / contain no-repeat rgba(40, 60, 25, 0.95)`;
+        btn.style.background = `url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(40, 60, 25, 0.95)`;
       } else {
         btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
         btn.style.boxShadow = "none";
         btn.style.opacity = "0.25";
-        btn.style.background = `url('./img/arbre${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9)`;
+        btn.style.background = `url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9)`;
       }
     });
   }
@@ -1075,9 +1033,8 @@ export class Ui {
         const zoomSpeed = 0.5;
         const newDistance = this.orbitController.distance + (e.deltaY > 0 ? zoomSpeed : -zoomSpeed);
         this.updateSlider("distance", newDistance);
-      }, {
-        passive: false
       },
+      { passive: false },
     );
   }
 
