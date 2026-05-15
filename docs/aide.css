@@ -161,6 +161,15 @@
       text-align: center;
     }
 
+    #contact a{
+      color: #333;      
+    text-decoration: none; 
+    }
+
+        #contact a:hover{
+text-decoration: underline;
+    }
+
 
     .logos {
       display: flex;
