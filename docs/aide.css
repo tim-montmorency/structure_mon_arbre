@@ -104,9 +104,9 @@
    margin-bottom: 16px;
  } 
 
-#description h4{
+#description h3{
   font-family: 'Lush Garden', serif;
-   font-size: 24px;
+   font-size: 26px;
    font-weight: 400;
    color: #394032;
    text-align: center;
@@ -133,7 +133,7 @@
 
   #theorie h3 {
    font-family: 'Lush Garden', serif;
-   font-size: 24px;
+   font-size: 26px;
    font-weight: 400;
    margin-bottom: 16px;
    color:  #394032;
