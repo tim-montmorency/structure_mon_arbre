@@ -1,7 +1,5 @@
 # Documentation du code
 
-# Documentation Technique
-
 Documentation des fonctions publiques et de l'architecture technique du système de visualisation et d'interaction avec des arbres 3D.
 
 ## Vue d'ensemble
@@ -19,6 +17,14 @@ Le système est composé de plusieurs modules responsables de:
 - **Score global**: cumulé sur tous les niveaux (réinitialisé par `selectTree()`)
 - **Historique des temps**: liste des temps par niveau complété
 - **État UI**: niveau actif, état des panneaux
+
+## Chronomètre et pointage
+
+- Chrono démarre automatiquement à `resetExercise()`
+- Format MM:SS affiché dans le panneau Chrono & Score
+- Bonus x2 points si réponse avant 120 secondes
+- Historique des temps enregistrés à chaque niveau complété
+- Score total affiché en vert (positif) ou rouge (négatif)
 
 ---
 
@@ -706,13 +712,7 @@ ui.onToggleGrass = (enabled) => {
 }
 ```
 
-#### Chronomètre et pointage
 
-- Chrono démarre automatiquement à `resetExercise()`
-- Format MM:SS affiché dans le panneau Chrono & Score
-- Bonus x2 points si réponse avant 120 secondes
-- Historique des temps enregistrés à chaque niveau complété
-- Score total affiché en vert (positif) ou rouge (négatif)
 
 
 

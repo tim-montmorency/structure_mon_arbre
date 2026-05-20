@@ -6,3 +6,4 @@ Le projet a été réalisé par [l'Incubateur TIM](https://tim-montmorency.com/i
 
 - [Recherche initiale](./recherche.md)
 - [Documentation du code](./code.md)
+- [Étiquettes utilisées pour identifier les branches](./etiquettes.md)
