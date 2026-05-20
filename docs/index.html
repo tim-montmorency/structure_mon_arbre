@@ -13,6 +13,7 @@
 
 <body>
   <nav>
+    <a href="#" id="openAppLink">Application</a>
     <a href="#description">Description</a>
     <a href="#fonctionnement">Fonctionnement</a>
     <a href="#theorie">Théorie</a>
@@ -207,7 +208,7 @@
     </div>
   </div>
 
-  <footer>© 2026 Département TIM du Collège Montmorency</footer>
+  <footer>Incubateur TIM du Collège Montmorency (2026)</footer>
 
   <script>
     const button = document.getElementById("openAppBtn");
@@ -233,6 +234,30 @@
       );
     });
   </script>
+  <script>
+  const link = document.getElementById("openAppLink");
+
+  // Hover effect
+  link.addEventListener("mouseenter", () => {
+    link.style.color = "rgb(105, 120, 55)";
+    link.style.transform = "scale(1.03)";
+  });
+
+  link.addEventListener("mouseleave", () => {
+    link.style.color = "";
+    link.style.transform = "scale(1)";
+  });
+
+  // Click event
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    window.open(
+      "app.html",
+      "sma_app"
+    );
+  });
+</script>
   <script>
     window.name = "sma_aide";
   </script>
