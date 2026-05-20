@@ -24,10 +24,8 @@
   </div>
 
   <section>
-<div style="text-align: center;">
-  <button
-    id="openAppBtn"
-    style="
+    <div style="text-align: center;">
+      <button id="openAppBtn" style="
       padding: 12px 16px;
       box-sizing: border-box;
       text-align: center;
@@ -54,28 +52,24 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-    "
-  >
-    <img
-      src="./icons/tree64x64.png"
-      style="
+    ">
+        <img src="./icons/tree64x64.png" style="
         width: 30px;
         height: 30px;
         object-fit: contain;
         pointer-events: none;
-      "
-    />
+      " />
 
-    <span>Ouvrir l'application</span>
-  </button>
-</div>
+        <span>Ouvrir l'application</span>
+      </button>
+    </div>
   </section>
 
   <section id="description">
     <h2>Description</h2>
     <p>
-      Bienvenue dans ce logiciel de simulation en horticulture développé par
-      des étudiant·es de la technique en multimédia pour les étudiant·es en
+      Bienvenue dans cette application de simulation en horticulture développé par
+      <a href="https://tim-montmorency.com/incubateur/">l'Incubateur TIM</a> pour les étudiantes et étudiants en
       horticulture ! Ce jeu éducatif a été conçu pour vous permettre de mettre
       en pratique les notions théoriques liées à la taille de formation des
       jeunes arbres dans un environnement virtuel et sécuritaire. À travers
@@ -84,7 +78,7 @@
       de taille afin de favoriser une croissance saine et équilibrée.
     </p>
     <p>
-    <h3>Deux modes de jeu sont disponibles :</h3>
+    <h3>Deux modes de jeu</h3>
     <br />
     <p>
       <b>Mode pratique </b>: idéal pour apprendre à votre rythme, expérimenter et
@@ -120,37 +114,70 @@
 
   <section id="theorie">
     <h2>Théorie</h2>
-    <h3>Protocole de taille de formation des jeunes arbres</h3>
+
     <p>
-      Se référer au BNQ 0605-200 et au site : <a
-        href="https://espacepourlavie.ca/taille-des-arbres-feuillus">https://espacepourlavie.ca/taille-des-arbres-feuillus</a>
-      <br /><br />
-      1. Identification de l’individu : port naturel, problèmes<br />
-      2. Situation (est-il au bon endroit) + est-ce que je reviens<br />
-      3. Bilan sanitaire (mort, malade, brisée, interférentes)<br />
-      4. Bilan structural<br />
-      A) Dominance apicale seulement sur les arbres ayant un port pyramidale (choisir un axe principal: plus vigoureux,
-      plus vertical, mieux orienté)<br />
-      B) Sélection des charpentières (disposition axiale/ radiale, angle d’insertion aigue = écorce incluse)<br />
-      C) Hauteur de la couronne (rapport tronc/ramure)<br />
-      D) BBT (création de BBT dans le but de les enlever plus tard)<br />
-      *Attention au 30% maximum par année
+      Pour le protocole complet de taille de formation des jeunes arbres, se référer au <a
+        href="https://bnq.qc.ca/fr/normalisation/horticulture/entretien-arboricole-et-horticole.html">0605-200</a> et
+      au site <a href="https://espacepourlavie.ca/taille-des-arbres-feuillus">espacepourlavie.ca</a>.
+    </p>
+    <p>
+      En voici un résumé :
+    </p>
+
+    <ol>
+      <li>
+        Identification de l’individu : port naturel, problèmes
+      </li>
+
+      <li>
+        Situation (est-il au bon endroit ?) + est-ce que j’y reviens ?
+      </li>
+
+      <li>
+        Bilan sanitaire (mort, malade, brisé, interférent)
+      </li>
+
+      <li>
+        Bilan structural
+
+        <ol type="A">
+          <li>
+            Dominance apicale seulement sur les arbres ayant un port
+            pyramidal (choisir un axe principal : plus vigoureux,
+            plus vertical, mieux orienté)
+          </li>
+
+          <li>
+            Sélection des charpentières
+            (disposition axiale/radiale, angle d’insertion aigu =
+            écorce incluse)
+          </li>
+
+          <li>
+            Hauteur de la couronne (rapport tronc/ramure)
+          </li>
+
+          <li>
+            BBT (création de BBT dans le but de les enlever plus tard)
+          </li>
+        </ol>
+      </li>
+    </ol>
+
+    <p>
+      <strong>*Attention :</strong> au maximum 30% de taille par année!
     </p>
   </section>
-
-  <div class="divider"></div>
-
   <div id="credits">
     <h2>Crédits</h2>
     <div class="credits-grid">
       <div class="credits-col">
         <h3>Équipe</h3>
         <p>
-          Chef de projet : Thomas O Fredericks<br />
-          Enseignante en horticulture : Naomi Jarry<br />
-          <br />
-          Modélisation et programmation : Elie Daher<br />
-          Design UI et programmation : Dana Saavedra-Torrano
+          Chef de projet : <strong>Thomas O Fredericks</strong><br />
+          Enseignante en horticulture : <strong>Naomi Jarry</strong><br />
+          Modélisation et programmation : <strong>Elie Daher</strong><br />
+          Design UI et programmation : <strong>Dana Saavedra-Torrano</strong>
         </p>
       </div>
       <div id="contact">
@@ -183,32 +210,32 @@
   <footer>© 2026 Département TIM du Collège Montmorency</footer>
 
   <script>
-  const button = document.getElementById("openAppBtn");
+    const button = document.getElementById("openAppBtn");
 
-  // Hover effect
-  button.addEventListener("mouseenter", () => {
-    button.style.background = "rgb(105, 120, 55)";
-    button.style.borderColor = "rgb(180, 210, 90)";
-    button.style.transform = "scale(1.03)";
-  });
+    // Hover effect
+    button.addEventListener("mouseenter", () => {
+      button.style.background = "rgb(105, 120, 55)";
+      button.style.borderColor = "rgb(180, 210, 90)";
+      button.style.transform = "scale(1.03)";
+    });
 
-  button.addEventListener("mouseleave", () => {
-    button.style.background = "rgb(85, 99, 45)";
-    button.style.borderColor = "rgb(150, 174, 80)";
-    button.style.transform = "scale(1)";
-  });
+    button.addEventListener("mouseleave", () => {
+      button.style.background = "rgb(85, 99, 45)";
+      button.style.borderColor = "rgb(150, 174, 80)";
+      button.style.transform = "scale(1)";
+    });
 
-  // Click event
-  button.addEventListener("click", () => {
-    window.open(
-      "app.html",
-      "sma_app"
-    );
-  });
-</script>
- <script>
-        window.name = "sma_aide";
-    </script>
+    // Click event
+    button.addEventListener("click", () => {
+      window.open(
+        "app.html",
+        "sma_app"
+      );
+    });
+  </script>
+  <script>
+    window.name = "sma_aide";
+  </script>
 </body>
 
 </html>

@@ -5,13 +5,6 @@
    font-style: normal;
  }
 
- *,
- *::before,
- *::after {
-   box-sizing: border-box;
-   margin: 0;
-   padding: 0;
- }
 
  body {
    font-family: 'Plus Jakarta Sans', sans-serif;
@@ -96,11 +89,11 @@
    color: #394032;
  }
 
- section p {
+ section {
    font-size: 14px;
    line-height: 1.8;
    color: #000000;
-   text-align: center;
+   text-align: justify;
    margin-bottom: 16px;
  } 
 
@@ -111,7 +104,6 @@
    color: #394032;
    text-align: center;
  }
-
 
 
  #fonctionnement {
@@ -142,7 +134,7 @@
 
    #theorie a {
    color: #000000;
-   text-decoration: none;
+   text-decoration: underline;
  }
 
   #theorie a:hover {
@@ -185,12 +177,17 @@
    font-size: 13px;
    line-height: 2;
    color: #000000;
-   text-align: center;
+   text-align: left;
+ }
+
+  #description a {
+   color: #000000;
+   text-decoration: underline;
  }
 
  #contact a {
    color: #000000;
-   text-decoration: none;
+   text-decoration: underline;
  }
 
  #contact a:hover {
