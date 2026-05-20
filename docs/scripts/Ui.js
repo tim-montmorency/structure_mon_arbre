@@ -191,7 +191,7 @@ export class Ui {
       gap: 4px;
       text-decoration: none;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 24px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 600;
       opacity: 0.75;
@@ -1204,7 +1204,7 @@ export class Ui {
     `;
 
     const headerTitle = document.createElement("span");
-    headerTitle.textContent = "Chrono & Score";
+    headerTitle.textContent = "Chronomètre et pointage";
     headerTitle.style.cssText = `
       font-size: 14px;
       font-weight: 400;
