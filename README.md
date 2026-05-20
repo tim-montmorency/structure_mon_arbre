@@ -1,14 +1,8 @@
 # Structure mon arbre : un projet de l'Incubateur TIM de Montmorency 
 
-**Structure mon arbre** est un outil web interactif qui permet aux étudiants en horticulture de pratiquer la taille d’arbres jeunes en identifiant les défauts (sanitaires, structurels, branches basses, angles aigus, …) à tailler.
+**Structure mon arbre** est une application web qui permet aux étudiants en horticulture de pratiquer la taille d’arbres jeunes en identifiant les défauts (sanitaires, structurels, branches basses, angles aigus, …) à tailler.
 
-## Contexte et Contraintes du Projet
+Le projet a été réalisé par [l'Incubateur TIM](https://tim-montmorency.com/incubateur/), Elie Daher et Dana Saavedra-Torrano à la session d'hiver 2026. Il peut être essayé à l'adresse suivante : [tim-montmorency.com/structure_mon_arbre/](https://tim-montmorency.com/structure_mon_arbre/).
 
-- Arbres jeunes/moyens seulement (peu de branches, pas de feuilles requises)
-- 5 à 7 défauts clairs par arbre (malades, brisées, interférentes, angles aigus, espacement axiale/radiale mauvais, branches basses temporaires, verticales, etc...)
-- Interaction : cliquer sur une branche + feedback (bonne/mauvaise coupe qui montre la branche en vert ou rouge + explication pédagogique optionnel)
-- Vue 3D libre (orbite 360°)
-- Scénarios/exercices multiples si possible.
-- Interface web
-- Doit être le moins lourd possible
-
+- [Recherche initiale](./recherche.md)
+- [Documentation du code](./code.md)

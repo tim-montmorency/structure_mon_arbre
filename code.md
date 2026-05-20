@@ -1,3 +1,5 @@
+# Documentation du code
+
 # Documentation Technique
 
 Documentation des fonctions publiques et de l'architecture technique du système de visualisation et d'interaction avec des arbres 3D.
@@ -10,6 +12,13 @@ Le système est composé de plusieurs modules responsables de:
 - Contrôler la caméra orbitale
 - Créer l'environnement (ciel, sol, herbe, rochers, éclairage)
 - Animer le vent et gérer l'interface utilisateur
+
+## Données mémorisées
+
+- **URL**: paramètres d'orbite (distance, hauteur, rotation)
+- **Score global**: cumulé sur tous les niveaux (réinitialisé par `selectTree()`)
+- **Historique des temps**: liste des temps par niveau complété
+- **État UI**: niveau actif, état des panneaux
 
 ---
 
@@ -697,7 +706,7 @@ ui.onToggleGrass = (enabled) => {
 }
 ```
 
-#### Chronomètre et scoring
+#### Chronomètre et pointage
 
 - Chrono démarre automatiquement à `resetExercise()`
 - Format MM:SS affiché dans le panneau Chrono & Score
@@ -705,12 +714,6 @@ ui.onToggleGrass = (enabled) => {
 - Historique des temps enregistrés à chaque niveau complété
 - Score total affiché en vert (positif) ou rouge (négatif)
 
----
 
-## Données sauvegardées
 
-- **URL**: paramètres d'orbite (distance, hauteur, rotation)
-- **Score global**: cumulé sur tous les niveaux (réinitialisé par `selectTree()`)
-- **Historique des temps**: liste des temps par niveau complété
-- **État UI**: niveau actif, panneau collapse/expand
 

@@ -8,8 +8,4 @@
 8. Tronc indestructible - "indestructible"
 9. Branche débordante - "débordante"
 10. Branche basse temporaire - "temporaire"
-
-
-
-redondant avec 2
 11. Suppression double flèche - "flèche"
