@@ -1,6 +1,6 @@
-# Incubateur 2026
+# Structure mon arbre : un projet de l'Incubateur TIM de Montmorency 
 
-**Objectif** : Créer un outil web interactif permettant aux étudiants de pratiquer la taille d’arbres jeunes/moyens en identifiant 5 à 7 défauts par arbre (sanitaires, structurels, branches basses, angles aigus, etc...)
+**Structure mon arbre** est un outil web interactif qui permet aux étudiants en horticulture de pratiquer la taille d’arbres jeunes en identifiant les défauts (sanitaires, structurels, branches basses, angles aigus, …) à tailler.
 
 ## Contexte et Contraintes du Projet
 

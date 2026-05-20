@@ -172,31 +172,31 @@ export class Ui {
 
     // Bouton aide sous la ligne du titre, aligné à droite
     const aideBtn = document.createElement("a");
- let aideWindow = null;
+    let aideWindow = null;
 
-aideBtn.href = "#";
+    aideBtn.href = "#";
 
-aideBtn.addEventListener("click", (e) => {
-  e.preventDefault();
+    aideBtn.addEventListener("click", (e) => {
+      e.preventDefault();
 
-  if (aideWindow && !aideWindow.closed) {
-    aideWindow.focus(); // réutilise l'onglet existant
-  } else {
-    aideWindow = window.open("./aide.html", "aideWindow");
-  }
-});
+      if (aideWindow && !aideWindow.closed) {
+        aideWindow.focus(); // réutilise l'onglet existant
+      } else {
+        aideWindow = window.open("./aide.html", "aideWindow");
+      }
+    });
     aideBtn.style.cssText = `
       display: flex;
       align-items: center;
       gap: 4px;
       text-decoration: none;
       color: #ffffff;
-      font-size: 13px;
+      font-size: 14px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 600;
       opacity: 0.75;
       transition: opacity 0.2s;
-      align-self: flex-end;
+      align-self: center;
       margin-top: 6px;
       margin-bottom: 4px;
     `;
@@ -205,10 +205,10 @@ aideBtn.addEventListener("click", (e) => {
 
     const aideIcon = document.createElement("img");
     aideIcon.src = "./icons/help.png";
-    aideIcon.style.cssText = "width: 20px; height: 20px; object-fit: contain; display: block;";
+    aideIcon.style.cssText = "width: 40px; height: 40px; object-fit: contain; display: block;";
     const aideText = document.createElement("span");
-    aideText.textContent = "aide";
-    aideText.style.cssText = "line-height: 1; display: block;";
+    aideText.textContent = "Aide";
+    aideText.style.cssText = "line-height: 1; display: block";
     aideBtn.appendChild(aideIcon);
     aideBtn.appendChild(aideText);
     sliderPanel.appendChild(aideBtn);
@@ -944,10 +944,10 @@ aideBtn.addEventListener("click", (e) => {
     this._activeTreeIndex = index;
     this._updateTreeSelectorActive();
 
-      if (this._treePreviewImg) {
-    this._treePreviewImg.src = `./img/Tree${index + 1}.png`;
-  }
-  if (this.onTreeSelect) this.onTreeSelect(index);
+    if (this._treePreviewImg) {
+      this._treePreviewImg.src = `./img/Tree${index + 1}.png`;
+    }
+    if (this.onTreeSelect) this.onTreeSelect(index);
   }
 
   _updateTreeSelectorActive() {
