@@ -182,7 +182,7 @@ export class Ui {
       if (aideWindow && !aideWindow.closed) {
         aideWindow.focus(); // réutilise l'onglet existant
       } else {
-        aideWindow = window.open("./aide.html", "aideWindow");
+        aideWindow = window.open("./index.html", "sma_aide");
       }
     });
     aideBtn.style.cssText = `
@@ -190,7 +190,7 @@ export class Ui {
       align-items: center;
       gap: 4px;
       text-decoration: none;
-      color: #ffffff;
+      color: rgba(150, 174, 80, 1);
       font-size: 24px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 600;

@@ -49,8 +49,8 @@
  .hero {
    background: linear-gradient(180deg, #97AE50 0%, #e8ead3 100%);
    text-align: center;
-   padding: 120px 24px 100px;
-   min-height: 400px;
+   padding: 80px 24px 80px;
+   min-height: 300px;
    display: flex;
    align-items: center;
    justify-content: center;
@@ -84,7 +84,7 @@
  section {
    max-width: 780px;
    margin: 0 auto;
-   padding: 64px 0px;
+   padding: 32px 0px;
  }
 
  section h2 {

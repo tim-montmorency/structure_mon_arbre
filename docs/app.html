@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Structure mon arbre</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            display: block;
+        }
+        @font-face {
+            font-family: 'Lush Garden';
+            src: url('./fonts/LushGarden-5yvra.ttf') format('TrueType');
+            font-weight: normal;
+            font-style: normal;
+        }  
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./local/three.module.js",
+                "three/addons/": "./local/jsm/",
+                "stats": "./local/Stats.min.js"
+            }
+        }
+    </script>
+    <script>
+        window.name = "sma_app";
+    </script>
+</head>
+
+<body>
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

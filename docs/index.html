@@ -1,40 +1,214 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 
 <head>
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <title>Structure mon arbre</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }
-
-        canvas {
-            display: block;
-        }
-        @font-face {
-            font-family: 'Lush Garden';
-            src: url('./fonts/LushGarden-5yvra.ttf') format('TrueType');
-            font-weight: normal;
-            font-style: normal;
-        }  
-    </style>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "./local/three.module.js",
-                "three/addons/": "./local/jsm/",
-                "stats": "./local/Stats.min.js"
-            }
-        }
-    </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <title>Structure mon arbre — Aide</title>
+  <link rel="stylesheet" href="aide.css" />
+  <style></style>
 </head>
 
 <body>
-    <script type="module" src="./main.js"></script>
+  <nav>
+    <a href="#description">Description</a>
+    <a href="#fonctionnement">Fonctionnement</a>
+    <a href="#theorie">Théorie</a>
+    <a href="#credits">Crédits</a>
+  </nav>
+
+  <div class="hero">
+    <h1>Structure mon arbre</h1>
+  </div>
+
+  <section>
+<div style="text-align: center;">
+  <button
+    id="openAppBtn"
+    style="
+      padding: 12px 16px;
+      box-sizing: border-box;
+      text-align: center;
+
+      background: rgb(85, 99, 45);
+      border: 1px solid rgb(150, 174, 80);
+      border-radius: 8px;
+
+      color: rgb(255, 255, 255);
+      cursor: pointer;
+
+      font-weight: 400;
+      font-size: 24px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+
+      transition:
+        background 0.2s,
+        border-color 0.2s,
+        transform 0.15s;
+
+      white-space: nowrap;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    "
+  >
+    <img
+      src="./icons/tree64x64.png"
+      style="
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        pointer-events: none;
+      "
+    />
+
+    <span>Ouvrir l'application</span>
+  </button>
+</div>
+  </section>
+
+  <section id="description">
+    <h2>Description</h2>
+    <p>
+      Bienvenue dans ce logiciel de simulation en horticulture développé par
+      des étudiant·es de la technique en multimédia pour les étudiant·es en
+      horticulture ! Ce jeu éducatif a été conçu pour vous permettre de mettre
+      en pratique les notions théoriques liées à la taille de formation des
+      jeunes arbres dans un environnement virtuel et sécuritaire. À travers
+      différentes mises en situation, vous devrez observer la structure des
+      arbres, analyser leur développement et choisir les bonnes interventions
+      de taille afin de favoriser une croissance saine et équilibrée.
+    </p>
+    <p>
+    <h3>Deux modes de jeu sont disponibles :</h3>
+    <br />
+    <p>
+      <b>Mode pratique </b>: idéal pour apprendre à votre rythme, expérimenter et
+      mieux comprendre les impacts de chaque coupe sans risque pour les
+      végétaux.
+      <br />
+      <b>Mode compétition </b>: mettez vos connaissances et votre rapidité à
+      l’épreuve ! Le jeu calcule le temps nécessaire pour réussir à couper
+      toutes les bonnes branches. Les meilleurs résultats seront affichés dans
+      le tableau d’honneur.
+    </p>
+
+    <p>
+      L’objectif est de développer vos compétences et votre jugement
+      professionnels avant de réaliser des interventions sur de vrais arbres à
+      l’extérieur. Ce projet est le résultat d’une collaboration entre des
+      étudiant·es en technique multimédia et le programme d’horticulture afin
+      d’offrir une expérience d’apprentissage interactive, concrète et adaptée
+      à la réalité du terrain. Prenez le temps d’observer, de réfléchir et
+      d’appliquer vos connaissances : chaque décision influence l’avenir de
+      l’arbre ! Bonne pratique et amusez-vous à apprendre autrement.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="fonctionnement">
+    <h2>Fonctionnement</h2>
+    <img src="./img/fonctionnement.png" alt="Fonctionnement" class="fonctionnement-img" />
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="theorie">
+    <h2>Théorie</h2>
+    <h3>Protocole de taille de formation des jeunes arbres</h3>
+    <p>
+      Se référer au BNQ 0605-200 et au site : <a
+        href="https://espacepourlavie.ca/taille-des-arbres-feuillus">https://espacepourlavie.ca/taille-des-arbres-feuillus</a>
+      <br /><br />
+      1. Identification de l’individu : port naturel, problèmes<br />
+      2. Situation (est-il au bon endroit) + est-ce que je reviens<br />
+      3. Bilan sanitaire (mort, malade, brisée, interférentes)<br />
+      4. Bilan structural<br />
+      A) Dominance apicale seulement sur les arbres ayant un port pyramidale (choisir un axe principal: plus vigoureux,
+      plus vertical, mieux orienté)<br />
+      B) Sélection des charpentières (disposition axiale/ radiale, angle d’insertion aigue = écorce incluse)<br />
+      C) Hauteur de la couronne (rapport tronc/ramure)<br />
+      D) BBT (création de BBT dans le but de les enlever plus tard)<br />
+      *Attention au 30% maximum par année
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <div id="credits">
+    <h2>Crédits</h2>
+    <div class="credits-grid">
+      <div class="credits-col">
+        <h3>Équipe</h3>
+        <p>
+          Chef de projet : Thomas O Fredericks<br />
+          Enseignante en horticulture : Naomi Jarry<br />
+          <br />
+          Modélisation et programmation : Elie Daher<br />
+          Design UI et programmation : Dana Saavedra-Torrano
+        </p>
+      </div>
+      <div id="contact">
+        <div class="credits-col">
+          <h3>Contact</h3>
+          <p>
+            <a href="mailto:coordination.tim@cmontmorency.qc.ca">coordination.tim@cmontmorency.qc.ca</a>
+            <br />
+            <a
+              href="mailto:Coordination.PaysageetCHO@cmontmorency.qc.ca">Coordination.PaysageetCHO@cmontmorency.qc.ca</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="logos">
+      <div class="logo-tim">
+        <a href="https://tim-montmorency.com/" target="_blank">
+          <img src="./img/logo_tim.png" alt="Logo TIM" />
+        </a>
+      </div>
+      <div class="logo-montmorency">
+        <a href="https://www.cmontmorency.qc.ca/" target="_blank">
+          <img src="./img/logo_momo.png" alt="Collège Montmorency" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2026 Département TIM du Collège Montmorency</footer>
+
+  <script>
+  const button = document.getElementById("openAppBtn");
+
+  // Hover effect
+  button.addEventListener("mouseenter", () => {
+    button.style.background = "rgb(105, 120, 55)";
+    button.style.borderColor = "rgb(180, 210, 90)";
+    button.style.transform = "scale(1.03)";
+  });
+
+  button.addEventListener("mouseleave", () => {
+    button.style.background = "rgb(85, 99, 45)";
+    button.style.borderColor = "rgb(150, 174, 80)";
+    button.style.transform = "scale(1)";
+  });
+
+  // Click event
+  button.addEventListener("click", () => {
+    window.open(
+      "app.html",
+      "sma_app"
+    );
+  });
+</script>
+ <script>
+        window.name = "sma_aide";
+    </script>
 </body>
 
 </html>
