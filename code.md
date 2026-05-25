@@ -504,216 +504,130 @@ treeInteraction.restoreAll()
 
 ## Ui.js
 
-Gère l'interface utilisateur complète: glissières de caméra, boutons d'action, panneau de feedback et chronomètre.
+Le fichier contient la classe Ui, responsable de la gestion complète de l’interface utilisateur de l’application de Structure mon arbre.
 
-### `class Ui`
+Cette classe:
+- crée les panneaux visuels
+- gère les boutons et les glissières
+- affiche le score et le chronomètre
+- permet la sélection des niveaux
+- met à jour les paramètres de caméra
+- affiche les rétroactions après validation
 
-Système d'interface utilisateur pour le contrôle de la caméra et la gestion des niveaux.
-
+## Point d'entrée
 #### `constructor(orbitController, domElement, trees = [])`
-
-Initialise l'interface utilisateur.
-
-**Arguments:**
-- `orbitController`: instance `OrbitController` à contrôler
-- `domElement`: élément DOM canvas pour les événements souris
-- `trees`: tableau d'objets de configuration des niveaux
-
+Initialise l’interface utilisateur et crée tous les panneaux interactifs de l’application.
 ```javascript
-const ui = new Ui(orbitController, renderer.domElement, TREES)
+constructor(orbitController, domElement, trees = []){...}
 ```
 
-**Création:**
-- Glissières pour rotation, hauteur et distance de caméra
-- Boutons de présélection (vues haute/milieu/sol)
-- Toggle gazon/rochers
-- Sélecteur de niveau (grille numérotée)
-- Boutons d'action (Couper, Rétablir, Valider)
-- Panneau chrono & score
-- Panneau de rétroaction
 
+**Paramètres:**
+- `orbitController`: contrôleur utilisé pour manipuler la caméra orbitale
+- `domElement`: élément HTML utilisé pour détecter les interactions souris
+- `trees`: tableau contenant les configurations des arbres/niveaux
+
+Le constructeur créer :
+- initialise les variables
+- crée les glissières
+- crée les boutons
+- crée le panneau de score et de temps
+- crée le sélecteur de niveaux
+- active les contrôles de souris et de zoom
+
+## Fonction publique
 #### `updateSlider(key, value)`
-
-Met à jour programmatiquement une glissière.
-
+Met à jour la valeur d’une glissière et applique immédiatement la modification à la caméra.
+```javascript
+updateSlider("height", 0.75){...}
+```
 **Arguments:**
-- `key`: `"rotation"`, `"height"` ou `"distance"`
+- `key`: nom de la propriété à modifier (`"rotation"`, `"height"`,`"distance"`)
 - `value`: nouvelle valeur
 
-```javascript
-ui.updateSlider("height", 0.75)
-```
-
-- Vérifie et limite la valeur selon le min/max de la glissière
-- Déclenche l'événement `input` pour mettre à jour l'orbite
-
 #### `updateURL()`
-
-Sauvegarde les paramètres d'orbite actuels dans l'URL.
+Met à jour les paramètres de caméra dans l’URL de la page.
+```javascript
+updateURL(){...}
+```
+#### `setValidateEnabled(enabled)`
+Active ou désactive le bouton de validation.
 
 ```javascript
-ui.updateURL()
-// L'URL devient : ?distance=8.50&height=0.55&rotation=1.57
+ setValidateEnabled(enabled) {...}
 ```
 
-- Exécuté automatiquement lors du déplacement des glissières
-- Permet la persistence entre rechargements
+**Argument:**
+- `enabled`: détermine si le bouton est active ou non
 
 #### `setCutEnabled(enabled)`
-
-Active/désactive le bouton Couper.
-
-**Argument:**
-- `enabled`: booléen
+Active ou désactive le bouton de validation.
 
 ```javascript
-ui.setCutEnabled(true)
+ setCutEnabled(enabled) {...}
 ```
-
-#### `setRestoreEnabled(enabled)`
-
-Active/désactive le bouton Rétablir.
 
 **Argument:**
-- `enabled`: booléen
+- `enabled`: détermine si le bouton est active ou non
+#### `setResstoreEnabled(enabled)`
+Active ou désactive le bouton de validation.
 
-#### `setValidateEnabled(enabled)`
-
-Active/désactive le bouton Valider.
+```javascript
+ setRestoreEnabled(enabled) {...}
+```
 
 **Argument:**
-- `enabled`: booléen
-
-#### `resetExercise()`
-
-Réinitialise l'état de l'exercice pour un nouveau niveau.
-
-```javascript
-ui.resetExercise()
-```
-
-- Réinitialise le bouton Valider
-- Cache le panneau de rétroaction
-- Réinitialise les tracking de branches scorées et pénalisées
-- Démarre un nouveau chronomètre
-- Met à jour le panneau chrono/score
-
-#### `hideFeedback()`
-
-Cache le panneau de rétroaction.
-
-```javascript
-ui.hideFeedback()
-```
-
-#### `selectTree(index)`
-
-Sélectionne un niveau (réinitialisation complète).
-
-**Argument:**
-- `index`: index du niveau dans le tableau trees
-
-```javascript
-ui.selectTree(0)
-```
-
-- Réinitialise le score total et l'historique
-- Appelle le callback `onTreeSelect(index)`
-
-#### `addTree(treeConfig)`
-
-Ajoute dynamiquement un nouveau niveau à l'interface.
-
-**Argument:**
-- `treeConfig`: objet avec `id`, `label`, `model`, `scale`
-
-```javascript
-ui.addTree({ 
-  id: 10, 
-  label: "Arbre 10", 
-  model: "./models/Tree10.glb", 
-  scale: 0.7 
-})
-```
+- `enabled`: détermine si le bouton est active ou non
 
 #### `showFeedback(results)`
-
-Affiche le panneau de rétroaction après validation.
-
+Affiche le panneau de rétroaction après la validation d’un exercice.
+```javascript
+  showFeedback({ cut, missed, wrongCuts, wrongCutCount, wrongBranchDisplayCount, overCut }) {...}
+```
+Cette fonction:
+- calcule le score
+- applique les pénalités
+- affiche les bonnes et mauvaises réponses
+- met à jour le bouton de validation
 **Argument:**
-- `results`: objet retourné par `TreeInteraction.validate()`
+  - `cut`: branches correctement identifiées
+  - `missed`: branches manquées
+  - `wrongCuts`: branches incorrectement sélectionnées
+  - `wrongCutCount`: nombre de mauvaises sélections
+  - `wrongBranchDisplayCount`: nombre affiché dans le panneau
+  - `overCut`: indique si plus de 30% de l’arbre a été coupé
+ 
+  #### `resetExercise()`
+  Réinitialise l’exercice courant pour un nouveau niveau.
+  ```javascript
+  resetExercise() {...}
+  ```
 
+Appelé par main.js -> loadTree() à chaque chargement d'arbre.
+Remet à zéro tout ce qui est propre au niveau en cours :
+- état du bouton Valider
+- panneau de rétroaction
+- chrono (repart de 0)
+- Sets de suivi des branches scorées / pénalisées
+  Ne touche PAS au score total ni à l'historique des temps : ces données survivent d'un niveau à l'autre et ne sont effacées que par selectTree().
+
+#### `hideFeedback()`
+Cache le panneau de rétroaction.
 ```javascript
-ui.showFeedback({
-  cut: [...],
-  missed: [...],
-  wrongCuts: [...],
-  wrongCutCount: 2,
-  wrongBranchDisplayCount: 2,
-  overCut: false
-})
-```
-
-**Calcul du score:**
-- Cas de surcoupe (> 30%): pénalité forfaitaire -150 pts (une fois par tentative)
-- Cas normal:
-  - Bonnes branches = +50 pts × multiplicateur (×2 si < 120 secondes)
-  - Parents mixtes = -25 pts par nœud
-  - Chaque branche n'est comptabilisée qu'une fois par niveau
-- Met à jour le score total et l'affichage
-
-**Affichage du feedback:**
-- Panneau en bas à gauche montrant branches trouvées/manquées/mal identifiées
-- Bouton transformé en "Prochain Exercice" ou "Recommencer" selon le résultat
-
-#### Callbacks publics
-
-**`onTreeSelect`**: appelé quand un niveau est sélectionné
+   hideFeedback() {...}
+  ```
+#### `selectTree(index)`
+Permet de sélectionner un niveau manuellement.
 ```javascript
-ui.onTreeSelect = (index) => loadTree(TREES[index])
-```
+   selectTree(index) {...}
+  ```
+**Argument:**
+  - `index`: index du niveau à sélectionner
 
-**`onCutBranch`**: appelé quand le bouton Couper est cliqué
+#### `addTree(treeConfig)`
+Ajoute un nouvel arbre dans le sélecteur de niveaux.
 ```javascript
-ui.onCutBranch = () => treeInteraction.cutSelected()
-```
-
-**`onRestoreBranches`**: appelé quand le bouton Rétablir est cliqué
-```javascript
-ui.onRestoreBranches = () => treeInteraction.restoreAll()
-```
-
-**`onValidate`**: appelé quand le bouton Valider est cliqué
-```javascript
-ui.onValidate = () => {
-  const results = treeInteraction.validate()
-  ui.showFeedback(results)
-}
-```
-
-**`onRestart`**: appelé quand l'utilisateur clique Recommencer
-```javascript
-ui.onRestart = () => treeInteraction.restoreAll()
-```
-
-**`onNextExercise`**: appelé quand l'utilisateur clique Prochain Exercice
-```javascript
-ui.onNextExercise = () => {
-  const nextIndex = (ui._activeTreeIndex + 1) % TREES.length
-  ui._advanceToTree(nextIndex)
-}
-```
-
-**`onToggleGrass`**: appelé quand le toggle gazon est activé/désactivé
-```javascript
-ui.onToggleGrass = (enabled) => {
-  if (enabled) grass.activate(scene)
-  else grass.deactivate()
-}
-```
-
-
-
-
-
-
+   addTree(treeConfig) {...}
+  ```
+**Argument:**
+  - `treeConfig`: configuration du nouvel arbre
