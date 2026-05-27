@@ -190,7 +190,7 @@ export class Ui {
       align-items: center;
       gap: 4px;
       text-decoration: none;
-      color: rgba(150, 174, 80, 1);
+      color: rgba(220,140,40,0.85);
       font-size: 24px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 600;
@@ -873,7 +873,7 @@ export class Ui {
       aspect-ratio: 1;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      background: url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9);
+      background: rgba(69, 75, 64, 0.9);
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -881,16 +881,7 @@ export class Ui {
       padding: 0;
     `;
 
-    // Overlay sombre pour diminuer l'opacité de l'image
-    const overlay = document.createElement("div");
-    overlay.style.cssText = `
-      position: absolute;
-      inset: 0;
-      background: rgba(15, 20, 10, 0.6);
-      border-radius: 8px;
-      pointer-events: none;
-    `;
-    btn.appendChild(overlay);
+
 
     // Numéro centré
     const num = document.createElement("span");
@@ -956,12 +947,12 @@ export class Ui {
         btn.style.borderColor = "rgba(95, 120, 60, 0.8)";
         btn.style.boxShadow = "inset 0 0 0 2px rgba(95, 120, 60, 0.5)";
         btn.style.opacity = "1";
-        btn.style.background = `url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(40, 60, 25, 0.95)`;
+       // btn.style.background = `url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(40, 60, 25, 0.95)`;
       } else {
         btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
         btn.style.boxShadow = "none";
         btn.style.opacity = "0.25";
-        btn.style.background = `url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9)`;
+       // btn.style.background = `url('./img/Tree${i + 1}.png') center / contain no-repeat rgba(30, 35, 25, 0.9)`;
       }
     });
   }

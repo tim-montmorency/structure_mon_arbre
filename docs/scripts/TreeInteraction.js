@@ -49,7 +49,7 @@ export class TreeInteraction {
       if (child.isMesh) meshes.push(child);
     });
     const outlineMat = new THREE.MeshBasicMaterial({
-      color: 0xffff00,
+      color: 0x999999,
       side: THREE.BackSide,
     });
     for (const mesh of meshes) {
@@ -57,7 +57,7 @@ export class TreeInteraction {
       const pos = geo.attributes.position;
       const norm = geo.attributes.normal;
       if (!pos || !norm) continue;
-      const thickness = 0.25;
+      const thickness = 0.5;
       for (let i = 0; i < pos.count; i++) {
         pos.setXYZ(i, pos.getX(i) + norm.getX(i) * thickness, pos.getY(i) + norm.getY(i) * thickness, pos.getZ(i) + norm.getZ(i) * thickness);
       }
