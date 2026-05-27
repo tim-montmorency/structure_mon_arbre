@@ -19,6 +19,7 @@ const skyMaterial = createSky(scene);
 
 // Caméra
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+scene.add(camera);
 
 // Contrôleur d'orbite
 const orbitController = new OrbitController(camera, {
@@ -43,6 +44,8 @@ document.body.appendChild(renderer.domElement);
 
 // Éclairage
  const { sunLight } = createLighting(scene);
+
+
 
 // Vent
 const wind = new Wind();
@@ -102,6 +105,7 @@ function loadTree(config) {
       child.receiveShadow = false;
 
       if (child.material) {
+
         
         // Check if the material already has a normal map from the GLTF file
         if (child.material.normalMap) {
@@ -114,6 +118,8 @@ function loadTree(config) {
           
           // Keep your original normal map sharpness tweak
           child.material.normalScale.set(1.8, 1.8);
+
+          child.material.metalness = 0;
         }
 
         child.material.needsUpdate = true;

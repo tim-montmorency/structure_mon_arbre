@@ -3,9 +3,15 @@ import * as THREE from "three";
 
 export function createLighting(scene) {
   // Lumière ambiante douce pour éclairer les zones à l'ombre
-  scene.add(new THREE.HemisphereLight(0x87ceeb, 0x553322, 0.7));
+  //scene.add(new THREE.HemisphereLight(0x87ceeb, 0x553322, 10));
 
-  const sunLight = new THREE.DirectionalLight(0xfff8ee, 5.0);
+  // THREE.AmbientLight(color, intensity)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); 
+
+// Add it directly to your scene
+scene.add(ambientLight);
+
+  const sunLight = new THREE.DirectionalLight(0xfff8ee, 5);
   sunLight.position.set(4, 5, 3);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
