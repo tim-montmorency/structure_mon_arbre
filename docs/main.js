@@ -14,7 +14,7 @@ import { createRocks } from "./scripts/rocks.js";
 
 // Scène
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x6496d2, 15, 80);
+//scene.fog = new THREE.Fog(0x000000, 2, 4);//scene.fog = new THREE.Fog(0x6496d2, 15, 80);
 const skyMaterial = createSky(scene);
 
 // Caméra
@@ -90,24 +90,40 @@ function loadTree(config) {
 
   loader.load(
     config.model,
-    (gltf) => {
-      const tree = gltf.scene;
-      tree.position.y = 0;
-      tree.scale.setScalar(config.scale);
-      tree.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
+  
+      (gltf) => {
+  const tree = gltf.scene;
+  tree.position.y = 0;
+  tree.scale.setScalar(config.scale);
+  
+  tree.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = false;
 
-          // Normal map un peu plus forte que dans le modèle original pour mieux ressortir les détails sur les branches coupées
-          if (child.material?.normalMap) {
-            child.material.normalScale.set(1.8, 1.8);
-            child.material.needsUpdate = true;
-          }
+      if (child.material) {
+        
+        // Check if the material already has a normal map from the GLTF file
+        if (child.material.normalMap) {
+          
+          // 1. REUSE the normal map as the displacement map!
+          child.material.displacementMap = child.material.normalMap;
+          
+          // 2. Set a tiny scale (normal maps can be harsh when used as displacement)
+          child.material.displacementScale = 0.2; 
+          
+          // Keep your original normal map sharpness tweak
+          child.material.normalScale.set(1.8, 1.8);
         }
-      });
-      scene.add(tree);
-      currentTree = tree;
+
+        child.material.needsUpdate = true;
+      }
+    }
+  });
+  
+  scene.add(tree);
+  currentTree = tree;
+
 
       //orbitController.centerOn(tree);
 
@@ -188,7 +204,7 @@ loadTree(TREES[0]);
 
 function updateSunlight(time) {
   // Convert time to seconds
-  const seconds = time * 0.00005; 
+  const seconds = time * 0.00001; 
   
   // Adjust speed and radius of the rotation orbit
   const speed = 0.5; 
@@ -201,12 +217,15 @@ function updateSunlight(time) {
   sunLight.position.y = 5; // Keep your original height from createLighting
 }
 
+
+
 // Boucle d'animation
 const clock = new THREE.Clock();
 function animate(time = 0) {
   wind.update(clock.getDelta());
   orbitController.update();
-  //updateSunlight(time);
+  updateSunlight(time);
+ 
   renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
