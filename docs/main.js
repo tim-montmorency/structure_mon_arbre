@@ -25,7 +25,7 @@ const orbitController = new OrbitController(camera, {
   distance: 2,
   height: Math.PI / 3,
   rotation: 0,
-  target: new THREE.Vector3(0, 1.5, 0),
+  //target: new THREE.Vector3(0, 1, 0),
 });
 
 // Charger les paramètres de caméra depuis l'URL si disponibles
@@ -42,7 +42,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 // Éclairage
-createLighting(scene);
+ const { sunLight } = createLighting(scene);
 
 // Vent
 const wind = new Wind();
@@ -109,7 +109,7 @@ function loadTree(config) {
       scene.add(tree);
       currentTree = tree;
 
-      orbitController.centerOn(tree);
+      //orbitController.centerOn(tree);
 
       // Charger l'environnement une seule fois
       if (!environmentLoaded) {
@@ -184,11 +184,29 @@ ui.onNextExercise = () => {
 // Charger le premier arbre
 loadTree(TREES[0]);
 
+
+
+function updateSunlight(time) {
+  // Convert time to seconds
+  const seconds = time * 0.00005; 
+  
+  // Adjust speed and radius of the rotation orbit
+  const speed = 0.5; 
+  const angle = seconds * speed;
+  const radius = 5; // Distance from the center (X and Z)
+
+  // Rotate around the Y-axis (X and Z change, Y stays constant)
+  sunLight.position.x = Math.cos(angle) * radius;
+  sunLight.position.z = Math.sin(angle) * radius;
+  sunLight.position.y = 5; // Keep your original height from createLighting
+}
+
 // Boucle d'animation
 const clock = new THREE.Clock();
-function animate() {
+function animate(time = 0) {
   wind.update(clock.getDelta());
   orbitController.update();
+  //updateSunlight(time);
   renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);

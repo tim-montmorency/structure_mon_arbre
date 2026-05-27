@@ -13,7 +13,7 @@ export class Ui {
     this.sliderDefs = [
       { key: "rotation", min: -Math.PI, max: Math.PI, label: "Rotation caméra:" },
       { key: "height", min: 0.15, max: 1, label: "Hauteur caméra:" },
-      { key: "distance", min: 5, max: 1, label: "Distance caméra:" },
+      { key: "distance", min: 1, max: 5, label: "Distance caméra:" },
     ];
 
     this.buttonCount = 2; // Reset + Couper
@@ -322,16 +322,16 @@ export class Ui {
         action: () => {
           this.updateSlider("height", 1);
           this.updateSlider("distance", 5);
-          this.updateSlider("rotation", 2.34);
+          //this.updateSlider("rotation", 2.34);
         },
       },
       {
         label: "Vue milieu",
         iconRotation: "0deg",
         action: () => {
-          this.updateSlider("height", 0.575);
+          this.updateSlider("height", 0.45);
           this.updateSlider("distance", 5);
-          this.updateSlider("rotation", 2.34);
+          //this.updateSlider("rotation", 2.34);
         },
       },
       {
@@ -339,8 +339,8 @@ export class Ui {
         iconRotation: "-15deg",
         action: () => {
           this.updateSlider("height", 0.15);
-          this.updateSlider("distance", 5);
-          this.updateSlider("rotation", 2.34);
+          this.updateSlider("distance", 2.8);
+          //this.updateSlider("rotation", 2.34);
         },
       },
     ];
